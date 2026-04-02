@@ -12,6 +12,7 @@
     "singleQuote": false
   },
   "imports": {
+    "@std/assert": "jsr:@std/assert",
     "@cutout/jsx/element": "./element",
     "@cutout/jsx/helpers": "./helpers",
     "@cutout/jsx/html": "./html"

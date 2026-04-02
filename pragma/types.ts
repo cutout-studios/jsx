@@ -11,9 +11,13 @@ export type CutoutIR<V = unknown> = {
   index: Uint16Array;
 };
 
+// TODO: In production, escape these values.
 export enum CutoutIRTags {
-  START_PROPS = "props",
-  END_PROPS = "/props",
-  START_CHILDREN = "children",
-  END_CHILDREN = "/children",
+  START_NODE = "__NODE__",
+  END_NODE = "/__NODE__",
 }
+
+export const isCutoutNode = (value: unknown): value is CutoutNode =>
+  Boolean(
+    value && typeof value === "object" && "type" in value && "props" in value,
+  );

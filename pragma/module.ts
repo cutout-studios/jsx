@@ -1,44 +1,49 @@
-import { type CutoutIR, CutoutIRTags, type CutoutNode } from "./types.ts";
+import { type CutoutIR, CutoutIRTags, type CutoutNode, isCutoutNode } from "./types.ts";
 
-export const Fragment = null;
+export const Fragment = Symbol("Fragment");
 
 export const jsx = (
   type: string | (() => unknown),
   props: { [key: string]: unknown },
-  // TODO: support keys
 ): CutoutIR => {
   const values = new Map<unknown, number>([[Fragment, 0x00]]);
   const index: number[] = [];
 
   const _pushValue = (value: unknown) => {
-    if (!values.has(value)) {
-      // TODO: escape value (?)
-      values.set(value, values.size);
+    let id = values.get(value);
+
+    if (id === undefined) {
+      id = values.size;
+      values.set(value, id);
     }
 
-    index.push(values.get(value) as number);
+    index.push(id);
   };
 
-  const nodeStack: CutoutNode[] = [{ type, props }];
-  while (nodeStack.length) {
-    const { type, props } = nodeStack.pop() as CutoutNode;
-
-    _pushValue(type);
-    _pushValue(CutoutIRTags.START_PROPS);
+  const stack: unknown[] = [];
+  const _stackNode = ({ type, props }: CutoutNode) => {
+    stack.push(CutoutIRTags.END_NODE);
 
     for (const key in props) {
-      if (key === CutoutIRTags.START_CHILDREN) {
-        nodeStack.push(...props[key] as CutoutNode[]);
-        continue;
-      }
-
-      _pushValue(key);
-      _pushValue(props[key]);
+      stack.push(props[key], key);
     }
 
-    // TODO: start/end children (substack?)
+    stack.push(type, CutoutIRTags.START_NODE);
+  };
 
-    _pushValue(CutoutIRTags.END_PROPS);
+  _stackNode({ type, props });
+  while (stack.length) {
+    const element = stack.pop();
+
+    if (isCutoutNode(element)) {
+      _stackNode(element);
+    } else if (Array.isArray(element) && element.every(isCutoutNode)) {
+      for (const subelement of element) {
+        _stackNode(subelement);
+      }
+    } else {
+      _pushValue(element);
+    }
   }
 
   return {
