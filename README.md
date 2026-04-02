@@ -5,23 +5,43 @@ A generic JSX pragma for runtime interpretation.
 ```tsx
 /* @jsx jsr:@cutout/jsx */
 
-import { server } from "@cutout/jsx/server";
-import { style } from "@cutout/jsx/html";
+import { html, style } from "@cutout/jsx/html";
 
-// NOTE: this API is too opinionated atm
-server.addRoute("/hello", () => (
-  <html>
-    <head>
-      <title>{"hello!"}</title>
-      {style`h1 { color: red; }`}
-    </head>
-    <body>
-      <h1>{"hello!"}</h1>
-    </body>
-  </html>
-));
+Deno.serve((request) => {
+  // very naive routing
+  if (request.url.endsWith("/hello")) {
+    const helloMessage = "hello!";
 
-server.start({ port: 3000 });
+    return new Response(
+      html(
+        <html>
+          <head>
+            <title>{helloMessage}</title>
+            {style`h1 { color: red; }`}
+          </head>
+          <body>
+            <h1>{helloMessage}</h1>
+          </body>
+        </html>,
+      ),
+    );
+  }
+
+  return new Response(
+    html(<h1>Not Found</h1>),
+    { status: 404 },
+  );
+});
+```
+
+```tsx
+/* @jsx jsr:@cutout/jsx */
+
+import { dom } from "@cutout/jsx/element";
+
+class MyButton extends HTMLElement {
+  // ... 
+}
 ```
 
 ## Contributing

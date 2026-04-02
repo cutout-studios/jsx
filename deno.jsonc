@@ -3,8 +3,7 @@
     ".": "./pragma/module.ts",
     "./element": "./element/module.ts",
     "./helpers": "./helpers/module.ts",
-    "./html": "./html/module.ts",
-    "./server": "./server/module.ts"
+    "./html": "./html/module.ts"
   },
   "fmt": {
     "indentWidth": 2,
@@ -15,8 +14,7 @@
   "imports": {
     "@cutout/jsx/element": "./element",
     "@cutout/jsx/helpers": "./helpers",
-    "@cutout/jsx/html": "./html",
-    "@cutout/jsx/server": "./server"
+    "@cutout/jsx/html": "./html"
   },
   "lint": {
     "plugins": [
