@@ -1,0 +1,29 @@
+name: Feature Request
+description: Request a new feature!
+body:
+  - type: checkboxes
+    id: code-of-conduct
+    attributes:
+      label: "Confirm: Code of Conduct"
+      description: "By submitting this issue, you agree to follow our [Code of Conduct](./CODE_OF_CONDUCT.md)."
+      options:
+        - label: "I agree to follow this project's Code of Conduct."
+          required: true
+
+  - type: checkboxes
+    id: existing-features-check
+    attributes:
+      label: "Confirm: Verified Existing Feature Requests"
+      description: "Before proceeding, confirm you've searched for similar feature requests. If a similar request exists, please add your thoughts there instead of opening a new one."
+      options:
+        - label: "I have searched the [existing issues](https://github.com/cutout-studios/jsx/issues) and found no similar feature requests."
+          required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: "Feature Description"
+      description: "Please describe the feature in detail. What use case does it address, and why is the current system insufficient?"
+      placeholder: "e.g. Currently when I ask Bott to summarize the current conversation, they go over the entire history of the channel."
+    validations:
+      required: true

@@ -1,0 +1,17 @@
+config_version = "0"
+
+exclude_patterns = [
+  "**/*.test.ts",
+]
+
+[smells.function_complexity]
+threshold = 20
+
+[smells.boolean_logic]
+threshold = 6
+
+[smells.nested_control_flow]
+threshold = 3
+
+[smells.return_statements]
+enabled = false

@@ -1,0 +1,28 @@
+{
+  "exports": {
+    ".": "./pragma/module.ts",
+    "./element": "./element/module.ts",
+    "./helpers": "./helpers/module.ts",
+    "./html": "./html/module.ts",
+    "./server": "./server/module.ts"
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "semiColons": true,
+    "singleQuote": false
+  },
+  "imports": {
+    "@cutout/jsx/element": "./element",
+    "@cutout/jsx/helpers": "./helpers",
+    "@cutout/jsx/html": "./html",
+    "@cutout/jsx/server": "./server"
+  },
+  "lint": {
+    "plugins": [
+      "jsr:@ayk/lint-import-order"
+    ]
+  },
+  "name": "@cutout/jsx",
+  "version": "0.0.0-alpha.0"
+}

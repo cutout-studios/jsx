@@ -1,0 +1,53 @@
+name: Pull Request Checks
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  statuses: write
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull Request Title
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            chore
+          requireScope: true
+          scopePattern: ^[a-z]+(/[a-z]+)*$
+          scopeDescription: |
+            Scope must be a top-level folder path (e.g., 'integrations/gemini')
+
+      - name: Pull Request Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const hasLinkedIssue = await import("${{ github.workspace }}/.github/workflows/scripts/hasLinkedIssue.js");
+
+            await hasLinkedIssue.default({ github, context, core });
+
+  label:
+    name: Label
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Label Pull Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const getLabels = await import("${{ github.workspace }}/.github/workflows/scripts/getLabels.js");
+
+            await getLabels.default({ github, context, core });
