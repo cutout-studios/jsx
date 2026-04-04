@@ -26,7 +26,7 @@ jobs:
           requireScope: true
           scopePattern: ^[a-z]+(/[a-z]+)*$
           scopeDescription: |
-            Scope must be a top-level folder path (e.g., 'integrations/gemini')
+            Scope must be a top-level folder path (e.g., 'pragma')
 
       - name: Pull Request Issue
         uses: actions/github-script@v7

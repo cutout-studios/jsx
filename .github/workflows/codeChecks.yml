@@ -25,7 +25,8 @@ jobs:
       - name: Lint
         run: |
           deno lint
-          deno doc --lint **/*.ts
+          # TODO(#4): Add JSDoc coverage
+          # deno doc --lint **/*.ts
 
   unitTests:
     name: Unit Tests

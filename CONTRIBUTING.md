@@ -28,11 +28,3 @@ please [open an issue]() to discuss it!
 
 Look at the included [`.vscode/extensions.json`](./.vscode/extensions.json) to
 review the recommended extensions needed for this project.
-
-### **Documentation**
-
-TBD: See the JSR website?
-
-## **Releasing**
-
-_TODO: probably just `deno publish`?_

@@ -1,10 +1,7 @@
 {
   "exports": {
-    ".": "./pragma/module.ts",
-    "./element": "./element/module.ts",
-    "./helpers": "./helpers/module.ts",
-    "./html": "./html/module.ts",
-    "./server": "./server/module.ts"
+    "./jsx-runtime": "./jsx/module.ts",
+    "./tokens": "./tokens/module.ts"
   },
   "fmt": {
     "indentWidth": 2,
@@ -13,11 +10,11 @@
     "singleQuote": false
   },
   "imports": {
-    "@cutout/jsx/element": "./element",
-    "@cutout/jsx/helpers": "./helpers",
-    "@cutout/jsx/html": "./html",
-    "@cutout/jsx/server": "./server"
+    "@cutout/jsx/tokens": "./tokens/module.ts",
+    "@std/assert": "jsr:@std/assert",
+    "@std/testing": "jsr:@std/testing"
   },
+  "license": "MIT",
   "lint": {
     "plugins": [
       "jsr:@ayk/lint-import-order"
