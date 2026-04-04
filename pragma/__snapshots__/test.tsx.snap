@@ -1,0 +1,118 @@
+export const snapshot = {};
+
+snapshot[`jsx - simple case 1`] = `
+[
+  [
+    "ELEMENT",
+    "div",
+  ],
+]
+`;
+
+snapshot[`jsx - props 1`] = `
+[
+  [
+    "ELEMENT",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "style",
+  ],
+  [
+    "OBJECT",
+    {
+      color: "red",
+    },
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "my-cool-div",
+  ],
+]
+`;
+
+snapshot[`jsx - children 1`] = `
+[
+  [
+    "ELEMENT",
+    "ul",
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "ELEMENT",
+    "li",
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "STRING",
+    "Child #1",
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "ELEMENT",
+    "li",
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "STRING",
+    "Child #2",
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "ELEMENT",
+    "li",
+  ],
+  [
+    "CHILD_START",
+    null,
+  ],
+  [
+    "STRING",
+    "Child #3",
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+  [
+    "CHILD_END",
+    null,
+  ],
+]
+`;

@@ -12,7 +12,8 @@
   },
   "imports": {
     "@std/testing": "jsr:@std/testing",
-    "@cutout/jxs/model": "./model/module.ts"
+    "@cutout/jsx": "./pragma/module.ts",
+    "@cutout/jsx/model": "./model/module.ts"
   },
   "lint": {
     "plugins": [

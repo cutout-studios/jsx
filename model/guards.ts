@@ -17,6 +17,8 @@ export const isValidCutoutToken = (
       return typeof value[1] === "boolean";
     case CutoutTypeAnnotation.FRAGMENT:
     case CutoutTypeAnnotation.NULL:
+    case CutoutTypeAnnotation.CHILD_START:
+    case CutoutTypeAnnotation.CHILD_END:
       return value[1] === null;
     case CutoutTypeAnnotation.OBJECT:
       return typeof value[1] === "object";
