@@ -3,7 +3,15 @@ export const snapshot = {};
 snapshot[`jsx - simple case 1`] = `
 [
   [
-    "ELEMENT",
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    0,
+  ],
+  [
+    "ELEMENT_CLOSE",
     "div",
   ],
 ]
@@ -12,7 +20,7 @@ snapshot[`jsx - simple case 1`] = `
 snapshot[`jsx - props 1`] = `
 [
   [
-    "ELEMENT",
+    "ELEMENT_OPEN",
     "div",
   ],
   [
@@ -33,86 +41,353 @@ snapshot[`jsx - props 1`] = `
     "STRING",
     "my-cool-div",
   ],
+  [
+    "CHILDREN",
+    0,
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
 ]
 `;
 
 snapshot[`jsx - children 1`] = `
 [
   [
-    "ELEMENT",
+    "ELEMENT_OPEN",
     "ul",
   ],
   [
-    "CHILD_START",
-    null,
+    "CHILDREN",
+    3,
   ],
   [
-    "ELEMENT",
+    "ELEMENT_OPEN",
     "li",
   ],
   [
-    "CHILD_START",
-    null,
+    "CHILDREN",
+    1,
   ],
   [
     "STRING",
     "Child #1",
   ],
   [
-    "CHILD_END",
-    null,
-  ],
-  [
-    "CHILD_END",
-    null,
-  ],
-  [
-    "CHILD_START",
-    null,
-  ],
-  [
-    "ELEMENT",
+    "ELEMENT_CLOSE",
     "li",
   ],
   [
-    "CHILD_START",
-    null,
+    "ELEMENT_OPEN",
+    "li",
+  ],
+  [
+    "CHILDREN",
+    1,
   ],
   [
     "STRING",
     "Child #2",
   ],
   [
-    "CHILD_END",
-    null,
-  ],
-  [
-    "CHILD_END",
-    null,
-  ],
-  [
-    "CHILD_START",
-    null,
-  ],
-  [
-    "ELEMENT",
+    "ELEMENT_CLOSE",
     "li",
   ],
   [
-    "CHILD_START",
-    null,
+    "ELEMENT_OPEN",
+    "li",
+  ],
+  [
+    "CHILDREN",
+    1,
   ],
   [
     "STRING",
     "Child #3",
   ],
   [
-    "CHILD_END",
-    null,
+    "ELEMENT_CLOSE",
+    "li",
   ],
   [
-    "CHILD_END",
-    null,
+    "ELEMENT_CLOSE",
+    "ul",
+  ],
+]
+`;
+
+snapshot[`"jsx - children + props 1`] = `
+[
+  [
+    "ELEMENT_OPEN",
+    "ul",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "main",
+  ],
+  [
+    "CHILDREN",
+    3,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "li",
+  ],
+  [
+    "PROPERTY",
+    "class",
+  ],
+  [
+    "STRING",
+    "selected",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "STRING",
+    "Child #1",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "li",
+  ],
+  [
+    "ELEMENT_OPEN",
+    "li",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "STRING",
+    "Child #2",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "li",
+  ],
+  [
+    "ELEMENT_OPEN",
+    "li",
+  ],
+  [
+    "PROPERTY",
+    "disabled",
+  ],
+  [
+    "BOOLEAN",
+    true,
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "STRING",
+    "Child #3",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "li",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "ul",
+  ],
+]
+`;
+
+snapshot[`jsx - nested children 1`] = `
+[
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "STRING",
+    "Hello, World!",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+]
+`;
+
+snapshot[`jsx - nested children + props 1`] = `
+[
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "1",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "2",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "3",
+  ],
+  [
+    "PROPERTY",
+    "onClick",
+  ],
+  [
+    "FUNCTION",
+    [Function: onClick],
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "4",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "ELEMENT_OPEN",
+    "div",
+  ],
+  [
+    "PROPERTY",
+    "id",
+  ],
+  [
+    "STRING",
+    "5",
+  ],
+  [
+    "CHILDREN",
+    1,
+  ],
+  [
+    "STRING",
+    "Hello, World!",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
+  ],
+  [
+    "ELEMENT_CLOSE",
+    "div",
   ],
 ]
 `;

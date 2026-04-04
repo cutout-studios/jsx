@@ -10,22 +10,22 @@ export const isValidCutoutToken = (
 
   switch(value[0]) {
     case CutoutTypeAnnotation.NUMBER:
+    case CutoutTypeAnnotation.CHILDREN:
       return typeof value[1] === "number" || typeof value[1] === "bigint";
     case CutoutTypeAnnotation.ARRAY:
       return Array.isArray(value[1]);
     case CutoutTypeAnnotation.BOOLEAN:
       return typeof value[1] === "boolean";
-    case CutoutTypeAnnotation.FRAGMENT:
+    // case CutoutTypeAnnotation.FRAGMENT:
     case CutoutTypeAnnotation.NULL:
-    case CutoutTypeAnnotation.CHILD_START:
-    case CutoutTypeAnnotation.CHILD_END:
       return value[1] === null;
     case CutoutTypeAnnotation.OBJECT:
       return typeof value[1] === "object";
     case CutoutTypeAnnotation.FUNCTION:
       return typeof value[1] === "function";
     case CutoutTypeAnnotation.PROPERTY:
-    case CutoutTypeAnnotation.ELEMENT:
+    case CutoutTypeAnnotation.ELEMENT_OPEN:
+    case CutoutTypeAnnotation.ELEMENT_CLOSE:
     case CutoutTypeAnnotation.STRING:
       return typeof value[1] === "string";
     case CutoutTypeAnnotation.SYMBOL:

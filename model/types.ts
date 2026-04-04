@@ -1,10 +1,10 @@
 export enum CutoutTypeAnnotation {
   ARRAY = "ARRAY",
   BOOLEAN = "BOOLEAN",
-  CHILD_START = "CHILD_START",
-  CHILD_END = "CHILD_END",
-  ELEMENT = "ELEMENT",
-  FRAGMENT = "FRAGMENT",
+  CHILDREN = "CHILDREN",
+  ELEMENT_OPEN = "ELEMENT_OPEN",
+  ELEMENT_CLOSE = "ELEMENT_CLOSE",
+  // FRAGMENT = "FRAGMENT",
   FUNCTION = "FUNCTION",
   GENERATOR = "GENERATOR",
   NULL = "NULL",
@@ -47,20 +47,23 @@ export type CutoutFunctionToken = AnyCutoutToken<
   CutoutTypeAnnotation.FUNCTION,
   Function
 >;
-export type CutoutElementToken = AnyCutoutToken<
-  CutoutTypeAnnotation.ELEMENT,
+export type CutoutElementOpenToken = AnyCutoutToken<
+  CutoutTypeAnnotation.ELEMENT_OPEN,
+  string
+>;
+export type CutoutElementCloseToken = AnyCutoutToken<
+  CutoutTypeAnnotation.ELEMENT_CLOSE,
   string
 >;
 export type CutoutPropertyToken = AnyCutoutToken<
   CutoutTypeAnnotation.PROPERTY,
   string
 >;
-export type CutoutFragmentToken = AnyCutoutToken<
-  CutoutTypeAnnotation.FRAGMENT,
-  null
->;
-export type CutoutChildStartToken = AnyCutoutToken<CutoutTypeAnnotation.CHILD_START, null>;
-export type CutoutChildEndToken = AnyCutoutToken<CutoutTypeAnnotation.CHILD_END, null>;
+// export type CutoutFragmentToken = AnyCutoutToken<
+//   CutoutTypeAnnotation.FRAGMENT,
+//   null
+// >;
+export type CutoutChildrenToken = AnyCutoutToken<CutoutTypeAnnotation.CHILDREN, number>;
 export type CutoutArrayToken = AnyCutoutToken<
   CutoutTypeAnnotation.ARRAY,
   Array<unknown>
@@ -82,10 +85,10 @@ export type CutoutGeneratorToken = AnyCutoutToken<
 export type ValidCutoutToken =
   | CutoutArrayToken
   | CutoutBooleanToken
-  | CutoutChildStartToken
-  | CutoutChildEndToken
-  | CutoutElementToken
-  | CutoutFragmentToken
+  | CutoutChildrenToken
+  | CutoutElementCloseToken
+  | CutoutElementOpenToken
+  // | CutoutFragmentToken
   | CutoutFunctionToken
   | CutoutGeneratorToken
   | CutoutNullToken

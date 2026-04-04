@@ -1,9 +1,9 @@
 import {
-  type CutoutElementToken,
+  type CutoutElementOpenToken,
+  type CutoutElementCloseToken,
   type CutoutGeneratorToken,
   type CutoutPropertyToken,
-  type CutoutChildStartToken,
-  type CutoutChildEndToken,
+  type CutoutChildrenToken,
   CutoutTypeAnnotation,
   isValidCutoutToken,
   TOKEN_ANNOTATION_INDEX,
@@ -20,7 +20,8 @@ declare global {
   }
 }
 
-export const Fragment = [CutoutTypeAnnotation.FRAGMENT, null];
+// TODO: Fragment
+// export const Fragment = [CutoutTypeAnnotation.FRAGMENT, null];
 
 export const jsx = (
   type: string,
@@ -28,21 +29,22 @@ export const jsx = (
   ...children: unknown[]
 ): CutoutGeneratorToken => {
   const _generator = function* () {
-    yield [CutoutTypeAnnotation.ELEMENT, type] as CutoutElementToken;
+    yield [CutoutTypeAnnotation.ELEMENT_OPEN, type] as CutoutElementOpenToken;
 
     for (const key in props) {
       yield [CutoutTypeAnnotation.PROPERTY, key] as CutoutPropertyToken;
 
       for (const token of _forwardTokens(props[key])) yield token;
     }
-    
+
+    // TODO: flatten children to get true children length
+    yield [CutoutTypeAnnotation.CHILDREN, children.length] as CutoutChildrenToken;
+
     for (const child of children) {
-      yield [CutoutTypeAnnotation.CHILD_START, null] as CutoutChildStartToken;
-
       for (const token of _forwardTokens(child)) yield token;
-
-      yield [CutoutTypeAnnotation.CHILD_END, null] as CutoutChildEndToken;
     }
+    
+    yield [CutoutTypeAnnotation.ELEMENT_CLOSE, type] as CutoutElementCloseToken;
   };
 
   return [CutoutTypeAnnotation.GENERATOR, _generator()];
@@ -82,7 +84,7 @@ function* _forwardTokens(value: unknown, debug = false) {
         unknownValue = "[UNSERIALIZABLE]";
       }
 
-      console.warn(`Encountered unknown value ${unknownValue}. Skipping.`);
+      console.warn(`Encountered unknown value "${unknownValue}". Skipping.`);
     }
     return;
   }
