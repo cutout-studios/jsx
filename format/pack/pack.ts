@@ -42,7 +42,7 @@ function _attemptTokenEncode(token: ValidCutoutToken): Uint8Array {
         return encode(null);
       case CutoutTokenType.SYMBOL:
         return encode(token[1].description as string);
-      // TODO: detect functions within objects and arrays and throw an error, since these won't be properly serialized and will cause data loss.
+      // TODO(#10): detect functions within objects and arrays and throw an error, since these won't be properly serialized and will cause data loss.
       case CutoutTokenType.ARRAY:
       case CutoutTokenType.OBJECT:
         try {

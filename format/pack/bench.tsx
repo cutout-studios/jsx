@@ -70,7 +70,7 @@ Deno.bench(`${BENCH_GROUP} - 1000 rows, varied`, (bench) => {
   bench.end();
 });
 
-// TODO: see if we can avoid GC
+// TODO(#9): see if we can avoid GC
 let wikiSize: number | null = null;
 
 Deno.bench(
