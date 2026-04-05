@@ -13,7 +13,7 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
 
     switch (type) {
       case CutoutTokenType.ELEMENT_OPEN:
-        if(value === FRAGMENT_LABEL) {
+        if (value === FRAGMENT_LABEL) {
           inFragmentContext = true;
           break;
         }
@@ -22,12 +22,14 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
         result += `<${escape(value)}`;
         break;
       case CutoutTokenType.ELEMENT_CLOSE:
-        if(value === FRAGMENT_LABEL) {
+        if (value === FRAGMENT_LABEL) {
           inFragmentContext = false;
           break;
         }
 
-        result += inPropertyContext ? `></${escape(value)}>` : `</${escape(value)}>`;
+        result += inPropertyContext
+          ? `></${escape(value)}>`
+          : `</${escape(value)}>`;
         break;
       case CutoutTokenType.PROPERTY:
         inPropertyContext = true;
@@ -50,7 +52,9 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
         result += inPropertyContext ? `"${escape(value)}"` : escape(value);
         break;
       case CutoutTokenType.SYMBOL:
-        result += inPropertyContext ? `"${escape(value.description ?? "")}"` : "";
+        result += inPropertyContext
+          ? `"${escape(value.description ?? "")}"`
+          : "";
         break;
       case CutoutTokenType.NUMBER:
         result += String(value);
@@ -86,5 +90,4 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
   }
 
   return result;
-}
-
+};
