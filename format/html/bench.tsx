@@ -1,13 +1,14 @@
 /** @jsxImportSource @cutout/jsx */
+
 import { brotliCompressSync } from "node:zlib";
 
 import { wikipediaOrg } from "./bench.html.tsx";
-import { pack } from "./pack.ts";
+import { html } from "./html.ts";
 
-const BENCH_GROUP = "format/pack";
+const BENCH_GROUP = "format/html";
 
 Deno.bench(`${BENCH_GROUP} - single value`, () => {
-  pack(<div></div>);
+  html(<div></div>);
 });
 
 Deno.bench(`${BENCH_GROUP} - 100 rows`, (bench) => {
@@ -19,7 +20,7 @@ Deno.bench(`${BENCH_GROUP} - 100 rows`, (bench) => {
 
   bench.start();
 
-  pack(
+  html(
     <div>
       {rows.map((row) => (
         <div id={row.id} class={row.class}>
@@ -39,7 +40,7 @@ Deno.bench(`${BENCH_GROUP} - 1000 rows, repeating`, (bench) => {
 
   bench.start();
 
-  pack(
+  html(
     <div>
       {rows.map((row) => <div key={null}>{row.content}</div>)}
     </div>,
@@ -57,7 +58,7 @@ Deno.bench(`${BENCH_GROUP} - 1000 rows, varied`, (bench) => {
 
   bench.start();
 
-  pack(
+  html(
     <div>
       {rows.map((row) => (
         <div id={row.id} class={row.class}>
@@ -70,15 +71,14 @@ Deno.bench(`${BENCH_GROUP} - 1000 rows, varied`, (bench) => {
   bench.end();
 });
 
-// TODO(#9): see if we can avoid GC
 let wikiSize: number | null = null;
 
 Deno.bench(
   `${BENCH_GROUP} - wikipedia.org (no style/script tags)`,
   (bench) => {
     if (wikiSize === null) {
-      const wikiData = pack(wikipediaOrg());
-      wikiSize = wikiData.byteLength;
+      const wikiData = html(wikipediaOrg());
+      wikiSize = wikiData.length;
       console.info(`[pack size]: ${(wikiSize / 1024).toFixed(2)} KB`);
       console.info(
         `[pack + br size]: ${
@@ -88,7 +88,7 @@ Deno.bench(
     }
 
     bench.start();
-    pack(wikipediaOrg());
+    html(wikipediaOrg());
     bench.end();
   },
 );
@@ -103,7 +103,7 @@ Deno.bench(`${BENCH_GROUP} - 10000 rows`, (bench) => {
   }));
 
   if (largeDataSize === null) {
-    const largeData = pack(
+    const largeData = html(
       <div>
         {rows.map((row) => (
           <div id={row.id} class={row.class}>
@@ -113,11 +113,11 @@ Deno.bench(`${BENCH_GROUP} - 10000 rows`, (bench) => {
       </div>,
     );
 
-    largeDataSize = largeData.byteLength;
+    largeDataSize = largeData.length;
 
-    console.info(`[pack size]: ${(largeDataSize / 1024).toFixed(2)} KB`);
+    console.info(`[html size]: ${(largeDataSize / 1024).toFixed(2)} KB`);
     console.info(
-      `[pack + br size]: ${
+      `[html + br size]: ${
         (brotliCompressSync(largeData).byteLength / 1024).toFixed(2)
       } KB`,
     );
@@ -125,7 +125,7 @@ Deno.bench(`${BENCH_GROUP} - 10000 rows`, (bench) => {
 
   bench.start();
 
-  pack(
+  html(
     <div>
       {rows.map((row) => (
         <div id={row.id} class={row.class}>

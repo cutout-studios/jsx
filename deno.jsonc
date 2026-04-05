@@ -12,7 +12,6 @@
   },
   "imports": {
     "@cutout/jsx/tokens": "./tokens/module.ts",
-    "@std/msgpack": "jsr:@std/msgpack",
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
   },
