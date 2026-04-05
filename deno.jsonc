@@ -12,7 +12,8 @@
   },
   "imports": {
     "@cutout/jsx/tokens": "./tokens/module.ts",
-    "@std/msgpack": "jsr:@std/msgpack",
+    "@std/fmt": "jsr:@std/fmt",
+    "@std/http/route": "jsr:@std/http/unstable-route",
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
   },
@@ -23,5 +24,8 @@
     ]
   },
   "name": "@cutout/jsx",
-  "version": "0.0.0-alpha.0"
+  "version": "0.0.0-alpha.0",
+  "tasks": {
+    "example:html": "deno run --allow-net ./format/html/example.tsx"
+  }
 }

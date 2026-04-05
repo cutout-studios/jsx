@@ -10,6 +10,7 @@ exclude_patterns = [
   "**/*.bench.tsx",
   "**/bench.tsx",
   "**/bench.html.tsx",
+  "**/example.tsx",
 ]
 
 [smells.function_complexity]
