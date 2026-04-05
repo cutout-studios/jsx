@@ -8,6 +8,7 @@ A generic JSX pragma for runtime interpretation. A work in progress.
 
 - `@cutout/jsx`: the pragma
 - `@cutout/jsx/tokens`: type-annotated tokens in DFS order
+- `@cutout/jsx/format`: formatters of the jsx ast
 
 ## Contributing
 

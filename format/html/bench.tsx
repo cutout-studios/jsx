@@ -1,6 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { brotliCompressSync } from "node:zlib";
+import { format as formatBytes } from "@std/fmt/bytes";
 
 import { wikipediaOrg } from "./bench.html.tsx";
 import { html } from "./html.ts";
@@ -78,12 +79,13 @@ Deno.bench(
   (bench) => {
     if (wikiSize === null) {
       const wikiData = html(wikipediaOrg());
-      wikiSize = wikiData.length;
-      console.info(`[pack size]: ${(wikiSize / 1024).toFixed(2)} KB`);
+      const encoder = new TextEncoder();
+      wikiSize = encoder.encode(wikiData).byteLength;
+      console.info(`[html size]: ${formatBytes(wikiSize)}`);
       console.info(
-        `[pack + br size]: ${
-          (brotliCompressSync(wikiData).byteLength / 1024).toFixed(2)
-        } KB`,
+        `[html + br size]: ${
+          formatBytes(brotliCompressSync(wikiData).byteLength)
+        }`,
       );
     }
 
@@ -113,13 +115,14 @@ Deno.bench(`${BENCH_GROUP} - 10000 rows`, (bench) => {
       </div>,
     );
 
-    largeDataSize = largeData.length;
+    const encoder = new TextEncoder();
+    largeDataSize = encoder.encode(largeData).byteLength;
 
-    console.info(`[html size]: ${(largeDataSize / 1024).toFixed(2)} KB`);
+    console.info(`[html size]: ${formatBytes(largeDataSize)}`);
     console.info(
       `[html + br size]: ${
-        (brotliCompressSync(largeData).byteLength / 1024).toFixed(2)
-      } KB`,
+        formatBytes(brotliCompressSync(largeData).byteLength)
+      }`,
     );
   }
 

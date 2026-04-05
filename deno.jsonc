@@ -12,6 +12,7 @@
   },
   "imports": {
     "@cutout/jsx/tokens": "./tokens/module.ts",
+    "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
