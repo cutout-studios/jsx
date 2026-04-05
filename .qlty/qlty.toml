@@ -2,6 +2,14 @@ config_version = "0"
 
 exclude_patterns = [
   "**/*.test.ts",
+  "**/test.ts",
+  "**/*.test.tsx",
+  "**/test.tsx",
+  "**/*.bench.ts",
+  "**/bench.ts",
+  "**/*.bench.tsx",
+  "**/bench.tsx",
+  "**/bench.html.tsx",
 ]
 
 [smells.function_complexity]
