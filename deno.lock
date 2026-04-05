@@ -47,6 +47,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@*",
+      "jsr:@std/msgpack@*",
       "jsr:@std/testing@*"
     ]
   }

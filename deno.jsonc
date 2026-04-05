@@ -1,7 +1,8 @@
 {
   "exports": {
     "./jsx-runtime": "./jsx/module.ts",
-    "./tokens": "./tokens/module.ts"
+    "./tokens": "./tokens/module.ts",
+    "./format": "./format/module.ts"
   },
   "fmt": {
     "indentWidth": 2,
@@ -11,6 +12,7 @@
   },
   "imports": {
     "@cutout/jsx/tokens": "./tokens/module.ts",
+    "@std/msgpack": "jsr:@std/msgpack",
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
   },
