@@ -37,6 +37,8 @@ jobs:
 
       - name: Pull Request Issue
         uses: actions/github-script@v7
+        env:
+          CACHE_BUST: ${{ github.run_id }}-${{ github.run_number }}
         with:
           script: |
             const hasLinkedIssue = await import("${{ github.workspace }}/.github/workflows/scripts/hasLinkedIssue.mjs");
@@ -55,6 +57,8 @@ jobs:
 
       - name: Label Pull Request
         uses: actions/github-script@v7
+        env:
+          CACHE_BUST: ${{ github.run_id }}-${{ github.run_number }}
         with:
           script: |
             const getLabels = await import("${{ github.workspace }}/.github/workflows/scripts/getLabels.mjs");
