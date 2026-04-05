@@ -1,8 +1,16 @@
-import { type CutoutGeneratorToken, CutoutTokenType, type ValidCutoutToken } from "@cutout/jsx/tokens";
+import {
+  type CutoutGeneratorToken,
+  CutoutTokenType,
+  type ValidCutoutToken,
+} from "@cutout/jsx/tokens";
 import { decode } from "@std/msgpack";
 
 export const unpack = (data: Uint8Array): CutoutGeneratorToken => {
-  const [typeIndex, valueIndex, tokenData] = decode(data) as [number[], Uint8Array[], number[]];
+  const [typeIndex, valueIndex, tokenData] = decode(data) as [
+    number[],
+    Uint8Array[],
+    number[],
+  ];
 
   return [
     CutoutTokenType.GENERATOR,
