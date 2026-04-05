@@ -11,6 +11,7 @@
     "singleQuote": false
   },
   "imports": {
+    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
     "@cutout/jsx/tokens": "./tokens/module.ts",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
