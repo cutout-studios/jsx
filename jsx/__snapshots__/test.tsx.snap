@@ -3,11 +3,11 @@ export const snapshot = {};
 snapshot[`jsx - simple case 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
 ]
@@ -16,29 +16,29 @@ snapshot[`jsx - simple case 1`] = `
 snapshot[`jsx - props 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "style",
   ],
   [
-    "OBJECT",
+    8,
     {
       color: "red",
     },
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "my-cool-div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
 ]
@@ -47,63 +47,63 @@ snapshot[`jsx - props 1`] = `
 snapshot[`jsx - children 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "ul",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #1",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #2",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #3",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "ul",
   ],
 ]
@@ -112,63 +112,63 @@ snapshot[`jsx - children 1`] = `
 snapshot[`jsx - mapped children 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "ul",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #1",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #2",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #3",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "ul",
   ],
 ]
@@ -177,87 +177,87 @@ snapshot[`jsx - mapped children 1`] = `
 snapshot[`jsx - children + props 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "ul",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "main",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "class",
   ],
   [
-    "STRING",
+    10,
     "selected",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #1",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #2",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "li",
   ],
   [
-    "PROPERTY",
+    9,
     "disabled",
   ],
   [
-    "BOOLEAN",
+    1,
     true,
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Child #3",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "li",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "ul",
   ],
 ]
@@ -266,67 +266,67 @@ snapshot[`jsx - children + props 1`] = `
 snapshot[`jsx - nested children 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Hello, World!",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
 ]
@@ -335,115 +335,115 @@ snapshot[`jsx - nested children 1`] = `
 snapshot[`jsx - nested children + props 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "1",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "2",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "3",
   ],
   [
-    "PROPERTY",
+    9,
     "onClick",
   ],
   [
-    "FUNCTION",
+    4,
     [Function: onClick],
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "4",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "div",
   ],
   [
-    "PROPERTY",
+    9,
     "id",
   ],
   [
-    "STRING",
+    10,
     "5",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Hello, World!",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "div",
   ],
 ]
@@ -452,47 +452,47 @@ snapshot[`jsx - nested children + props 1`] = `
 snapshot[`jsx - fragment 1`] = `
 [
   [
-    "ELEMENT_OPEN",
+    2,
     "[FRAGMENT]",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "span",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Hello #1",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "span",
   ],
   [
-    "ELEMENT_OPEN",
+    2,
     "span",
   ],
   [
-    "PROPERTY",
+    9,
     "children",
   ],
   [
-    "STRING",
+    10,
     "Hello #2",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "span",
   ],
   [
-    "ELEMENT_CLOSE",
+    3,
     "[FRAGMENT]",
   ],
 ]
