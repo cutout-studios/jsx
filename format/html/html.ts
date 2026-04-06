@@ -21,7 +21,7 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
         inFragmentContext = false;
         result += `<${escape(value)}`;
         break;
-      // TODO: Handle void elements properly.
+      // TODO(#17): Handle void elements properly.
       case CutoutTokenType.ELEMENT_CLOSE:
         if (value === FRAGMENT_LABEL) {
           inFragmentContext = false;
