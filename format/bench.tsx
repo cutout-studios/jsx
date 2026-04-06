@@ -27,14 +27,12 @@ Deno.bench(
   },
 );
 
-
-Deno.bench(`format/element - 10000 rows`, {group: "10000 rows"}, (bench) => {
+Deno.bench(`format/element - 10000 rows`, { group: "10000 rows" }, (bench) => {
   const rows = Array.from({ length: 10000 }, (_, i) => ({
     id: `row-${i}`,
     class: i % 2 === 0 ? "even" : "odd",
     content: `Row #${i}`,
   }));
-
 
   bench.start();
 
@@ -51,7 +49,7 @@ Deno.bench(`format/element - 10000 rows`, {group: "10000 rows"}, (bench) => {
   bench.end();
 });
 
-Deno.bench(`format/html - 10000 rows`, {group: "10000 rows"}, (bench) => {
+Deno.bench(`format/html - 10000 rows`, { group: "10000 rows" }, (bench) => {
   const rows = Array.from({ length: 10000 }, (_, i) => ({
     id: `row-${i}`,
     class: i % 2 === 0 ? "even" : "odd",
