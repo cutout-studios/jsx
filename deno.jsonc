@@ -34,8 +34,9 @@
   },
   "name": "@cutout/jsx",
   "tasks": {
-    "example:element": "deno run --allow-net --unstable-bundle ./format/element/example/server.tsx",
-    "example:html": "deno run --allow-net ./format/html/example.tsx"
+    "example:element": "deno run --allow-net --unstable-bundle ./format/elements/example/server.tsx",
+    "example:html": "deno run --allow-net ./format/html/example.tsx",
+    "docs:lint": "deno doc --lint **/module.ts"
   },
   "version": "0.0.0-alpha.0"
 }

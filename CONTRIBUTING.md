@@ -10,7 +10,7 @@
 
 ### **Unexpected Behavior**
 
-If you find a bug, please [open an issue]()! Include as much detail as possible
+If you find a bug, please [open an issue](https://github.com/cutout-studios/jsx/issues)! Include as much detail as possible
 in the form. Screenshots, logs, and video captures are super helpful!
 
 > [!WARNING]
@@ -20,7 +20,7 @@ in the form. Screenshots, logs, and video captures are super helpful!
 ### **Feature Requests**
 
 If you have an idea for a new feature or an improvement to an existing one,
-please [open an issue]() to discuss it!
+please [open an issue](https://github.com/cutout-studios/jsx/issues) to discuss it!
 
 ## **Submitting Code**
 

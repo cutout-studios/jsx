@@ -22,11 +22,11 @@ jobs:
       - name: Format
         run: deno fmt --check
 
-      - name: Lint
-        run: |
-          deno lint
-          # TODO(#4): Add JSDoc coverage
-          # deno doc --lint **/*.ts
+      - name: Lint Code
+        run: deno lint
+
+      - name: Lint Docs
+        run: deno task docs:lint
 
   unitTests:
     name: Unit Tests
@@ -73,10 +73,10 @@ jobs:
 
       - name: Run Benchmarks
         run: |
-          deno bench --allow-all > bench-raw.txt 2>&1 || true
+          deno bench --allow-all > bench.txt 2>&1 || true
 
           # Strip ANSI color codes
-          sed 's/\x1b\[[0-9;]*m//g' bench-raw.txt > bench.txt
+          sed 's/\x1b\[[0-9;]*m//g' bench.txt > bench.txt
 
           {
             echo "## Benchmark Results"
