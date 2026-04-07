@@ -74,16 +74,15 @@ export type CutoutSymbolToken = AnyCutoutToken<
 >;
 export type CutoutGeneratorToken = AnyCutoutToken<
   CutoutTokenType.GENERATOR,
-  Generator<ValidCutoutToken>
+  Generator<OutputCutoutToken>
 >;
 
-export type ValidCutoutToken =
+export type OutputCutoutToken =
   | CutoutArrayToken
   | CutoutBooleanToken
   | CutoutElementCloseToken
   | CutoutElementOpenToken
   | CutoutFunctionToken
-  | CutoutGeneratorToken
   | CutoutNullToken
   | CutoutNumberToken
   | CutoutObjectToken
@@ -91,3 +90,7 @@ export type ValidCutoutToken =
   | CutoutStringToken
   | CutoutSymbolToken
   | CutoutUndefinedToken;
+
+export type ValidCutoutToken =
+  | OutputCutoutToken
+  | CutoutGeneratorToken;

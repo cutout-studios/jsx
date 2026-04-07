@@ -1,9 +1,19 @@
+import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { TOKEN_LENGTH } from "./constants.ts";
-import { CutoutTokenType, type ValidCutoutToken } from "./types.ts";
+import {
+  CutoutTokenType,
+  type OutputCutoutToken,
+  type ValidCutoutToken,
+} from "./types.ts";
 
 export const isValidCutoutToken = (
   value: unknown,
-): value is ValidCutoutToken => {
+): value is ValidCutoutToken =>
+  isOutputCutoutToken(value) || isCutoutGeneratorToken(value);
+
+export const isOutputCutoutToken = (
+  value: unknown,
+): value is OutputCutoutToken => {
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 
@@ -31,11 +41,18 @@ export const isValidCutoutToken = (
       return value[1] === undefined;
     case CutoutTokenType.UNKNOWN:
       return true;
-    case CutoutTokenType.GENERATOR:
-      return isGenerator(value[1]);
   }
 
   return false;
+};
+
+export const isCutoutGeneratorToken = (
+  value: unknown,
+): value is CutoutGeneratorToken => {
+  if (!Array.isArray(value)) return false;
+  if (value.length !== TOKEN_LENGTH) return false;
+
+  return value[0] === CutoutTokenType.GENERATOR && isGenerator(value[1]);
 };
 
 const isGenerator = (value: unknown): value is Generator => {

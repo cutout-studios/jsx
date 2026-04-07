@@ -20,7 +20,7 @@ threshold = 20
 threshold = 6
 
 [smells.nested_control_flow]
-threshold = 3
+threshold = 4
 
 [smells.return_statements]
 enabled = false

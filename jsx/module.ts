@@ -11,6 +11,11 @@ import {
   tokenizeValue,
   UNSERIALIZABLE_LABEL,
 } from "@cutout/jsx/tokens";
+import { CHILDREN_LABEL } from "../tokens/constants.ts";
+import {
+  isCutoutGeneratorToken,
+  isOutputCutoutToken,
+} from "../tokens/guards.ts";
 
 // Must declare a namespace here for JSX to function.
 // deno-lint-ignore no-namespace
@@ -49,7 +54,7 @@ export const jsx = (
 
     // Children are a special property.
     if (Array.isArray(children) && children.length) {
-      yield [CutoutTokenType.PROPERTY, "children"] as CutoutPropertyToken;
+      yield [CutoutTokenType.PROPERTY, CHILDREN_LABEL] as CutoutPropertyToken;
 
       for (const child of children as unknown[]) yield* _forwardTokens(child);
     }
@@ -68,17 +73,12 @@ export const jsxs = jsx;
 export const jsxDEV = jsx;
 
 function* _forwardTokens(value: unknown, debug = false) {
-  const isValidToken = isValidCutoutToken(value);
-
-  if (
-    isValidToken &&
-    value[TOKEN_TYPE_INDEX] === CutoutTokenType.GENERATOR
-  ) {
+  if (isCutoutGeneratorToken(value)) {
     yield* value[TOKEN_VALUE_INDEX];
     return;
   }
 
-  if (isValidToken) {
+  if (isOutputCutoutToken(value)) {
     yield value;
     return;
   }

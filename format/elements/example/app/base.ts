@@ -1,8 +1,11 @@
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
-import { element } from "../../main.ts";
+import { elements } from "../../main.ts";
 
 export abstract class BaseElement extends HTMLElement {
   abstract render(props: Record<string, unknown>): CutoutGeneratorToken;
+
+  connectedCallback = this.#doRender;
+  attributeChangedCallback = this.#doRender;
 
   get #attributes(): Record<string, unknown> {
     return new Proxy({}, {
@@ -10,19 +13,13 @@ export abstract class BaseElement extends HTMLElement {
     });
   }
 
-  connectedCallback() {
-    this.#doRender();
-  }
-
-  attributeChangedCallback() {
-    this.#doRender();
-  }
-
   #doRender() {
     if (!this.shadowRoot) {
       this.attachShadow({ mode: "open" });
     }
 
-    this.shadowRoot?.replaceChildren(element(this.render(this.#attributes)));
+    this.shadowRoot!.replaceChildren(
+      ...Array.from(elements(this.render(this.#attributes))),
+    );
   }
 }

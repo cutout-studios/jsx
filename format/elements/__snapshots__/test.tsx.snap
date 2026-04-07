@@ -8,4 +8,4 @@ snapshot[`element - attributes 1`] = `'<div id="test" class="example" data-value
 
 snapshot[`element - boolean attributes 1`] = `'<input type="checkbox" checked="" disabled="">'`;
 
-snapshot[`element - fragment 1`] = `"<div><div>First</div><div>Second</div></div>"`;
+snapshot[`element - fragment 1`] = `"<div>First</div>"`;

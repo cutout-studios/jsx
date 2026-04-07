@@ -1,12 +1,12 @@
 import {
   CutoutTokenType,
+  type OutputCutoutToken,
   type UnknownCutoutToken,
-  type ValidCutoutToken,
 } from "./types.ts";
 
 export const tokenizeValue = (
   value: unknown,
-): ValidCutoutToken | UnknownCutoutToken => {
+): OutputCutoutToken | UnknownCutoutToken => {
   switch (typeof value) {
     case "bigint":
     case "number":
