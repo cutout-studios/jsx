@@ -8,8 +8,8 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
 
   const context = {
     property: true,
-    fragment: false
-  }
+    fragment: false,
+  };
 
   for (const token of generator) {
     const [type, value] = token;
@@ -29,14 +29,14 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
           context.fragment = false;
           break;
         }
-        
+
         // TODO(#17): Handle void elements properly.
         if (context.property) {
-          result += ">"
+          result += ">";
           context.property = false;
         }
-        
-        result += `</${escape(value)}>`
+
+        result += `</${escape(value)}>`;
         break;
       case CutoutTokenType.PROPERTY:
         if (context.fragment) break;
@@ -58,8 +58,8 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
         break;
       case CutoutTokenType.SYMBOL:
         if (!context.property) break;
-        
-        result += `"${escape(value.description ?? "")}"`
+
+        result += `"${escape(value.description ?? "")}"`;
         break;
       case CutoutTokenType.BOOLEAN:
         if (!context.property) break;
@@ -68,7 +68,7 @@ export const html: CutoutFormatter<string> = ([, generator]) => {
           // Remove stray `=`
           result = result.substring(0, result.length - 1);
         } else {
-          result += '"false"'
+          result += '"false"';
         }
         break;
       // TODO(#10): detect functions within objects and arrays and throw an error, since these won't be properly serialized and will cause data loss.
