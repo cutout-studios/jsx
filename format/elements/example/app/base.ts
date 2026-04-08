@@ -1,8 +1,5 @@
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
-import { elements } from "../../main.ts";
-
 export abstract class BaseElement extends HTMLElement {
-  abstract render(props: Record<string, unknown>): CutoutGeneratorToken;
+  abstract render(props: Record<string, unknown>): HTMLCollection;
 
   get #attributes(): Record<string, unknown> {
     return new Proxy({}, {
@@ -24,7 +21,7 @@ export abstract class BaseElement extends HTMLElement {
     }
 
     this.shadowRoot!.replaceChildren(
-      ...Array.from(elements(this.render(this.#attributes))),
+      ...Array.from(this.render(this.#attributes)),
     );
   }
 }

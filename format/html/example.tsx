@@ -1,7 +1,6 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { html } from "@cutout/jsx/format";
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { blue } from "@std/fmt/colors";
 import { type Route, route } from "@std/http/route";
 
@@ -31,7 +30,7 @@ Deno.serve(
           Math.floor(Math.random() * 16777215).toString(16)
         }`;
 
-        return (
+        return html(
           <html>
             <head>
               <title>HTML Example | {message}</title>
@@ -43,7 +42,7 @@ Deno.serve(
             <body>
               <h1>{message}</h1>
             </body>
-          </html>
+          </html>,
         );
       }),
     ],
@@ -53,7 +52,7 @@ Deno.serve(
 
 function createHTMLRoute(
   pathname: string,
-  render: (params: Record<string, unknown>) => CutoutGeneratorToken,
+  render: (params: Record<string, unknown>) => string,
 ): Route {
   return {
     pattern: new URLPattern({ pathname }),
@@ -61,11 +60,11 @@ function createHTMLRoute(
       const { groups: params } = patternResult?.pathname;
 
       return new Response(
-        html(render(
+        render(
           new Proxy({}, {
             get: (_, key) => decodeURIComponent(params[String(key)] ?? ""),
           }),
-        )),
+        ),
         {
           status: 200,
           headers: {

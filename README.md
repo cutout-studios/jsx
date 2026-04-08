@@ -5,23 +5,51 @@
 [![Code Coverage](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/coverage.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 
 `@cutout/jsx` is a generic, interpretable JSX runtime, inspired in part by the
-long-abandoned [OpenJSX](https://github.com/OpenJSX).
+long-abandoned [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it
+everywhere._
 
-Its design is intended to emphasize a buildless approach with zero third-party
-dependencies. The examples that follow are implemented inline entirely within
-the Deno runtime.
-
-_(TODO: How it works)_
+This libraries' design is intended to enable a buildless approach with zero
+additional dependencies. The [examples that follow](#examples) are implemented
+entirely with the [Deno](https://deno.com/) runtime and standard library, and
+are [sufficiently performant](#benchmarks).
 
 > [!CAUTION]
-> `@cutout/jsx` is deeply in alpha and is intended only for discussion: not
+> `@cutout/jsx` is deeply in alpha and is currently for discussion only: not
 > production use.
+
+## How it works
+
+```tsx
+/* @jsxImportSource jsr:@cutout/jsx */
+
+import { elements, html } from "jsr:@cutout/jsx/format";
+
+console.log(
+  html(<div></div>),
+); // => "<div></div>"
+
+console.log(
+  elements(<div></div>),
+); // => HTMLCollection {}
+```
+
+It looks simple enough, but what's happening here is:
+
+1. **[`@cutout/jsx`](./jsx/module.ts)** - we're choosing to point our
+   `@jsxImportSource` to the `jsr:@cutout/jsx` library instead of a default one,
+   like React's.
+1. **[`@cutout/jsx/tokens`](./tokens)** - The `@cutout/jsx` _progressively
+   evaluates_ your JSX via a
+   [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator).
+   This Generator returns a flat stream of tuple-like values we call "tokens".
+1. **[`@cutout/jsx/format`](./format)** - Each JSX token stream can then be
+   passed into any of our provided formats (and you can easily write your own).
 
 ## Examples
 
 ### Single-Page App (SPA)
 
-Run `deno task example:spa` to demo the following locally:
+Run `deno task example:spa` to start the local demo:
 
 ```tsx
 // excerpt from format/elements/example/app/element.tsx
@@ -53,12 +81,13 @@ export class ExampleElement extends BaseElement {
 ```
 
 > [!NOTE]
-> The `BaseElement` definition is very minimal, and can be found
-> [here](./format/elements/example/app/base.ts).
+> The `BaseElement` definition is a very minimal extension of the WebComponent
+> class, and can be found at
+> [format/elements/example/app/base.ts](./format/elements/example/app/base.ts).
 
 ### Server-Side Rendering (SSR)
 
-Run `deno task example:ssr` to demo the following locally:
+Run `deno task example:ssr` to start the local demo:
 
 ```tsx
 // excerpt from format/html/example.tsx

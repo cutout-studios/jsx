@@ -1,5 +1,6 @@
 /** @jsxImportSource @cutout/jsx */
 
+import { elements } from "../../main.ts";
 import { BaseElement } from "../app/base.ts";
 
 export class ExampleElement extends BaseElement {
@@ -13,7 +14,7 @@ export class ExampleElement extends BaseElement {
   };
 
   render({ color = "black" }) {
-    return (
+    return elements(
       <>
         <style>{/* css */ `h1 { color: ${color}; }`}</style>
         <h1>Hello, World!</h1>
@@ -24,7 +25,7 @@ export class ExampleElement extends BaseElement {
         >
           Randomize Color
         </button>
-      </>
+      </>,
     );
   }
 }
