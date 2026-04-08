@@ -28,7 +28,7 @@ Deno.test("element - attributes", async (test) => {
   await assertSnapshot(
     test,
     elements(
-      <div id="test" class="example" data-value="123">
+      <div id="test" style={{ color: "red" }} data-value="123">
         Test
       </div>,
     )[0].outerHTML,

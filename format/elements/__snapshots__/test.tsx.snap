@@ -4,7 +4,7 @@ snapshot[`element - simple element 1`] = `"<div></div>"`;
 
 snapshot[`element - nested elements 1`] = `"<div><span>Test</span></div>"`;
 
-snapshot[`element - attributes 1`] = `'<div id="test" class="example" data-value="123">Test</div>'`;
+snapshot[`element - attributes 1`] = `'<div id="test" data-value="123">Test</div>'`;
 
 snapshot[`element - boolean attributes 1`] = `'<input type="checkbox" checked="" disabled="">'`;
 
