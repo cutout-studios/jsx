@@ -35,8 +35,8 @@
   "name": "@cutout/jsx",
   "tasks": {
     "docs:lint": "deno doc --lint **/module.ts",
-    "example:element": "deno run --allow-net --unstable-bundle --watch-hmr ./format/elements/example/server.tsx",
-    "example:html": "deno run --allow-net --watch-hmr ./format/html/example.tsx"
+    "example:spa": "deno run --allow-net --unstable-bundle --watch-hmr ./format/elements/example/server.tsx",
+    "example:ssr": "deno run --allow-net --watch-hmr ./format/html/example.tsx"
   },
   "version": "0.0.0-alpha.0"
 }
