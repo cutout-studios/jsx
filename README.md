@@ -25,26 +25,26 @@ are [sufficiently performant](#benchmarks).
 import { elements, html } from "jsr:@cutout/jsx/format";
 
 console.log(
-  html(<div></div>),
-); // => "<div></div>"
-
-console.log(
   elements(<div></div>),
 ); // => HTMLCollection {}
+
+console.log(
+  html(<div></div>),
+); // => "<div></div>"
 ```
 
 It looks simple enough, but what's happening here is:
 
-1. **[`@cutout/jsx`](./jsx/module.ts)** - we're choosing to point our
-   `@jsxImportSource` to the `jsr:@cutout/jsx` library instead of a default one,
-   like React's.
-1. **[`@cutout/jsx/tokens`](./tokens)** - The `@cutout/jsx` _progressively
-   evaluates_ your JSX via a
+1. **[`@cutout/jsx`](./jsx/module.ts)** - in a new TSX file, we're pointing our
+   `@jsxImportSource` to _this_ library (`@cutout/jsx`) instead of the default
+   one (React).
+1. **[`@cutout/jsx/tokens`](./tokens)** - The `@cutout/jsx` library
+   _progressively evaluates_ your JSX via a
    [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator).
-   This Generator returns a flat stream of tuple-like values we call "tokens".
+   This generator returns a flat stream of tuple-like values we call "tokens".
 1. **[`@cutout/jsx/format`](./format)** - Each JSX token stream can then be
-   passed into any of our provided formats, ultimately resulting in your desired
-   output (and you can easily write your own).
+   passed to any of our provided formatters, resulting in the desired format
+   (and you can easily write your own).
 
 ## Examples
 
@@ -55,7 +55,7 @@ It looks simple enough, but what's happening here is:
 ### Single-Page App (SPA)
 
 The `elements` format can be easily leveraged to create UI components. Run
-`deno task example:spa` to check it out:
+`deno task example:spa` to try it:
 
 ```tsx
 // excerpt from format/elements/example/app/element.tsx
@@ -85,14 +85,14 @@ export class ExampleElement extends BaseElement {
 ```
 
 > [!NOTE]
-> The `BaseElement` definition is a very minimal extension of the WebComponent
-> class, and can be found at
+> This `BaseElement` definition is a very minimal extension of the WebComponent
+> class. You can find it at
 > [format/elements/example/app/base.ts](./format/elements/example/app/base.ts).
 
 ### Server-Side Rendering (SSR)
 
-The `html` format make it easy to generate valid HTML responses server-side. Run
-`deno task example:ssr` to try it:
+The `html` format makes it easy to generate valid HTML responses server-side.
+Run `deno task example:ssr` to try this one out:
 
 ```tsx
 // excerpt from format/html/example.tsx
