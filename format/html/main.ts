@@ -13,7 +13,7 @@ import { escape } from "./escape.ts";
  * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
  * @returns {string} The formatted HTML.
  */
-export const html: CutoutFormatter<string> = ([, generator]) => {
+export const html: CutoutFormatter<string> = ([, generator]): string => {
   const state: _FormatState = {
     result: "",
     context: {
