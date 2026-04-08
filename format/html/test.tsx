@@ -124,19 +124,17 @@ Deno.test(
   (test) =>
     assertSnapshot(
       test,
-      html(<input type="text" />)
-    )
-);
-
-Deno.test(`${TEST_GROUP} - fragment`,
-  (test) =>
-    assertSnapshot(
-      test,
-      html(
-        <>
-          <span>Hello #1</span>
-          <span>Hello #2</span>
-        </>,
-      ),
+      html(<input type="text" />),
     ),
 );
+
+Deno.test(`${TEST_GROUP} - fragment`, (test) =>
+  assertSnapshot(
+    test,
+    html(
+      <>
+        <span>Hello #1</span>
+        <span>Hello #2</span>
+      </>,
+    ),
+  ));

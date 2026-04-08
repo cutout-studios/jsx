@@ -8,7 +8,6 @@ import type { CutoutFormatter } from "../types.ts";
 import { VOID_ELEMENTS } from "./constants.ts";
 import { escape } from "./escape.ts";
 
-
 export const html: CutoutFormatter<string> = ([, generator]) => {
   const state: _FormatState = {
     result: "",
