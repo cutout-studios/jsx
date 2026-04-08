@@ -7,6 +7,7 @@
     ]
   },
   "exports": {
+    ".": "./jsx/module.ts",
     "./format": "./format/module.ts",
     "./jsx-runtime": "./jsx/module.ts",
     "./tokens": "./tokens/module.ts"
