@@ -8,7 +8,7 @@
 long-abandoned [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it
 everywhere._
 
-This libraries' design is intended to enable a workflow that has **no build
+This libraries' design is intended to enable a full-stack workflow that has **no build
 step** and **no additional dependencies**. The
 [examples that follow](#more-examples) are implemented entirely with the
 [Deno](https://deno.com/) runtime and standard library, and are
