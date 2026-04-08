@@ -26,7 +26,7 @@ Deno.serve(
   route(
     [
       {
-        pattern: new URLPattern({ pathname: "/echo/:message" }),
+        pattern: new URLPattern({ pathname: "/echo/:message/" }),
         handler: (_req: Request, params) => {
           const message = decodeURIComponent(
             params?.pathname.groups.message ?? "",

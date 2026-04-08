@@ -1,3 +1,3 @@
 export * from "./types.ts";
 export * from "./html/main.ts";
-export * from "./element/main.ts";
+export * from "./elements/main.ts";
