@@ -24,7 +24,7 @@ workflow that requires **no additional dependencies** outside of the
 ```tsx
 /* @jsxImportSource jsr:@cutout/jsx */
 
-import { elements, html } from "jsr:@cutout/jsx/format";\
+import { elements, html } from "jsr:@cutout/jsx/format";
 
 // -- browser platform --
 console.log(
