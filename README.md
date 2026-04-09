@@ -6,12 +6,13 @@
 
 `@cutout/jsx` is a generic, interpretable JSX runtime, inspired in part by the
 long-abandoned [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it
-everywhere._
+anywhere._
 
-This libraries' design is intended to enable a full-stack workflow that has **no build
-step** and **no additional dependencies**. The
-[examples that follow](#more-examples) are implemented entirely with the
-[Deno](https://deno.com/) runtime and standard library, and are
+**This library is intended to replace React and Next.js**, enabling a full-stack
+workflow that requires **no additional dependencies** outside of the
+[Deno standard library](https://docs.deno.com/runtime/reference/std/) and
+[command line tools](https://docs.deno.com/runtime/reference/cli/). The
+[examples that follow](#more-examples) are implemented as such, and are
 [sufficiently performant](#benchmarks).
 
 > [!CAUTION]
@@ -23,12 +24,14 @@ step** and **no additional dependencies**. The
 ```tsx
 /* @jsxImportSource jsr:@cutout/jsx */
 
-import { elements, html } from "jsr:@cutout/jsx/format";
+import { elements, html } from "jsr:@cutout/jsx/format";\
 
+// -- browser platform --
 console.log(
   elements(<div></div>),
 ); // => HTMLCollection {}
 
+// -- any platform --
 console.log(
   html(<div></div>),
 ); // => "<div></div>"
@@ -37,15 +40,24 @@ console.log(
 It looks simple enough, but what's happening here is:
 
 1. **[`@cutout/jsx`](./jsx/module.ts)** - in a new TSX file, we're pointing our
-   `@jsxImportSource` to _this_ library (`@cutout/jsx`) instead of the default
+   `@jsxImportSource` to _this_ runtime (`@cutout/jsx`) instead of the default
    one (React).
-1. **[`@cutout/jsx/tokens`](./tokens)** - The `@cutout/jsx` library
-   _progressively evaluates_ your JSX via a
-   [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator).
-   This generator returns a flat stream of tuple-like values we call "tokens".
+1. The `@cutout/jsx` runtime _progressively evaluates_ your JSX via a
+   [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator),
+   returning a flat stream of tuple-like values we call "tokens". You shouldn't
+   often need to work with tokens directly, but they defined in the
+   [`@cutout/jsx/tokens`](./tokens) submodule if need be.
 1. **[`@cutout/jsx/format`](./format)** - Each JSX token stream can then be
-   passed to any of our provided formatters, resulting in the desired format
-   (and you can easily write your own).
+   consumed by the provided formatters, resulting in the desired format (and you
+   can easily write your own).
+
+Any file written this way can simply be
+[run with Deno directly](https://docs.deno.com/runtime/reference/cli/run/), no
+setup required:
+
+```sh
+deno myCutoutApp.tsx
+```
 
 ## More Examples
 
@@ -120,6 +132,10 @@ Deno.serve(
   // [...]
 );
 ```
+
+### Full Application
+
+Pending development.
 
 ## Benchmarks
 
