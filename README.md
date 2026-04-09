@@ -48,8 +48,8 @@ It looks simple enough, but what's happening here is:
    often need to work with tokens directly, but they're defined in the
    [`@cutout/jsx/tokens`](./tokens) submodule if need be.
 1. **[`@cutout/jsx/format`](./format)** - Each JSX token stream can then be
-   consumed by any provided formatter, resulting in that format (and you
-   can easily write your own).
+   consumed by any provided formatter, resulting in that format (and you can
+   easily write your own).
 
 Any script written in the above way can simply be
 [run with Deno directly](https://docs.deno.com/runtime/reference/cli/run/), no
@@ -67,8 +67,8 @@ deno myCutoutApp.tsx
 
 ### Client-Side Rendering
 
-The `elements` format can be easily leveraged to create UI components, like 
-you might create for a Single-Page App. Run `deno task example:spa` for this one:
+The `elements` format can be easily leveraged to create UI components, as you
+might for a Single-Page App (SPA). Run `deno task example:spa` for this one:
 
 ```tsx
 // excerpt from format/elements/example/app/element.tsx
