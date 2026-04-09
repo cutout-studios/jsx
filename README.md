@@ -45,13 +45,13 @@ It looks simple enough, but what's happening here is:
 1. The `@cutout/jsx` runtime _progressively evaluates_ your JSX via a
    [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator),
    returning a flat stream of tuple-like values we call "tokens". You shouldn't
-   often need to work with tokens directly, but they defined in the
+   often need to work with tokens directly, but they're defined in the
    [`@cutout/jsx/tokens`](./tokens) submodule if need be.
 1. **[`@cutout/jsx/format`](./format)** - Each JSX token stream can then be
-   consumed by the provided formatters, resulting in the desired format (and you
+   consumed by any provided formatter, resulting in that format (and you
    can easily write your own).
 
-Any file written this way can simply be
+Any script written in the above way can simply be
 [run with Deno directly](https://docs.deno.com/runtime/reference/cli/run/), no
 setup required:
 
