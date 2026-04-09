@@ -65,10 +65,10 @@ deno myCutoutApp.tsx
 > Github doesn't properly support JSX or comment-tagged template highlighting.
 > The highlighting you see here is not what will appear in your editor.
 
-### Single-Page App (SPA)
+### Client-Side Rendering
 
-The `elements` format can be easily leveraged to create UI components. Run
-`deno task example:spa` for this one:
+The `elements` format can be easily leveraged to create UI components, like 
+you might create for a Single-Page App. Run `deno task example:spa` for this one:
 
 ```tsx
 // excerpt from format/elements/example/app/element.tsx
