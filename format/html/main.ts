@@ -151,5 +151,7 @@ function _appendObject(
   state: _FormatState,
   value: object,
 ) {
+  // deep check?
+
   state.result += `"${escape(JSON.stringify(value))}"`;
 }
