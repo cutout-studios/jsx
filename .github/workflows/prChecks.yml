@@ -1,7 +1,6 @@
 name: Pull Request Checks
 
 on:
-  push:
   pull_request_target:
     types: [opened, edited, synchronize, reopened]
 
@@ -24,10 +23,8 @@ jobs:
             feat
             fix
             chore
-          requireScope: true
-          scopePattern: ^[a-z]+(/[a-z]+)*$
-          scopeDescription: |
-            Scope must be a top-level folder path (e.g., 'format/html')
+          scopes: |
+            [a-z]+(/[a-z]+)*
 
       - name: Pull Request Issue
         uses: actions/github-script@v9
