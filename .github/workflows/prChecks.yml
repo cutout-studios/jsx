@@ -26,6 +26,9 @@ jobs:
           scopes: |
             [a-z]+(/[a-z]+)*
 
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
       - name: Pull Request Issue
         uses: actions/github-script@v9
         with:
