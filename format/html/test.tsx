@@ -1,5 +1,6 @@
 /** @jsxImportSource @cutout/jsx */
 
+import { assertThrows } from "@std/assert/throws";
 import { assertSnapshot } from "@std/testing/snapshot";
 import { html } from "./main.ts";
 
@@ -138,3 +139,16 @@ Deno.test(`${TEST_GROUP} - fragment`, (test) =>
       </>,
     ),
   ));
+
+Deno.test(`${TEST_GROUP} - nested function fails`, () => {
+  assertThrows(() => {
+    html(
+      <div
+        data-key={[{ key: 1 }, { key: 2, methods: [{ onClick: () => {} }] }, {
+          key: 3,
+        }]}
+      >
+      </div>,
+    );
+  });
+});

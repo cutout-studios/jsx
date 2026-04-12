@@ -54,7 +54,7 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
       // TODO(#21): Basic error system
       case CutoutTokenType.FUNCTION:
         throw new Error(`
-          Functions tokens cannot be securely stringified.
+          Function tokens cannot be securely stringified.
           Consider writing a custom format or transforming the function into a serializable value.
         `);
       default:
@@ -145,13 +145,32 @@ function _appendString(
   state.result += escape(value);
 }
 
-// TODO(#10): detect functions within objects and arrays and throw an error,
-// since these won't be properly serialized and will cause data loss.
 function _appendObject(
   state: _FormatState,
   value: object,
 ) {
-  // deep check?
+  const checkStack = [value];
+  while (checkStack.length) {
+    const valueToCheck = checkStack.pop();
+
+    if (typeof valueToCheck === "function") {
+      // TODO(#21): Basic error system
+      throw new Error(`
+        A function was found nested inside a given object.
+        Functions cannot be securely stringified.
+        Consider writing a custom format or transforming the function into a serializable value. 
+      `);
+    }
+
+    if (Array.isArray(valueToCheck)) {
+      checkStack.push(...valueToCheck);
+      continue;
+    }
+
+    if (typeof valueToCheck === "object") {
+      checkStack.push(...Object.values(valueToCheck));
+    }
+  }
 
   state.result += `"${escape(JSON.stringify(value))}"`;
 }
