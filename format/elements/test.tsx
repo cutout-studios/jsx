@@ -1,4 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
+/** @jsxImportSourceTypes @cutout/jsx/format/html */
 
 import { DOMParser } from "@b-fuze/deno-dom";
 import { assertSnapshot } from "@std/testing/snapshot";

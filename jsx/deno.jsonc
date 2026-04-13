@@ -1,0 +1,6 @@
+{
+  "exports": {
+    ".": "./module.ts",
+    "./jsx-runtime": "./module.ts"
+  }
+}

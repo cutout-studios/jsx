@@ -1,4 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
+/** @jsxImportSourceTypes @cutout/jsx/format/html */
 
 import { blue } from "@std/fmt/colors";
 import { join } from "@std/path";

@@ -51,6 +51,8 @@ It looks simple enough, but what's happening here is:
    consumed by any provided formatter, resulting in that format (and you can
    easily write your own).
 
+_(TODO: types)_
+
 Any script written in the above way can simply be
 [run with Deno directly](https://docs.deno.com/runtime/reference/cli/run/), no
 setup required:

@@ -1,4 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
+/** @jsxImportSourceTypes @cutout/jsx/format/html */
 
 import { html } from "@cutout/jsx/format";
 import { blue } from "@std/fmt/colors";

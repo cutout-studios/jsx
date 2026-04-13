@@ -1,4 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
+/** @jsxImportSourceTypes @cutout/jsx/format/html */
 
 import { elements } from "../../main.ts";
 import { BaseElement } from "../app/base.ts";

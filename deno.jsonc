@@ -9,7 +9,9 @@
   "exports": {
     ".": "./jsx/module.ts",
     "./format": "./format/module.ts",
+    "./format/html/jsx-runtime": "./format/html/runtime.ts",
     "./jsx-runtime": "./jsx/module.ts",
+    "./strict/jsx-runtime": "./jsx/strict.ts",
     "./tokens": "./tokens/module.ts"
   },
   "fmt": {
@@ -20,7 +22,6 @@
   },
   "imports": {
     "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom",
-    "@cutout/jsx/tokens": "./tokens/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
