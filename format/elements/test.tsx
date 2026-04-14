@@ -1,5 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
-/** @jsxImportSourceTypes @cutout/jsx/format/html */
+/** @jsxImportSourceTypes @cutout/jsx/format/elements */
 
 import { DOMParser } from "@b-fuze/deno-dom";
 import { assertSnapshot } from "@std/testing/snapshot";
@@ -29,7 +29,7 @@ Deno.test("element - attributes", async (test) => {
   await assertSnapshot(
     test,
     elements(
-      <div id="test" style={{ color: "red" }} data-value="123">
+      <div id="test" style="color:red;" data-value="123">
         Test
       </div>,
     )[0].outerHTML,

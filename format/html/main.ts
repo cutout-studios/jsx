@@ -4,9 +4,11 @@ import {
   FRAGMENT_LABEL,
 } from "@cutout/jsx/tokens";
 
+import { VOID } from "../constants/elements.ts";
 import type { CutoutFormatter } from "../types.ts";
-import { VOID_ELEMENTS } from "./constants.ts";
 import { escape } from "./escape.ts";
+
+const VOID_ELEMENTS: Set<string> = new Set(VOID);
 
 /**
  * A generic HTML formatter, for SSR.

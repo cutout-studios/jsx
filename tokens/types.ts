@@ -167,6 +167,8 @@ export type CutoutArrayToken = AnyCutoutToken<
   Array<unknown>
 >;
 
+type AnyFunction = (...args: unknown[]) => unknown;
+
 /**
  * A token wrapping a function.
  *
@@ -175,9 +177,7 @@ export type CutoutArrayToken = AnyCutoutToken<
  */
 export type CutoutFunctionToken = AnyCutoutToken<
   CutoutTokenType.FUNCTION,
-  // "Function" is the appropriate value here - we actually want any class or function.
-  // deno-lint-ignore ban-types
-  Function
+  AnyFunction
 >;
 
 // -----------------------------------------------------------------------------

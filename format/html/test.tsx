@@ -15,7 +15,7 @@ Deno.test(
   (test) =>
     assertSnapshot(
       test,
-      html(<div style={{ color: "red" }} id="my-cool-div"></div>),
+      html(<div style="color:red;" id="my-cool-div"></div>),
     ),
 );
 
@@ -58,7 +58,7 @@ Deno.test(
         <ul id="main">
           <li class="selected">Child #1</li>
           <li>Child #2</li>
-          <li disabled>Child #3</li>
+          <li>Child #3</li>
         </ul>,
       ),
     ),
@@ -73,7 +73,9 @@ Deno.test(
         <ul id="main">
           <li class="selected">Child #1</li>
           <li>Child #2</li>
-          <li disabled>Child #3</li>
+          <li>
+            <button type="button" disabled>Child #3</button>
+          </li>
         </ul>,
       ),
     ),

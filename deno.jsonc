@@ -9,7 +9,8 @@
   "exports": {
     ".": "./jsx/module.ts",
     "./format": "./format/module.ts",
-    "./format/html/jsx-runtime": "./format/html/runtime.ts",
+    "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
+    "./format/elements/jsx-runtime": "./format/elements/runtime.d.ts",
     "./jsx-runtime": "./jsx/module.ts",
     "./strict/jsx-runtime": "./jsx/strict.ts",
     "./tokens": "./tokens/module.ts"
