@@ -75,8 +75,8 @@ deno myCutoutApp.tsx
 
 ### Client-Side Rendering
 
-The `elements` format can be easily leveraged to create UI components, as you
-might for a Single-Page App (SPA). Run `deno task example:spa` for this one:
+The `dom` format is used to build dom elements on the fly, as you
+might for a Single-Page App (SPA). Run `deno task example:spa` to try it:
 
 ```tsx
 // excerpt from format/dom/example/app/element.tsx
@@ -112,8 +112,8 @@ export class ExampleElement extends BaseElement {
 
 ### Server-Side Rendering (SSR)
 
-The `html` format makes it easy to generate valid HTML responses server-side.
-Run `deno task example:ssr` to try this one out:
+The `html` format makes it easy to generate HTML text server-side.
+Run `deno task example:ssr` for this one:
 
 ```tsx
 // excerpt from format/html/example.tsx

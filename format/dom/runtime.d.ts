@@ -17,11 +17,11 @@ type ResolveSupportedAttributeType<A extends Attributes> = A extends
   : string;
 
 type ResolveElementAttributes<E extends Elements> =
-  & {
+  & Omit<{
     [
       A in Attributes as PickElementAttributes<E, A>
     ]?: ResolveSupportedAttributeType<A>;
-  }
+  }, "style">
   & {
     key?: string | number;
     style?: CSSStyleDeclaration;

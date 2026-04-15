@@ -31,7 +31,7 @@ Deno.test("element - attributes", async (test) => {
     dom(
       <div
         id="test"
-        style={{ color: "red" }}
+        style={{ color: "red" } as CSSStyleDeclaration}
         dataset={{ value: "123" }}
       >
         Test

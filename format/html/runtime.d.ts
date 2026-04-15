@@ -20,7 +20,6 @@ type ResolveElementAttributes<E extends Elements> =
     ]?: ResolveSupportedAttributeType<A>;
   }
   & {
-    [key: `data-${string}`]: string | number;
     key?: string | number;
   };
 
