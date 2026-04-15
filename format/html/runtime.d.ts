@@ -24,7 +24,6 @@ type ResolveElementAttributes<E extends Elements> =
     key?: string | number;
   };
 
-// Permit arbitrary tags (the browser will parse them still)
 declare namespace JSX {
   type IntrinsicElements =
     & _JSX.IntrinsicElements

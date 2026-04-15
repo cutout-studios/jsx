@@ -8,7 +8,7 @@ import { VOID } from "../constants/elements.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
-const VOID_ELEMENTS: Set<string> = new Set(VOID);
+const VOID_SET: Set<string> = new Set(VOID);
 
 /**
  * A generic HTML formatter, for SSR.
@@ -103,7 +103,7 @@ function _closeElement(
     state.context.property = false;
   }
 
-  if (!VOID_ELEMENTS.has(value)) {
+  if (!VOID_SET.has(value)) {
     state.result += `</${escape(value)}>`;
   }
 }
