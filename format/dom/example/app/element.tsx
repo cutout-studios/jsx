@@ -1,7 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
-/** @jsxImportSourceTypes @cutout/jsx/format/elements */
+/** @jsxImportSourceTypes @cutout/jsx/format/dom */
 
-import { elements } from "../../main.ts";
+import { dom } from "../../main.ts";
 import { BaseElement } from "../app/base.ts";
 
 export class ExampleElement extends BaseElement {
@@ -15,12 +15,12 @@ export class ExampleElement extends BaseElement {
   };
 
   render({ color = "black" }) {
-    return elements(
+    // TODO: for xss, 'srcdoc' is the real test. we _should_ escape.
+    return dom(
       <>
         <style>{/* css */ `h1 { color: ${color}; }`}</style>
         <h1>Hello, World!</h1>
         <button
-          data-xss="<script>alert('hi');</script>"
           type="button"
           onclick={this.randomizeColor}
         >

@@ -3,7 +3,7 @@
 import { DOMParser } from "@b-fuze/deno-dom";
 
 import { wikipediaOrg } from "./bench.html.tsx";
-import { elements } from "./elements/main.ts";
+import { dom } from "./dom/main.ts";
 import { html } from "./html/main.ts";
 
 globalThis.document = new DOMParser().parseFromString(
@@ -15,7 +15,7 @@ Deno.bench(
   `format/element - wikipedia.org`,
   { group: "wikipedia.org (no style/script tags)" },
   () => {
-    elements(wikipediaOrg())[0].outerHTML;
+    dom(wikipediaOrg())[0].outerHTML;
   },
 );
 
@@ -36,7 +36,7 @@ Deno.bench(`format/element - 10000 rows`, { group: "10000 rows" }, (bench) => {
 
   bench.start();
 
-  elements(
+  dom(
     <div>
       {rows.map((row) => (
         <div id={row.id} class={row.class}>

@@ -28,10 +28,10 @@ dependencies** outside of the
 import { elements, html } from "jsr:@cutout/jsx/format";
 
 // -- browser platform --
-/** @jsxImportSourceTypes jsr:@cutout/jsx/format/elements */
+/** @jsxImportSourceTypes jsr:@cutout/jsx/format/dom */
 
 console.log(
-  elements(<div></div>),
+  dom(<div></div>),
 ); // => HTMLCollection {}
 
 // -- any platform --
@@ -79,7 +79,7 @@ The `elements` format can be easily leveraged to create UI components, as you
 might for a Single-Page App (SPA). Run `deno task example:spa` for this one:
 
 ```tsx
-// excerpt from format/elements/example/app/element.tsx
+// excerpt from format/dom/example/app/element.tsx
 export class ExampleElement extends BaseElement {
   static observedAttributes = ["color"];
 
@@ -92,7 +92,7 @@ export class ExampleElement extends BaseElement {
 
   // `render` is called every time "color" is changed, just like React.
   render({ color = "black" }) {
-    return elements(
+    return dom(
       <>
         <style>{/* css */ `h1 { color: ${color}; }`}</style>
         <h1>Hello, World!</h1>
@@ -108,7 +108,7 @@ export class ExampleElement extends BaseElement {
 > [!NOTE]
 > This `BaseElement` definition is a very minimal extension of the WebComponent
 > class. You can find it at
-> [format/elements/example/app/base.ts](./format/elements/example/app/base.ts).
+> [format/dom/example/app/base.ts](./format/dom/example/app/base.ts).
 
 ### Server-Side Rendering (SSR)
 

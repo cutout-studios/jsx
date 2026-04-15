@@ -119,7 +119,7 @@ export namespace JSX {
    * `IntrinsicElements` must be defined, otherwise nothing is valid.
    */
   export interface IntrinsicElements {
-    /** Allows all elements. */
+    /** Allows all tags and properties. */
     [elementTag: string]: unknown;
   }
 }

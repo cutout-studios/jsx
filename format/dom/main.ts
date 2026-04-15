@@ -12,7 +12,7 @@ import type { CutoutFormatter } from "../types.ts";
  * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
  * @returns {HTMLCollection} The created DOM element objects.
  */
-export const elements: CutoutFormatter<HTMLCollection> = (
+export const dom: CutoutFormatter<HTMLCollection> = (
   [, generator],
 ): HTMLCollection => {
   const state: _FormatState = {
