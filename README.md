@@ -9,7 +9,8 @@ long-abandoned [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it
 anywhere._
 
 **This library is intended to replace React and Next.js**, enabling a full-stack
-workflow that requires **no additional dependencies** outside of the
+workflow for the [Deno runtime](https://deno.com/) that requires **no additional
+dependencies** outside of the
 [Deno standard library](https://docs.deno.com/runtime/reference/std/) and
 [command line tools](https://docs.deno.com/runtime/reference/cli/). The
 [examples that follow](#more-examples) are implemented as such, and are
@@ -22,16 +23,20 @@ workflow that requires **no additional dependencies** outside of the
 ## How it works
 
 ```tsx
-/* @jsxImportSource jsr:@cutout/jsx */
+/** @jsxImportSource jsr:@cutout/jsx */
 
 import { elements, html } from "jsr:@cutout/jsx/format";
 
 // -- browser platform --
+/** @jsxImportSourceTypes jsr:@cutout/jsx/format/elements */
+
 console.log(
   elements(<div></div>),
 ); // => HTMLCollection {}
 
 // -- any platform --
+/** @jsxImportSourceTypes jsr:@cutout/jsx/format/html */
+
 console.log(
   html(<div></div>),
 ); // => "<div></div>"
@@ -42,6 +47,8 @@ It looks simple enough, but what's happening here is:
 1. **[`@cutout/jsx`](./jsx/module.ts)** - in a new TSX file, we're pointing our
    `@jsxImportSource` to _this_ runtime (`@cutout/jsx`) instead of the default
    one (React).
+   - Optionally, the `@jsxImportSourceTypes` can be set to add per-format
+     typing. _NOTE: eventually the plan is to be able to mix and match formats, see [Issue #31](https://github.com/cutout-studios/jsx/issues/31)_
 1. The `@cutout/jsx` runtime _progressively evaluates_ your JSX via a
    [`Generator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator),
    returning a flat stream of tuple-like values we call "tokens". You shouldn't
@@ -51,11 +58,9 @@ It looks simple enough, but what's happening here is:
    consumed by any provided formatter, resulting in that format (and you can
    easily write your own).
 
-_(TODO: types)_
-
 Any script written in the above way can simply be
 [run with Deno directly](https://docs.deno.com/runtime/reference/cli/run/), no
-setup required:
+setup or build required:
 
 ```sh
 deno myCutoutApp.tsx
@@ -137,7 +142,7 @@ Deno.serve(
 
 ### Full Application
 
-Pending development.
+_Pending development._
 
 ## Benchmarks
 
