@@ -4,7 +4,8 @@
       "dom",
       "deno.ns",
       "deno.unstable"
-    ]
+    ],
+    "types": ["npm:react@^19.2.5"]
   },
   "exports": {
     ".": "./jsx/module.ts",
@@ -31,7 +32,10 @@
     // is a fast but incomplete implementation:
     // "happy-dom" is a complete implementation that more
     // accurately reflects browser overhead.
-    "happy-dom": "npm:happy-dom@^20.9.0"
+    "happy-dom": "npm:happy-dom@^20.9.0",
+    "react": "npm:react@^19.2.5",
+    "react/jsx-runtime": "npm:react@^19.2.5/jsx-runtime",
+    "react-dom": "npm:react-dom@^19.2.5"
   },
   "license": "MIT",
   "lint": {
