@@ -15,7 +15,6 @@ export class ExampleElement extends BaseElement {
   };
 
   render({ color = "black" }) {
-    // TODO: for xss, 'srcdoc' is the real test. we _should_ escape.
     return dom(
       <>
         <style>{/* css */ `h1 { color: ${color}; }`}</style>

@@ -114,7 +114,9 @@ function _handlePrimitive(
 function _handleObject(state: _FormatState, value: object) {
   if (!state.pointers.element) return;
 
-  // "style" and "dataset" are the only valid HTML object properties.
+  // "style", "dataset" and "classlist" are
+  // the only (?) valid HTML object properties that are not
+  // implicitly representable by JSX.
   switch (state.pointers.attribute) {
     case "style": {
       const style = value as CSSStyleDeclaration;
@@ -131,6 +133,12 @@ function _handleObject(state: _FormatState, value: object) {
       for (const key in value) {
         state.pointers.element.dataset[key] = (value as DOMStringMap)[key];
       }
+      return;
+    }
+    case "classlist": {
+      (value as DOMTokenList).forEach((token) => {
+        state.pointers.element?.classList.add(token);
+      });
       return;
     }
     default:

@@ -111,7 +111,7 @@ export const Fragment: string = FRAGMENT_LABEL;
  * The default @cutout/jsx typings.
  *
  * Without knowing how you want to format your JSX,
- * we must allow all elements and attributes: 
+ * we must allow all elements and attributes:
  * otherwise nothing will work!
  */
 // deno-lint-ignore no-namespace

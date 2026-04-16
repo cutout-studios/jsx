@@ -39,6 +39,7 @@ type ResolveElementAttributes<E extends Elements> =
     key?: string | number;
     style?: CSSStyleDeclaration;
     dataset?: DOMStringMap;
+    classlist?: DOMTokenList;
 
     // Also permissive: permits unknown attributes.
     [unknown: string]: unknown;
