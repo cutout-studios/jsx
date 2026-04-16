@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "imports": {
+    "react": "npm:react",
+    "react-dom": "npm:react-dom",
+    "@types/react": "npm:@types/react"
+  }
+}

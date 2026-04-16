@@ -1,7 +1,5 @@
-/** @jsxImportSource react */
-
 import { renderToString } from "react-dom/server";
-import { wikipediaOrg } from "./constants/wikipedia.react.tsx";
+import { wikipediaOrg } from "./wikipedia.tsx";
 
 Deno.bench(
   `react-dom/server - wikipedia.org`,

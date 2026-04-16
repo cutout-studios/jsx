@@ -1,9 +1,7 @@
-/** @jsxImportSource react */
-
 export const wikipediaOrg = () => (
-  <html lang="en" class="no-js">
+  <html lang="en" className="no-js">
     <head>
-      <meta charset="utf-8" />
+      <meta charSet="utf-8" />
       <title>Wikipedia</title>
       <meta
         name="description"
@@ -15,7 +13,7 @@ export const wikipediaOrg = () => (
       <link rel="license" href="//creativecommons.org/licenses/by-sa/4.0/" />
       <link rel="preconnect" href="//upload.wikimedia.org" />
       <link rel="me" href="https://wikis.world/@wikipedia" />
-      <meta property="og:url" content />
+      <meta property="og:url" content="" />
       <meta property="og:title" content="Wikipedia, the free encyclopedia" />
       <meta property="og:type" content="website" />
       <meta
@@ -29,28 +27,28 @@ export const wikipediaOrg = () => (
     </head>
     <body id="www-wikipedia-org">
       <main>
-        <div class="central-textlogo">
+        <div className="central-textlogo">
           <img
-            class="central-featured-logo"
+            className="central-featured-logo"
             src="portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png"
-            srcset="portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png 1.5x, portal/wikipedia.org/assets/img/Wikipedia-logo-v2@2x.png 2x"
+            srcSet="portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png 1.5x, portal/wikipedia.org/assets/img/Wikipedia-logo-v2@2x.png 2x"
             width="200"
             height="183"
-            alt
+            alt=""
           />
-          <h1 class="central-textlogo-wrapper">
-            <span class="central-textlogo__image sprite svg-Wikipedia_wordmark">
+          <h1 className="central-textlogo-wrapper">
+            <span className="central-textlogo__image sprite svg-Wikipedia_wordmark">
               Wikipedia
             </span>
-            <strong class="jsl10n localized-slogan" data-jsl10n="portal.slogan">
+            <strong className="jsl10n localized-slogan" data-jsl10n="portal.slogan">
               The Free Encyclopedia
             </strong>
           </h1>
         </div>
-        <div class="central-textlogo wikipedia25-videologo">
+        <div className="central-textlogo wikipedia25-videologo">
           <video
             id="wikipedia25-video"
-            class="wikipedia25-video"
+            className="wikipedia25-video"
             data-idle-light="portal/wikipedia.org/assets/img/wikipedia25-synthesizer-idle-light.webm"
             data-idle-dark="portal/wikipedia.org/assets/img/wikipedia25-synthesizer-idle-dark.webm"
             data-click-light="portal/wikipedia.org/assets/img/wikipedia25-synthesizer-click-light.webm"
@@ -59,20 +57,20 @@ export const wikipediaOrg = () => (
             data-poster-dark="portal/wikipedia.org/assets/img/wikipedia25-synthesizer-poster-dark.webp"
             width="200"
             height="200"
-            autoplay
+            autoPlay
             loop
             muted
-            playsinline
+            playsInline
           >
           </video>
           <button
             id="wikipedia25-play-button"
-            class="cdx-button cdx-button--action-progressive cdx-button--weight-primary cdx-button--size-medium cdx-button--icon-only cdx-button--framed jsl10n wikipedia25-play-button"
+            className="cdx-button cdx-button--action-progressive cdx-button--weight-primary cdx-button--size-medium cdx-button--icon-only cdx-button--framed jsl10n wikipedia25-play-button"
             type="button"
             data-jsl10n="portal.wikipedia25.play-button-text"
             aria-label="Play"
           >
-            <span class="cdx-icon cdx-icon--small">
+            <span className="cdx-icon cdx-icon--small">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -86,12 +84,12 @@ export const wikipediaOrg = () => (
               </svg>
             </span>
           </button>
-          <h1 class="central-textlogo-wrapper">
-            <span class="central-textlogo__image sprite svg-Wikipedia_wordmark">
+          <h1 className="central-textlogo-wrapper">
+            <span className="central-textlogo__image sprite svg-Wikipedia_wordmark">
               Wikipedia
             </span>
             <strong
-              class="jsl10n wikipedia25-slogan"
+              className="jsl10n wikipedia25-slogan"
               data-jsl10n="portal.wikipedia25.slogan"
             >
               25 years of the free encyclopedia
@@ -101,15 +99,15 @@ export const wikipediaOrg = () => (
         <nav
           data-jsl10n="top-ten-nav-label"
           aria-label="Top languages"
-          class="central-featured"
+          className="central-featured"
           data-el-section="primary links"
         >
-          <div class="central-featured-lang lang1" lang="en" dir="ltr">
+          <div className="central-featured-lang lang1" lang="en" dir="ltr">
             <a
               id="js-link-box-en"
               href="//en.wikipedia.org/"
               title="English — Wikipedia — The Free Encyclopedia"
-              class="link-box"
+              className="link-box"
               data-slogan="The Free Encyclopedia"
             >
               <strong>English</strong>
@@ -119,12 +117,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang2" lang="ja" dir="ltr">
+          <div className="central-featured-lang lang2" lang="ja" dir="ltr">
             <a
               id="js-link-box-ja"
               href="//ja.wikipedia.org/"
               title="Nihongo — ウィキペディア — フリー百科事典"
-              class="link-box"
+              className="link-box"
               data-slogan="フリー百科事典"
             >
               <strong>日本語</strong>
@@ -134,12 +132,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang3" lang="de" dir="ltr">
+          <div className="central-featured-lang lang3" lang="de" dir="ltr">
             <a
               id="js-link-box-de"
               href="//de.wikipedia.org/"
               title="Deutsch — Wikipedia — Die freie Enzyklopädie"
-              class="link-box"
+              className="link-box"
               data-slogan="Die freie Enzyklopädie"
             >
               <strong>Deutsch</strong>
@@ -149,12 +147,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang4" lang="ru" dir="ltr">
+          <div className="central-featured-lang lang4" lang="ru" dir="ltr">
             <a
               id="js-link-box-ru"
               href="//ru.wikipedia.org/"
               title="Russkiy — Википедия — Свободная энциклопедия"
-              class="link-box"
+              className="link-box"
               data-slogan="Свободная энциклопедия"
             >
               <strong>Русский</strong>
@@ -164,12 +162,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang5" lang="fr" dir="ltr">
+          <div className="central-featured-lang lang5" lang="fr" dir="ltr">
             <a
               id="js-link-box-fr"
               href="//fr.wikipedia.org/"
               title="Français — Wikipédia — L’encyclopédie libre"
-              class="link-box"
+              className="link-box"
               data-slogan="L’encyclopédie libre"
             >
               <strong>Français</strong>
@@ -179,12 +177,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang6" lang="es" dir="ltr">
+          <div className="central-featured-lang lang6" lang="es" dir="ltr">
             <a
               id="js-link-box-es"
               href="//es.wikipedia.org/"
               title="Español — Wikipedia — La enciclopedia libre"
-              class="link-box"
+              className="link-box"
               data-slogan="La enciclopedia libre"
             >
               <strong>Español</strong>
@@ -194,12 +192,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang7" lang="it" dir="ltr">
+          <div className="central-featured-lang lang7" lang="it" dir="ltr">
             <a
               id="js-link-box-it"
               href="//it.wikipedia.org/"
               title="Italiano — Wikipedia — L&#x27;enciclopedia libera"
-              class="link-box"
+              className="link-box"
               data-slogan="L&#x27;enciclopedia libera"
             >
               <strong>Italiano</strong>
@@ -209,12 +207,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang8" lang="zh" dir="ltr">
+          <div className="central-featured-lang lang8" lang="zh" dir="ltr">
             <a
               id="js-link-box-zh"
               href="//zh.wikipedia.org/"
               title="Zhōngwén — 维基百科 / 維基百科 — 自由的百科全书 / 自由的百科全書"
-              class="link-box localize-variant"
+              className="link-box localize-variant"
               data-slogan="自由的百科全书 / 自由的百科全書"
             >
               <strong>中文</strong>
@@ -224,12 +222,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang9" lang="pt" dir="ltr">
+          <div className="central-featured-lang lang9" lang="pt" dir="ltr">
             <a
               id="js-link-box-pt"
               href="//pt.wikipedia.org/"
               title="Português — Wikipédia — A Enciclopédia Livre"
-              class="link-box"
+              className="link-box"
               data-slogan="A Enciclopédia Livre"
             >
               <strong>Português</strong>
@@ -239,12 +237,12 @@ export const wikipediaOrg = () => (
               </small>
             </a>
           </div>
-          <div class="central-featured-lang lang10" lang="pl" dir="ltr">
+          <div className="central-featured-lang lang10" lang="pl" dir="ltr">
             <a
               id="js-link-box-pl"
               href="//pl.wikipedia.org/"
               title="Polski — Wikipedia — Wolna encyklopedia"
-              class="link-box"
+              className="link-box"
               data-slogan="Wolna encyklopedia"
             >
               <strong>Polski</strong>
@@ -255,41 +253,41 @@ export const wikipediaOrg = () => (
             </a>
           </div>
         </nav>
-        <div class="wikipedia25-cta-container">
+        <div className="wikipedia25-cta-container">
           <button
             type="button"
             id="wikipedia25-cta-button"
-            class="cdx-button cdx-button--action-default cdx-button--weight-primary cdx-button--size-large cdx-button--framed cdx-dialog__footer__primary-action jsl10n"
+            className="cdx-button cdx-button--action-default cdx-button--weight-primary cdx-button--size-large cdx-button--framed cdx-dialog__footer__primary-action jsl10n"
             data-jsl10n="portal.wikipedia25.launch-cta-text"
           >
             Unlock birthday surprises on Wikipedia
           </button>
           <div
-            class="wikipedia25-cta-description jsl10n"
+            className="wikipedia25-cta-description jsl10n"
             data-jsl10n="portal.wikipedia25.launch-cta-description"
           >
             Learn how to turn on Birthday mode so you and Baby Globe can explore
             Wikipedia together!
           </div>
         </div>
-        <div class="wikipedia25-modal-container">
+        <div className="wikipedia25-modal-container">
           <div
             id="wikipedia25-dialog-backdrop"
-            class="cdx-dialog-backdrop hidden"
+            className="cdx-dialog-backdrop hidden"
           >
-            <div tabindex="0" class="wikipedia25-dialog-focus-trap-start"></div>
+            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-start"></div>
             <div
               id="wikipedia25-dialog"
-              class="cdx-dialog cdx-dialog--vertical-actions"
+              className="cdx-dialog cdx-dialog--vertical-actions"
               role="dialog"
               aria-labelledby="wikipedia25-modal-title"
               aria-modal="true"
             >
-              <header class="cdx-dialog__header cdx-dialog__header--default">
-                <div class="cdx-dialog__header__title-group">
+              <header className="cdx-dialog__header cdx-dialog__header--default">
+                <div className="cdx-dialog__header__title-group">
                   <h2
                     id="wikipedia25-modal-title"
-                    class="cdx-dialog__header__title jsl10n"
+                    className="cdx-dialog__header__title jsl10n"
                     data-jsl10n="portal.wikipedia25.launch-modal.title"
                   >
                     Unlock birthday surprises on Wikipedia
@@ -297,12 +295,12 @@ export const wikipediaOrg = () => (
                 </div>
                 <button
                   id="wikipedia25-dialog-close-button"
-                  class="cdx-button cdx-button--action-default cdx-button--weight-quiet cdx-button--size-medium cdx-button--icon-only cdx-dialog__header__close-button jsl10n"
+                  className="cdx-button cdx-button--action-default cdx-button--weight-quiet cdx-button--size-medium cdx-button--icon-only cdx-dialog__header__close-button jsl10n"
                   type="button"
                   data-jsl10n="portal.wikipedia25.launch-modal.close-button-text"
                   aria-label="Close"
                 >
-                  <span class="cdx-icon cdx-icon--medium">
+                  <span className="cdx-icon cdx-icon--medium">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -318,20 +316,20 @@ export const wikipediaOrg = () => (
                   </span>
                 </button>
               </header>
-              <div class="cdx-dialog-focus-trap" tabindex="-1"></div>
+              <div className="cdx-dialog-focus-trap" tabIndex={-1}></div>
               <div
-                class="cdx-dialog__body cdx-scrollable-container jsl10n"
+                className="cdx-dialog__body cdx-scrollable-container jsl10n"
                 data-jsl10n="portal.wikipedia25.launch-modal.text"
               >
                 Learn how to turn on Birthday mode so you and Baby Globe can
                 explore Wikipedia together!
               </div>
-              <footer class="cdx-dialog__footer cdx-dialog__footer--default">
-                <div class="cdx-dialog__footer__actions">
+              <footer className="cdx-dialog__footer cdx-dialog__footer--default">
+                <div className="cdx-dialog__footer__actions">
                   <button
                     type="button"
                     id="wikipedia25-dialog-primary-button"
-                    class="cdx-button cdx-button--action-progressive cdx-button--weight-primary cdx-button--size-medium cdx-button--framed cdx-dialog__footer__primary-action jsl10n"
+                    className="cdx-button cdx-button--action-progressive cdx-button--weight-primary cdx-button--size-medium cdx-button--framed cdx-dialog__footer__primary-action jsl10n"
                     data-jsl10n="portal.wikipedia25.launch-modal.primary-button-text"
                   >
                     Learn more
@@ -339,22 +337,22 @@ export const wikipediaOrg = () => (
                 </div>
               </footer>
             </div>
-            <div tabindex="0" class="wikipedia25-dialog-focus-trap-end"></div>
+            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-end"></div>
           </div>
         </div>
-        <div role="search" class="search-container">
+        <div role="search" className="search-container">
           <form
-            class="pure-form"
+            className="pure-form"
             id="search-form"
             action="//www.wikipedia.org/search-redirect.php"
             data-el-section="search"
           >
             <fieldset>
               <input type="hidden" name="family" value="wikipedia" />
-              <div class="search-input" id="search-input">
+              <div className="search-input" id="search-input">
                 <label
-                  for="searchInput"
-                  class="screen-reader-text"
+                  htmlFor="searchInput"
+                  className="screen-reader-text"
                   data-jsl10n="portal.search-input-label"
                 >
                   Search Wikipedia
@@ -363,14 +361,14 @@ export const wikipediaOrg = () => (
                   id="searchInput"
                   name="search"
                   type="search"
-                  size="20"
-                  autofocus="autofocus"
-                  accesskey="F"
+                  size={20}
+                  autoFocus
+                  accessKey="F"
                   dir="auto"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
-                <div class="styled-select no-js">
-                  <div class="hide-arrow">
+                <div className="styled-select no-js">
+                  <div className="hide-arrow">
                     <select id="searchLanguage" name="language">
                       <option value="af" lang="af">Afrikaans</option>
                       <option value="sq" lang="sq">Shqip</option>
@@ -390,7 +388,7 @@ export const wikipediaOrg = () => (
                       <option value="de" lang="de">Deutsch</option>
                       <option value="et" lang="et">Eesti</option>
                       <option value="el" lang="el">Ελληνικά</option>
-                      <option value="en" lang="en" selected="selected">
+                      <option value="en" lang="en" selected>
                         English
                       </option>
                       <option value="es" lang="es">Español</option>
@@ -459,17 +457,17 @@ export const wikipediaOrg = () => (
                       <option value="ru" lang="ru">Русский</option>
                       <option value="yue" lang="yue">粵語</option>
                     </select>
-                    <div class="styled-select-active-helper"></div>
+                    <div className="styled-select-active-helper"></div>
                   </div>
-                  <i class="sprite svg-arrow-down"></i>
+                  <i className="sprite svg-arrow-down"></i>
                 </div>
               </div>
               <button
-                class="pure-button pure-button-primary-progressive"
+                className="pure-button pure-button-primary-progressive"
                 type="submit"
               >
                 <i
-                  class="sprite svg-search-icon"
+                  className="sprite svg-search-icon"
                   data-jsl10n="search-input-button"
                 >
                   Search
@@ -480,41 +478,41 @@ export const wikipediaOrg = () => (
           </form>
         </div>
         <nav data-jsl10n="all-languages-nav-label" aria-label="All languages">
-          <div class="lang-list-button-wrapper">
+          <div className="lang-list-button-wrapper">
             <button
               type="button"
               id="js-lang-list-button"
               aria-expanded="false"
               aria-controls="js-lang-lists"
-              class="lang-list-button"
+              className="lang-list-button"
             >
-              <i class="sprite svg-language-icon"></i>
+              <i className="sprite svg-language-icon"></i>
               <span
-                class="lang-list-button-text jsl10n"
+                className="lang-list-button-text jsl10n"
                 data-jsl10n="portal.language-button-text"
               >
                 Read Wikipedia in your language
               </span>
-              <i class="sprite svg-arrow-down-blue"></i>
+              <i className="sprite svg-arrow-down-blue"></i>
             </button>
           </div>
-          <div class="lang-list-border"></div>
-          <div class="lang-list-container">
-            <div id="js-lang-lists" class="lang-list-content">
-              <h2 class="bookshelf-container">
-                <span class="bookshelf">
-                  <span class="text">
+          <div className="lang-list-border"></div>
+          <div className="lang-list-container">
+            <div id="js-lang-lists" className="lang-list-content">
+              <h2 className="bookshelf-container">
+                <span className="bookshelf">
+                  <span className="text">
                     <bdi dir="ltr">
                       1,000,000+
                     </bdi>
-                    <span class="jsl10n" data-jsl10n="entries">
+                    <span className="jsl10n" data-jsl10n="entries">
                       articles
                     </span>
                   </span>
                 </span>
               </h2>
               <div
-                class="langlist langlist-large hlist"
+                className="langlist langlist-large hlist"
                 data-el-section="secondary links"
               >
                 <ul>
@@ -601,20 +599,20 @@ export const wikipediaOrg = () => (
                   </li>
                 </ul>
               </div>
-              <h2 class="bookshelf-container">
-                <span class="bookshelf">
-                  <span class="text">
+              <h2 className="bookshelf-container">
+                <span className="bookshelf">
+                  <span className="text">
                     <bdi dir="ltr">
                       100,000+
                     </bdi>
-                    <span class="jsl10n" data-jsl10n="portal.entries">
+                    <span className="jsl10n" data-jsl10n="portal.entries">
                       articles
                     </span>
                   </span>
                 </span>
               </h2>
               <div
-                class="langlist langlist-large hlist"
+                className="langlist langlist-large hlist"
                 data-el-section="secondary links"
               >
                 <ul>
@@ -876,19 +874,19 @@ export const wikipediaOrg = () => (
                   </li>
                 </ul>
               </div>
-              <h2 class="bookshelf-container">
-                <span class="bookshelf">
-                  <span class="text">
+              <h2 className="bookshelf-container">
+                <span className="bookshelf">
+                  <span className="text">
                     <bdi dir="ltr">
                       10,000+
                     </bdi>
-                    <span class="jsl10n" data-jsl10n="portal.entries">
+                    <span className="jsl10n" data-jsl10n="portal.entries">
                       articles
                     </span>
                   </span>
                 </span>
               </h2>
-              <div class="langlist hlist" data-el-section="secondary links">
+              <div className="langlist hlist" data-el-section="secondary links">
                 <ul>
                   <li>
                     <a href="//ace.wikipedia.org/" lang="ace">Bahsa Acèh</a>
@@ -1358,19 +1356,19 @@ export const wikipediaOrg = () => (
                   </li>
                 </ul>
               </div>
-              <h2 class="bookshelf-container">
-                <span class="bookshelf">
-                  <span class="text">
+              <h2 className="bookshelf-container">
+                <span className="bookshelf">
+                  <span className="text">
                     <bdi dir="ltr">
                       1,000+
                     </bdi>
-                    <span class="jsl10n" data-jsl10n="portal.entries">
+                    <span className="jsl10n" data-jsl10n="portal.entries">
                       articles
                     </span>
                   </span>
                 </span>
               </h2>
-              <div class="langlist hlist" data-el-section="secondary links">
+              <div className="langlist hlist" data-el-section="secondary links">
                 <ul>
                   <li>
                     <a href="//lad.wikipedia.org/" lang="lad">
@@ -1540,7 +1538,7 @@ export const wikipediaOrg = () => (
                       title="Gon ua"
                       data-hans="赣语"
                       data-hant="贛語"
-                      class="jscnconv"
+                      className="jscnconv"
                     >
                       赣语 / 贛語
                     </a>
@@ -1893,20 +1891,20 @@ export const wikipediaOrg = () => (
                   </li>
                 </ul>
               </div>
-              <h2 class="bookshelf-container">
-                <span class="bookshelf">
-                  <span class="text">
+              <h2 className="bookshelf-container">
+                <span className="bookshelf">
+                  <span className="text">
                     <bdi dir="ltr">
                       100+
                     </bdi>
-                    <span class="jsl10n" data-jsl10n="portal.entries">
+                    <span className="jsl10n" data-jsl10n="portal.entries">
                       articles
                     </span>
                   </span>
                 </span>
               </h2>
               <div
-                class="langlist langlist-tiny hlist"
+                className="langlist langlist-tiny hlist"
                 data-el-section="secondary links"
               >
                 <ul>
@@ -2020,13 +2018,12 @@ export const wikipediaOrg = () => (
                 </ul>
               </div>
               <div
-                class="langlist langlist-others hlist"
+                className="langlist langlist-others hlist"
                 data-el-section="other languages"
               >
                 <a
-                  class="jsl10n"
+                  className="jsl10n"
                   href="https://meta.wikimedia.org/wiki/Special:MyLanguage/List_of_Wikipedias"
-                  lang
                   data-jsl10n="other-languages-label"
                 >
                   Other languages
@@ -2037,72 +2034,72 @@ export const wikipediaOrg = () => (
         </nav>
         <hr />
       </main>
-      <footer class="footer" data-el-section="other projects">
-        <div class="footer-sidebar">
-          <div class="footer-sidebar-content">
-            <div class="footer-sidebar-icon sprite svg-Wikimedia-logo_black">
+      <footer className="footer" data-el-section="other projects">
+        <div className="footer-sidebar">
+          <div className="footer-sidebar-content">
+            <div className="footer-sidebar-icon sprite svg-Wikimedia-logo_black">
             </div>
             <div
-              class="footer-sidebar-text jsl10n"
+              className="footer-sidebar-text jsl10n"
               data-jsl10n="portal.footer-description"
             >
               Wikipedia is hosted by the Wikimedia Foundation, a non-profit
               organization that also hosts a range of other projects.
             </div>
-            <div class="footer-sidebar-text">
+            <div className="footer-sidebar-text">
               <a
                 href="https://donate.wikimedia.org/?wmf_medium=portal&wmf_campaign=portalFooter&wmf_source=portalFooter"
                 target="_blank"
               >
-                <span class="jsl10n" data-jsl10n="footer-donate">
+                <span className="jsl10n" data-jsl10n="footer-donate">
                   You can support our work with a donation.
                 </span>
               </a>
             </div>
           </div>
         </div>
-        <div class="footer-sidebar app-badges">
-          <div class="footer-sidebar-content">
-            <div class="footer-sidebar-text">
-              <div class="footer-sidebar-icon sprite svg-wikipedia_app_tile">
+        <div className="footer-sidebar app-badges">
+          <div className="footer-sidebar-content">
+            <div className="footer-sidebar-text">
+              <div className="footer-sidebar-icon sprite svg-wikipedia_app_tile">
               </div>
-              <strong class="jsl10n" data-jsl10n="portal.app-links.title">
+              <strong className="jsl10n" data-jsl10n="portal.app-links.title">
                 <a
-                  class="jsl10n"
+                  className="jsl10n"
                   data-jsl10n="portal.app-links.url"
                   href="https://en.wikipedia.org/wiki/List_of_Wikipedia_mobile_applications"
                 >
                   Download Wikipedia for Android or iOS
                 </a>
               </strong>
-              <p class="jsl10n" data-jsl10n="portal.app-links.description">
+              <p className="jsl10n" data-jsl10n="portal.app-links.description">
                 Save your favorite articles to read offline, sync your reading
                 lists across devices and customize your reading experience with
                 the official Wikipedia app.
               </p>
               <ul>
-                <li class="app-badge app-badge-android">
+                <li className="app-badge app-badge-android">
                   <a
                     target="_blank"
                     rel="noreferrer"
                     href="https://play.google.com/store/apps/details?id=org.wikipedia&referrer=utm_source%3Dportal%26utm_medium%3Dbutton%26anid%3Dadmob"
                   >
                     <span
-                      class="jsl10n sprite svg-badge_google_play_store"
+                      className="jsl10n sprite svg-badge_google_play_store"
                       data-jsl10n="portal.app-links.google-store"
                     >
                       Google Play Store
                     </span>
                   </a>
                 </li>
-                <li class="app-badge app-badge-ios">
+                <li className="app-badge app-badge-ios">
                   <a
                     target="_blank"
                     rel="noreferrer"
                     href="https://itunes.apple.com/app/apple-store/id324715238?pt=208305&ct=portal&mt=8"
                   >
                     <span
-                      class="jsl10n sprite svg-badge_ios_app_store"
+                      className="jsl10n sprite svg-badge_ios_app_store"
                       data-jsl10n="portal.app-links.apple-store"
                     >
                       Apple App Store
@@ -2113,22 +2110,22 @@ export const wikipediaOrg = () => (
             </div>
           </div>
         </div>
-        <div class="footer-sidebar wikipedia25-footer-sidebar">
-          <div class="footer-sidebar-content">
-            <div class="footer-sidebar-text">
-              <span class="cdx-toggle-switch cdx-toggle-switch--align-switch">
+        <div className="footer-sidebar wikipedia25-footer-sidebar">
+          <div className="footer-sidebar-content">
+            <div className="footer-sidebar-text">
+              <span className="cdx-toggle-switch cdx-toggle-switch--align-switch">
                 <input
                   id="wikipedia25-birthday-mode-toggle-switch"
-                  class="cdx-toggle-switch__input"
+                  className="cdx-toggle-switch__input"
                   type="checkbox"
                 />
-                <span class="cdx-toggle-switch__switch">
-                  <span class="cdx-toggle-switch__switch__grip"></span>
+                <span className="cdx-toggle-switch__switch">
+                  <span className="cdx-toggle-switch__switch__grip"></span>
                 </span>
-                <div class="cdx-toggle-switch__label cdx-label">
+                <div className="cdx-toggle-switch__label cdx-label">
                   <label
-                    class="cdx-label__label jsl10n"
-                    for="wikipedia25-birthday-mode-toggle-switch"
+                    className="cdx-label__label jsl10n"
+                    htmlFor="wikipedia25-birthday-mode-toggle-switch"
                     data-jsl10n="portal.wikipedia25.birthday-mode-toggle-text"
                   >
                     Birthday mode
@@ -2141,22 +2138,22 @@ export const wikipediaOrg = () => (
         <nav
           data-jsl10n="other-projects-nav-label"
           aria-label="Other projects"
-          class="other-projects"
+          className="other-projects"
         >
-          <div class="other-project">
-            <a class="other-project-link" href="//commons.wikimedia.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Commons-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//commons.wikimedia.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Commons-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="commons.name"
                 >
                   Commons
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="commons.slogan"
                 >
                   Free media collection
@@ -2164,20 +2161,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikivoyage.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikivoyage-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikivoyage.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikivoyage-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikivoyage.name"
                 >
                   Wikivoyage
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikivoyage.slogan"
                 >
                   Free travel guide
@@ -2185,20 +2182,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wiktionary.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wiktionary-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wiktionary.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wiktionary-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wiktionary.name"
                 >
                   Wiktionary
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wiktionary.slogan"
                 >
                   Free dictionary
@@ -2206,20 +2203,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikibooks.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikibooks-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikibooks.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikibooks-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikibooks.name"
                 >
                   Wikibooks
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikibooks.slogan"
                 >
                   Free textbooks
@@ -2227,20 +2224,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikinews.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikinews-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikinews.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikinews-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikinews.name"
                 >
                   Wikinews
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikinews.slogan"
                 >
                   Free news source
@@ -2248,20 +2245,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikidata.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikidata-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikidata.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikidata-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikidata.name"
                 >
                   Wikidata
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikidata.slogan"
                 >
                   Free knowledge base
@@ -2269,20 +2266,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikiversity.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikiversity-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikiversity.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikiversity-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikiversity.name"
                 >
                   Wikiversity
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikiversity.slogan"
                 >
                   Free learning resources
@@ -2290,20 +2287,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikiquote.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikiquote-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikiquote.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikiquote-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikiquote.name"
                 >
                   Wikiquote
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikiquote.slogan"
                 >
                   Free quote compendium
@@ -2311,20 +2308,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.mediawiki.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-MediaWiki-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.mediawiki.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-MediaWiki-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="mediawiki.name"
                 >
                   MediaWiki
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="mediawiki.slogan"
                 >
                   Free &amp; open wiki software
@@ -2332,20 +2329,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikisource.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikisource-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikisource.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikisource-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikisource.name"
                 >
                   Wikisource
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikisource.slogan"
                 >
                   Free content library
@@ -2353,20 +2350,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//species.wikimedia.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikispecies-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//species.wikimedia.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikispecies-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikispecies.name"
                 >
                   Wikispecies
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikispecies.slogan"
                 >
                   Free species directory
@@ -2374,20 +2371,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//www.wikifunctions.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Wikifunctions-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//www.wikifunctions.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Wikifunctions-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="wikifunctions.name"
                 >
                   Wikifunctions
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="wikifunctions.slogan"
                 >
                   Free function library
@@ -2395,20 +2392,20 @@ export const wikipediaOrg = () => (
               </div>
             </a>
           </div>
-          <div class="other-project">
-            <a class="other-project-link" href="//meta.wikimedia.org/">
-              <div class="other-project-icon">
-                <div class="sprite svg-Meta-Wiki-logo_sister"></div>
+          <div className="other-project">
+            <a className="other-project-link" href="//meta.wikimedia.org/">
+              <div className="other-project-icon">
+                <div className="sprite svg-Meta-Wiki-logo_sister"></div>
               </div>
-              <div class="other-project-text">
+              <div className="other-project-text">
                 <span
-                  class="other-project-title jsl10n"
+                  className="other-project-title jsl10n"
                   data-jsl10n="metawiki.name"
                 >
                   Meta-Wiki
                 </span>
                 <span
-                  class="other-project-tagline jsl10n"
+                  className="other-project-tagline jsl10n"
                   data-jsl10n="metawiki.slogan"
                 >
                   Community coordination &amp; documentation
@@ -2418,19 +2415,19 @@ export const wikipediaOrg = () => (
           </div>
         </nav>
         <hr />
-        <p class="site-license">
-          <small class="jsl10n" data-jsl10n="license">
+        <p className="site-license">
+          <small className="jsl10n" data-jsl10n="license">
             This page is available under the
             <a href="https://creativecommons.org/licenses/by-sa/4.0/">
               Creative Commons Attribution-ShareAlike License
             </a>
           </small>
-          <small class="jsl10n" data-jsl10n="terms">
+          <small className="jsl10n" data-jsl10n="terms">
             <a href="https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use">
               Terms of Use
             </a>
           </small>
-          <small class="jsl10n" data-jsl10n="privacy-policy">
+          <small className="jsl10n" data-jsl10n="privacy-policy">
             <a href="https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy">
               Privacy Policy
             </a>
