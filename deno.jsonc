@@ -4,8 +4,7 @@
       "dom",
       "deno.ns",
       "deno.unstable"
-    ],
-    "types": ["npm:react@^19.2.5"]
+    ]
   },
   "exports": {
     ".": "./jsx/module.ts",

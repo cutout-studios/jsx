@@ -40,7 +40,10 @@ export const wikipediaOrg = () => (
             <span className="central-textlogo__image sprite svg-Wikipedia_wordmark">
               Wikipedia
             </span>
-            <strong className="jsl10n localized-slogan" data-jsl10n="portal.slogan">
+            <strong
+              className="jsl10n localized-slogan"
+              data-jsl10n="portal.slogan"
+            >
               The Free Encyclopedia
             </strong>
           </h1>
@@ -275,7 +278,8 @@ export const wikipediaOrg = () => (
             id="wikipedia25-dialog-backdrop"
             className="cdx-dialog-backdrop hidden"
           >
-            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-start"></div>
+            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-start">
+            </div>
             <div
               id="wikipedia25-dialog"
               className="cdx-dialog cdx-dialog--vertical-actions"
@@ -337,7 +341,8 @@ export const wikipediaOrg = () => (
                 </div>
               </footer>
             </div>
-            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-end"></div>
+            <div tabIndex={0} className="wikipedia25-dialog-focus-trap-end">
+            </div>
           </div>
         </div>
         <div role="search" className="search-container">
@@ -369,7 +374,11 @@ export const wikipediaOrg = () => (
                 />
                 <div className="styled-select no-js">
                   <div className="hide-arrow">
-                    <select id="searchLanguage" name="language" defaultValue="en">
+                    <select
+                      id="searchLanguage"
+                      name="language"
+                      defaultValue="en"
+                    >
                       <option value="af" lang="af">Afrikaans</option>
                       <option value="sq" lang="sq">Shqip</option>
                       <option value="ar" lang="ar">العربية</option>

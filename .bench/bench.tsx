@@ -53,7 +53,7 @@ Deno.bench(
   `react-dom/client via happy-dom - wikipedia.org`,
   { group: "wikipedia.org (no style/script tags)" },
   (bench) => {
-    const container = globalThis.document.createElement("div");
+    const container = globalThis.document.documentElement;
     const root = createRoot(container);
     bench.start();
     flushSync(() => root.render(wikipediaOrg()));
@@ -85,7 +85,7 @@ Deno.bench(
             </div>
           ))}
         </div>,
-      ),
+      )
     );
     bench.end();
     container.outerHTML;
