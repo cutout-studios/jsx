@@ -112,15 +112,30 @@ function _handlePrimitive(
 }
 
 function _handleObject(state: _FormatState, value: object) {
-  if (state.pointers.attribute) {
-    return Object.defineProperty(
-      state.pointers.element,
-      state.pointers.attribute,
-      { value },
-    );
-  }
+  if (!state.pointers.element) return;
 
-  _appendTextNode(state, value);
+  // "style" and "dataset" are the only valid HTML object properties.
+  switch (state.pointers.attribute) {
+    case "style": {
+      const style = value as CSSStyleDeclaration;
+      for (let i = 0; i < style.length; i++) {
+        state.pointers.element.style.setProperty(
+          style[i],
+          style.getPropertyValue(style[i]),
+          style.getPropertyPriority(style[i]),
+        );
+      }
+      return;
+    }
+    case "dataset": {
+      for (const key in value) {
+        state.pointers.element.dataset[key] = (value as DOMStringMap)[key];
+      }
+      return;
+    }
+    default:
+      _appendTextNode(state, value);
+  }
 }
 
 function _appendTextNode(state: _FormatState, value: unknown) {

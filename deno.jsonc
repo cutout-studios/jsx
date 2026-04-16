@@ -21,12 +21,17 @@
     "singleQuote": false
   },
   "imports": {
-    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
     "@std/path": "jsr:@std/path",
-    "@std/testing": "jsr:@std/testing"
+    "@std/testing": "jsr:@std/testing",
+
+    // Deno's recommended headless browser "@b-fuze/deno-dom" 
+    // is a fast but incomplete implementation: 
+    // "happy-dom" is a complete implementation that more
+    // accurately reflects browser overhead.
+    "happy-dom": "npm:happy-dom@^20.9.0"
   },
   "license": "MIT",
   "lint": {

@@ -32,7 +32,7 @@ import { elements, html } from "jsr:@cutout/jsx/format";
 
 console.log(
   dom(<div></div>),
-); // => HTMLCollection {}
+); // => HTMLCollection [<div></div>]
 
 // -- any platform --
 /** @jsxImportSourceTypes jsr:@cutout/jsx/format/html */
@@ -154,24 +154,24 @@ benchmark for comparsion_
     CPU | Apple M5 Max
 Runtime | Deno 2.7.5 (aarch64-apple-darwin)
 
-| benchmark                        | time/iter (avg) |        iter/s |      (min … max)      |      p75 |      p99 |     p995 |
-| -------------------------------- | --------------- | ------------- | --------------------- | -------- | -------- | -------- |
+| benchmark                                  | time/iter (avg) |        iter/s |      (min … max)      |      p75 |      p99 |     p995 |
+| ------------------------------------------ | --------------- | ------------- | --------------------- | -------- | -------- | -------- |
 
 group wikipedia.org (no style/script tags)
-| format/element - wikipedia.org   |          3.4 ms |         289.9 | (  2.8 ms …   7.2 ms) |   3.8 ms |   7.1 ms |   7.2 ms |
-| format/html - wikipedia.org      |          2.4 ms |         409.3 | (  2.0 ms …   3.9 ms) |   2.5 ms |   3.8 ms |   3.8 ms |
+| format/dom via happy-dom - wikipedia.org   |         10.6 ms |          94.4 | (  8.4 ms …  18.6 ms) |  10.9 ms |  18.6 ms |  18.6 ms |
+| format/html - wikipedia.org                |          2.4 ms |         423.1 | (  2.1 ms …   4.2 ms) |   2.3 ms |   3.7 ms |   3.7 ms |
 
 summary
   format/html - wikipedia.org
-     1.41x faster than format/element - wikipedia.org
+     4.48x faster than format/dom via happy-dom - wikipedia.org
 
 group 10000 rows
-| format/element - 10000 rows      |         21.4 ms |          46.6 | ( 19.0 ms …  37.1 ms) |  21.8 ms |  37.1 ms |  37.1 ms |
-| format/html - 10000 rows         |         15.3 ms |          65.5 | ( 12.4 ms …  20.0 ms) |  16.3 ms |  20.0 ms |  20.0 ms |
+| format/dom via happy-dom - 10000 rows      |         64.0 ms |          15.6 | ( 59.7 ms …  83.5 ms) |  64.5 ms |  83.5 ms |  83.5 ms |
+| format/html - 10000 rows                   |         11.9 ms |          83.8 | ( 10.9 ms …  18.4 ms) |  12.4 ms |  18.4 ms |  18.4 ms |
 
 summary
   format/html - 10000 rows
-     1.40x faster than format/element - 10000 rows
+     5.36x faster than format/dom via happy-dom - 10000 rows
 ```
 
 ## Contributing

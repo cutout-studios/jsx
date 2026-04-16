@@ -108,10 +108,11 @@ export const jsxDEV: typeof jsx = jsx;
 export const Fragment: string = FRAGMENT_LABEL;
 
 /**
- * The default @cutout/jsx type set.
+ * The default @cutout/jsx typings.
  *
  * Without knowing how you want to format your JSX,
- * we allow all elements and attributes.
+ * we must allow all elements and attributes: 
+ * otherwise nothing will work!
  */
 // deno-lint-ignore no-namespace
 export namespace JSX {
