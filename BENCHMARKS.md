@@ -4,7 +4,7 @@ _Last updated: April 2026_
 
 ## Methodology
 
-The benchmark is a head to head of both React's and `@cutout/jsx` respective
+The benchmark is a head to head of both React's and `@cutout/jsx`'s respective
 rendering methods. Framework-based features - like streaming - are out of scope.
 
 All implementations are currently set up to render both:
