@@ -5,11 +5,7 @@ exclude_patterns = [
   "**/test.ts",
   "**/*.test.tsx",
   "**/test.tsx",
-  "**/*.bench.ts",
-  "**/bench.ts",
-  "**/*.bench.tsx",
-  "**/bench.tsx",
-  "**/bench.html.tsx",
+  "**/.*",
   "**/example.tsx",
 ]
 
