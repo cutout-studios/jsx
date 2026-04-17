@@ -33,7 +33,8 @@
     // accurately reflects browser overhead.
     "happy-dom": "npm:happy-dom",
     "react": "npm:react",
-    "react-dom": "npm:react-dom"
+    "react-dom": "npm:react-dom",
+    ".bench": "./.bench/module.ts"
   },
   "license": "MIT",
   "lint": {

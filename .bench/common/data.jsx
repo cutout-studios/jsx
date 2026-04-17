@@ -1,6 +1,23 @@
 /** @jsxImportSource react */
 
-export const wikipediaOrg = () => (
+const MANY_ROW_COUNT = 10000;
+const rows = Array.from({ length: MANY_ROW_COUNT }, (_, i) => ({
+  id: `row-${i}`,
+  className: i % 2 === 0 ? "even" : "odd",
+  content: `Row #${i}`,
+}));
+
+export const manyRows = () => (
+  <div>
+    {rows.map((row) => (
+      <div key={row.id} id={row.id} className={row.className}>
+        {row.content}
+      </div>
+    ))}
+  </div>
+);
+
+export const wikipediaHomePage = () => (
   <html lang="en" className="no-js">
     <head>
       <meta charSet="utf-8" />
