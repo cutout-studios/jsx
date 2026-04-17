@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
 
 import { renderToString } from "react-dom/server";
-import { BenchGroups, manyRows, wikipediaHomePage } from ".bench";
+import { BenchGroups, react } from ".bench";
 
 const LIBRARY = "react-dom/server";
 
@@ -9,7 +9,7 @@ Deno.bench(
   LIBRARY,
   { group: BenchGroups.WIKIPEDIA_SSR },
   () => {
-    renderToString(wikipediaHomePage());
+    renderToString(react.wikipediaHomePage());
   },
 );
 
@@ -17,6 +17,6 @@ Deno.bench(
   LIBRARY,
   { group: BenchGroups.MANY_ROW_SSR },
   () => {
-    renderToString(manyRows());
+    renderToString(react.manyRows());
   },
 );

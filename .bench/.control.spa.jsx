@@ -3,7 +3,7 @@
 import { Window } from "happy-dom";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
-import { BenchGroups, manyRows, wikipediaHomePage } from ".bench";
+import { BenchGroups, react } from ".bench";
 
 const LIBRARY = "react-dom/client";
 
@@ -27,7 +27,7 @@ Deno.bench(
     const root = createRoot(document.documentElement);
     bench.start();
 
-    flushSync(() => root.render(wikipediaHomePage()));
+    flushSync(() => root.render(react.wikipediaHomePage()));
 
     bench.end();
     root.unmount();
@@ -41,7 +41,7 @@ Deno.bench(
     const root = createRoot(document.documentElement);
     bench.start();
 
-    flushSync(() => root.render(manyRows()));
+    flushSync(() => root.render(react.manyRows()));
 
     bench.end();
     root.unmount();

@@ -2,7 +2,7 @@
 
 import { Window } from "happy-dom";
 import { dom } from "./main.ts";
-import { BenchGroups, manyRows, wikipediaHomePage } from ".bench";
+import { BenchGroups, cutout } from ".bench";
 
 const LIBRARY = "@cutout/jsx/format/dom";
 
@@ -12,14 +12,14 @@ Deno.bench(
   LIBRARY,
   { group: BenchGroups.WIKIPEDIA_SPA, baseline: true },
   () => {
-    dom(wikipediaHomePage());
+    dom(cutout.wikipediaHomePage());
   },
 );
 
 Deno.bench(
   LIBRARY,
-  { group: BenchGroups.WIKIPEDIA_SSR, baseline: true },
+  { group: BenchGroups.MANY_ROW_SPA, baseline: true },
   () => {
-    dom(manyRows());
+    dom(cutout.manyRows());
   },
 );

@@ -18,7 +18,7 @@ export const manyRows = () => (
 );
 
 export const wikipediaHomePage = () => (
-  <html lang="en" className="no-js">
+  <>
     <head>
       <meta charSet="utf-8" />
       <title>Wikipedia</title>
@@ -2463,5 +2463,5 @@ export const wikipediaHomePage = () => (
         </p>
       </footer>
     </body>
-  </html>
+  </>
 );
