@@ -40,6 +40,7 @@ runtimes, but contain identical contents otherwise.
 > `Full Results` below.
 
 ## Full Results
+
 ```
     CPU | Apple M5 Max
 Runtime | Deno 2.7.5 (aarch64-apple-darwin)
