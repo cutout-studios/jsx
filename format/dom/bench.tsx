@@ -1,14 +1,14 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { Window } from "happy-dom";
-import { dom } from "@cutout/jsx/format/dom";
-import { wikipediaOrg } from "../wikipedia.tsx";
+import { wikipediaOrg } from "../.bench/wikipedia.tsx";
+import { dom } from "./main.ts";
 
 Object.assign(globalThis, { document: new Window().document });
 
 Deno.bench(
   `format/dom via happy-dom - wikipedia.org`,
-  { group: "wikipedia.org (no style/script tags)" },
+  { group: "wikipedia.org (no style/script tags) - dom", baseline: true },
   () => {
     dom(wikipediaOrg())[0].outerHTML;
   },
@@ -16,7 +16,7 @@ Deno.bench(
 
 Deno.bench(
   `format/dom via happy-dom - 10000 rows`,
-  { group: "10000 rows" },
+  { group: "10000 rows - dom", baseline: true },
   (bench) => {
     const rows = Array.from({ length: 10000 }, (_, i) => ({
       id: `row-${i}`,

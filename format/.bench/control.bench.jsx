@@ -1,11 +1,14 @@
 /** @jsxImportSource react */
 
+import { Window } from "happy-dom";
+import { flushSync } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
-import { wikipediaOrg } from "../wikipedia.react.tsx";
+import { wikipediaOrg } from "./control.wikipedia.jsx";
 
 Deno.bench(
   `react-dom/server - wikipedia.org`,
-  { group: "wikipedia.org (no style/script tags)" },
+  { group: "wikipedia.org (no style/script tags) - string" },
   () => {
     renderToString(wikipediaOrg());
   },
@@ -13,7 +16,7 @@ Deno.bench(
 
 Deno.bench(
   `react-dom/server - 10000 rows`,
-  { group: "10000 rows" },
+  { group: "10000 rows - string" },
   (bench) => {
     const rows = Array.from({ length: 10000 }, (_, i) => ({
       id: `row-${i}`,
@@ -34,10 +37,6 @@ Deno.bench(
   },
 );
 
-import { Window } from "happy-dom";
-import { flushSync } from "react-dom";
-import { createRoot } from "react-dom/client";
-
 const window = new Window();
 Object.assign(globalThis, {
   window,
@@ -53,7 +52,7 @@ Object.assign(globalThis, {
 
 Deno.bench(
   `react-dom/client via happy-dom - wikipedia.org`,
-  { group: "wikipedia.org (no style/script tags)" },
+  { group: "wikipedia.org (no style/script tags) - dom" },
   (bench) => {
     const container = globalThis.document.documentElement;
     const root = createRoot(container);
@@ -67,7 +66,7 @@ Deno.bench(
 
 Deno.bench(
   `react-dom/client via happy-dom - 10000 rows`,
-  { group: "10000 rows" },
+  { group: "10000 rows - dom", baseline: true },
   (bench) => {
     const rows = Array.from({ length: 10000 }, (_, i) => ({
       id: `row-${i}`,

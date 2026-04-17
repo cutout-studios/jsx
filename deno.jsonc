@@ -31,7 +31,9 @@
     // is a fast but incomplete implementation:
     // "happy-dom" is a complete implementation that more
     // accurately reflects browser overhead.
-    "happy-dom": "npm:happy-dom"
+    "happy-dom": "npm:happy-dom",
+    "react": "npm:react",
+    "react-dom": "npm:react-dom"
   },
   "license": "MIT",
   "lint": {
