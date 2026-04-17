@@ -23,6 +23,13 @@ export default async function addLabels({ github, context, core }) {
   // Add labels
   if (!labels.size) return;
 
+  await github.rest.issues.removeLabels({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: pr.number,
+    labels: ["size: small", "size: medium", "size: large"],
+  });
+
   const labelsArray = [...labels];
 
   await github.rest.issues.addLabels({
