@@ -4,23 +4,40 @@ _Last updated: April 2026_
 
 ## Methodology
 
-_TODO. Mention constrained runtime. (Run with
-`--v8-flags="--jitless,--lite-mode"`. "SPA" results aren't relevant.) Framework
-features (streaming) out of scope._
+The benchmark is a head to head of both React's and `@cutout/jsx` respective
+rendering methods. Framework-based features - like streaming - are out of scope.
+
+All implementations are currently set up to render both:
+
+1. A "real-world" scenario (the [wikipedia.org](https://wikipedia.org/) source
+   HTML)
+2. A synthetic "heavy-data" scenario - 10K randomly generated rows.
+
+The JSX source files per implementation had to be separated due to differing
+runtimes, but contain identical contents otherwise.
+
+### Environments Tested
+
+- `client-side` - Powered by a `happy-dom` Window with minimal APIs exposed to
+  the Deno process.
+- `server-side` - Just the Deno process.
+- `server-side, constrained` - The Deno process run with
+  `--v8-flags="--jitless,--lite-mode"`, for embedding on mobile devices.
 
 ## Summary
 
-| Scenario  | Environment              | `@cutout/jsx` | React   | Winner             |
-| --------- | ------------------------ | ------------- | ------- | ------------------ |
-| wikipedia | client-side              | **10.0 ms**   | 20.6 ms | **Cutout (2.07×)** |
-| 10K rows  | client-side              | **57.0 ms**   | 97.4 ms | **Cutout (1.71×)** |
-| 10K rows  | server-side              | **13.0 ms**   | 18.4 ms | **Cutout (1.42×)** |
-| 10K rows  | server-side, constrained | **54.2 ms**   | 58.8 ms | **Cutout (1.08×)** |
-| wikipedia | server-side              | 2.4 ms        | 2.0 ms  | React (1.18×)<sup>†</sup>      |
-| wikipedia | server-side, constrained | 5.4 ms        | 9.3 ms  | React (1.73×)      |
+| Scenario  | Environment              | `@cutout/jsx` | React   | Winner                    |
+| --------- | ------------------------ | ------------- | ------- | ------------------------- |
+| wikipedia | client-side              | **10.0 ms**   | 20.6 ms | **Cutout (2.07×)**        |
+| 10K rows  | client-side              | **57.0 ms**   | 97.4 ms | **Cutout (1.71×)**        |
+| 10K rows  | server-side              | **13.0 ms**   | 18.4 ms | **Cutout (1.42×)**        |
+| 10K rows  | server-side, constrained | **54.2 ms**   | 58.8 ms | **Cutout (1.08×)**        |
+| wikipedia | server-side              | 2.4 ms        | 2.0 ms  | React (1.18×)<sup>†</sup> |
+| wikipedia | server-side, constrained | 5.4 ms        | 9.3 ms  | React (1.73×)             |
 
-> <sup>†</sup>Worth noting that `@cutout/jsx` still wins considerably here in terms of worst-case scenarios _(p99)_.
-> See the `Full Results` below.
+> <sup>†</sup>Worth noting that `@cutout/jsx` still wins considerably here in
+> worst-case scenarios _(p99)_, making it the safer choice. See the
+> `Full Results` below.
 
 ## Full Results
 
