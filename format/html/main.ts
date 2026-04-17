@@ -86,7 +86,7 @@ function _openElement(
     return state.context.fragment = true;
   }
 
-  state.result += `<${escape(value)}`;
+  state.result += `<${value}`;
   state.context.fragment = false;
 }
 
@@ -104,7 +104,7 @@ function _closeElement(
   }
 
   if (!VOID_SET.has(value)) {
-    state.result += `</${escape(value)}>`;
+    state.result += `</${value}>`;
   }
 }
 
@@ -119,7 +119,7 @@ function _addProperty(
     return state.context.property = false;
   }
 
-  state.result += ` ${escape(value)}=`;
+  state.result += ` ${value}=`;
   state.context.property = true;
 }
 
@@ -151,28 +151,18 @@ function _appendObject(
   state: _FormatState,
   value: object,
 ) {
-  const checkStack = [value];
-  while (checkStack.length) {
-    const valueToCheck = checkStack.pop();
+  state.result += `"${
+    escape(JSON.stringify(value, (_, _value) => {
+      if (typeof _value === "function") {
+        // TODO(#21): Basic error system
+        throw new Error(`
+          A function was found nested inside a given object.
+          Functions cannot be securely stringified.
+          Consider writing a custom format or transforming the function into a serializable value. 
+        `);
+      }
 
-    if (typeof valueToCheck === "function") {
-      // TODO(#21): Basic error system
-      throw new Error(`
-        A function was found nested inside a given object.
-        Functions cannot be securely stringified.
-        Consider writing a custom format or transforming the function into a serializable value. 
-      `);
-    }
-
-    if (Array.isArray(valueToCheck)) {
-      checkStack.push(...valueToCheck);
-      continue;
-    }
-
-    if (typeof valueToCheck === "object") {
-      checkStack.push(...Object.values(valueToCheck));
-    }
-  }
-
-  state.result += `"${escape(JSON.stringify(value))}"`;
+      return _value;
+    }))
+  }"`;
 }

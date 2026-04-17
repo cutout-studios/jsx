@@ -30,17 +30,16 @@ runtimes, but contain identical contents otherwise.
 | --------- | ------------------------ | ------------- | ------- | ------------------------- |
 | wikipedia | client-side              | **10.0 ms**   | 20.6 ms | **Cutout (2.07×)**        |
 | 10K rows  | client-side              | **57.0 ms**   | 97.4 ms | **Cutout (1.71×)**        |
-| 10K rows  | server-side              | **13.0 ms**   | 18.4 ms | **Cutout (1.42×)**        |
+| 10K rows  | server-side              | **12.3 ms**   | 18.3 ms | **Cutout (1.49×)**        |
 | 10K rows  | server-side, constrained | **54.2 ms**   | 58.8 ms | **Cutout (1.08×)**        |
-| wikipedia | server-side              | 2.4 ms        | 2.0 ms  | React (1.18×)<sup>†</sup> |
-| wikipedia | server-side, constrained | 5.4 ms        | 9.3 ms  | React (1.73×)             |
+| wikipedia | server-side              | 2.4 ms        | 2.2 ms  | React (1.08×)<sup>†</sup> |
+| wikipedia | server-side, constrained | 5.5 ms        | 8.9 ms  | React (1.63×)             |
 
 > <sup>†</sup>Worth noting that `@cutout/jsx` still wins considerably here in
 > worst-case scenarios _(p99)_, making it the safer choice. See the
 > `Full Results` below.
 
 ## Full Results
-
 ```
     CPU | Apple M5 Max
 Runtime | Deno 2.7.5 (aarch64-apple-darwin)
@@ -48,21 +47,21 @@ Runtime | Deno 2.7.5 (aarch64-apple-darwin)
 | benchmark                 | time/iter (avg) |        iter/s |      (min … max)      |      p75 |      p99 |     p995 |
 | ------------------------- | --------------- | ------------- | --------------------- | -------- | -------- | -------- |
 
-group [SSR] wikipedia HTML
-| react-dom/server          |          2.0 ms |         487.9 | (  1.1 ms …  23.0 ms) |   1.2 ms |  22.5 ms |  22.6 ms |
-| @cutout/jsx/format/html   |          2.4 ms |         414.2 | (  2.1 ms …   5.3 ms) |   2.4 ms |   3.5 ms |   3.5 ms |
+group [SSR] wikipedia.org home page
+| react-dom/server          |          2.2 ms |         446.9 | (  1.1 ms …  22.8 ms) |   1.2 ms |  22.6 ms |  22.8 ms |
+| @cutout/jsx/format/html   |          2.4 ms |         413.5 | (  2.1 ms …   5.3 ms) |   2.4 ms |   4.2 ms |   4.2 ms |
 
 summary
   @cutout/jsx/format/html
-     1.18x slower than react-dom/server
+     1.08x slower than react-dom/server
 
 group [SSR] 10K rows
-| react-dom/server          |         18.4 ms |          54.3 | ( 16.7 ms …  39.5 ms) |  18.0 ms |  39.5 ms |  39.5 ms |
-| @cutout/jsx/format/html   |         13.0 ms |          77.2 | ( 11.7 ms …  20.6 ms) |  13.4 ms |  20.6 ms |  20.6 ms |
+| react-dom/server          |         18.3 ms |          54.7 | ( 16.7 ms …  37.7 ms) |  18.1 ms |  37.7 ms |  37.7 ms |
+| @cutout/jsx/format/html   |         12.3 ms |          81.3 | ( 10.8 ms …  21.2 ms) |  12.2 ms |  21.2 ms |  21.2 ms |
 
 summary
   @cutout/jsx/format/html
-     1.42x faster than react-dom/server
+     1.49x faster than react-dom/server
 
 group [SPA] wikipedia HTML
 | @cutout/jsx/format/dom    |         10.0 ms |         100.2 | (  8.4 ms …  20.8 ms) |  10.4 ms |  20.8 ms |  20.8 ms |
@@ -90,19 +89,19 @@ Runtime | Deno 2.7.5 (aarch64-apple-darwin)
 | benchmark                 | time/iter (avg) |        iter/s |      (min … max)      |      p75 |      p99 |     p995 |
 | ------------------------- | --------------- | ------------- | --------------------- | -------- | -------- | -------- |
 
-group [SSR] wikipedia HTML
-| react-dom/server          |          5.4 ms |         185.7 | (  4.3 ms …  10.6 ms) |   4.9 ms |   9.8 ms |  10.6 ms |
-| @cutout/jsx/format/html   |          9.3 ms |         107.2 | (  8.7 ms …  11.3 ms) |   9.4 ms |  11.3 ms |  11.3 ms |
+group [SSR] wikipedia.org home page
+| react-dom/server          |          5.5 ms |         183.4 | (  4.3 ms …  10.9 ms) |   4.9 ms |  10.1 ms |  10.9 ms |
+| @cutout/jsx/format/html   |          8.9 ms |         112.4 | (  8.3 ms …  10.6 ms) |   8.8 ms |  10.6 ms |  10.6 ms |
 
 summary
   @cutout/jsx/format/html
-     1.73x slower than react-dom/server
+     1.63x slower than react-dom/server
 
 group [SSR] 10K rows
-| react-dom/server          |         58.8 ms |          17.0 | ( 56.4 ms …  79.3 ms) |  58.7 ms |  79.3 ms |  79.3 ms |
-| @cutout/jsx/format/html   |         54.2 ms |          18.4 | ( 52.7 ms …  55.6 ms) |  54.9 ms |  55.6 ms |  55.6 ms |
+| react-dom/server          |         57.8 ms |          17.3 | ( 55.8 ms …  77.5 ms) |  57.8 ms |  77.5 ms |  77.5 ms |
+| @cutout/jsx/format/html   |         50.4 ms |          19.8 | ( 49.0 ms …  52.4 ms) |  50.8 ms |  52.4 ms |  52.4 ms |
 
 summary
   @cutout/jsx/format/html
-     1.08x faster than react-dom/server
+     1.15x faster than react-dom/server
 ```
