@@ -58,7 +58,6 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
       case CutoutTokenType.FUNCTION:
         throw new CutoutError({
           code: CutoutErrorCode.DATA_INSECURE_OP,
-          location: "...",
           guidance: FUNCTION_SERIALIZATION,
           context: value
         });
@@ -66,7 +65,6 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
       default:
         throw new CutoutError({
           code: CutoutErrorCode.DATA_UNKNOWN,
-          location: "...",
           context: value
         });
     }
@@ -158,17 +156,16 @@ function _appendObject(
   value: object,
 ) {
   state.result += `"${
-    escape(JSON.stringify(value, (_key, _value) => {
-      if (typeof _value === "function") {
+    escape(JSON.stringify(value, (_, objectValue) => {
+      if (typeof objectValue === "function") {
         throw new CutoutError({
           code: CutoutErrorCode.DATA_INSECURE_OP,
-          location: "...",
           guidance: FUNCTION_SERIALIZATION,
-          context: _key
+          context: objectValue
         });
       }
 
-      return _value;
+      return objectValue;
     }))
   }"`;
 }

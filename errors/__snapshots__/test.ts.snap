@@ -1,0 +1,8 @@
+export const snapshot = {};
+
+snapshot[`CutoutError 1`] = `
+"[DATA_UNKNOWN]: \`@cutout/jsx\` has encountered unknown data.
+  **Location:** errors/test.ts:7:17
+  **Context:** None.
+  **Guidance:** Well, this *is* a test after all!"
+`;

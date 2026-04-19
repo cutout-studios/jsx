@@ -1,48 +1,63 @@
-export enum CutoutErrorCode {
-  DATA_UNKNOWN = "DATA_UNKNOWN",
-  DATA_INSECURE_OP = "DATA_INSECURE_OP",
-}
+import { relative } from "@std/path";
 
-type CutoutErrorOptions = {
-  code: CutoutErrorCode;
-  guidance?: string;
-  location?: string;
-  context?: unknown;
-} & ErrorOptions;
+import {
+  CONTENT_MAX_SIZE,
+  CONTENT_TRUNCATION_CHARACTER,
+  ERROR_CODE_TRANSLATIONS,
+} from "./constants.ts";
+import type { CutoutErrorCode, CutoutErrorOptions } from "./types.ts";
 
-const humanTranslation = {
-  [CutoutErrorCode.DATA_UNKNOWN]: "@cutout/jsx has encountered unknown data.",
-  [CutoutErrorCode.DATA_INSECURE_OP]:
-    "@cutout/jsx was requested to perform an insecure operation.",
-};
+export { CutoutErrorCode } from "./types.ts";
 
+/**
+ * TODO
+ */
 export class CutoutError extends Error {
-  location?: string;
-  context?: unknown;
-  guidance?: string;
+  code: CutoutErrorCode;
+  #context?: unknown;
+  #guidance?: string;
 
   constructor(
-    { code, guidance, location, context, ...options }: CutoutErrorOptions,
+    { code, guidance, context, ...options }: CutoutErrorOptions,
   ) {
-    let message = `[${code}] ${humanTranslation[code]}`;
+    super("Error message overridden by CutoutError.", options);
 
-    if (location) {
-      // ...
+    this.code = code;
+    this.#context = context;
+    this.#guidance = guidance;
+  }
+
+  override get message(): string {
+    return `
+      [${this.code}]: ${ERROR_CODE_TRANSLATIONS[this.code]}
+        **Location:** ${this.location}
+        **Context:** ${this.context ?? "None."}
+        **Guidance:** ${this.guidance ?? "Not provided."}
+    `.trim();
+  }
+
+  get location(): string | undefined {
+    const [_self, callerFrame] = this.stack?.split(/\n\s+at\s/) ?? [];
+
+    if (!callerFrame) return undefined;
+
+    return relative(Deno.cwd(), new URL(callerFrame).pathname);
+  }
+
+  get context(): string | undefined {
+    const result = String(this.#context);
+
+    if (result.length > CONTENT_MAX_SIZE) {
+      return result.slice(
+        0,
+        CONTENT_MAX_SIZE - CONTENT_TRUNCATION_CHARACTER.length,
+      ) + CONTENT_TRUNCATION_CHARACTER;
     }
 
-    if (context) {
-      // ...
-    }
+    return result;
+  }
 
-    if (guidance) {
-      message += guidance.trim();
-    }
-
-    super(message, options);
-
-    this.message = message;
-    this.location = location;
-    this.context = context;
-    this.guidance = guidance;
+  get guidance(): string | undefined {
+    return this.#guidance?.trim();
   }
 }
