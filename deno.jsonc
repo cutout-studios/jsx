@@ -12,7 +12,8 @@
     "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
     "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
     "./jsx-runtime": "./jsx/module.ts",
-    "./tokens": "./tokens/module.ts"
+    "./tokens": "./tokens/module.ts",
+    "./errors": "./errors/module.ts"
   },
   "fmt": {
     "indentWidth": 2,
@@ -44,7 +45,7 @@
   },
   "name": "@cutout/jsx",
   "tasks": {
-    "docs:lint": "deno doc --lint format/**/module.ts tokens/module.ts jsx/module.ts",
+    "docs:lint": "deno doc --lint format/**/module.ts tokens/module.ts jsx/module.ts errors/module.ts",
     "example:spa": "deno run --allow-net --unstable-bundle --watch-hmr ./format/dom/example/server.tsx",
     "example:ssr": "deno run --allow-net --watch-hmr ./format/html/example.tsx"
   },

@@ -1,3 +1,4 @@
+import { CutoutError, CutoutErrorCode } from "@cutout/jsx/errors";
 import {
   CHILDREN_LABEL,
   CutoutTokenType,
@@ -5,6 +6,7 @@ import {
 } from "@cutout/jsx/tokens";
 
 import { VOID } from "../constants/elements.ts";
+import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
@@ -53,16 +55,16 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
       case CutoutTokenType.NULL:
       case CutoutTokenType.UNDEFINED:
         break;
-      // TODO(#21): Basic error system
       case CutoutTokenType.FUNCTION:
-        throw new Error(`
-          Function tokens cannot be securely stringified.
-          Consider writing a custom format or transforming the function into a serializable value.
-        `);
+        throw new CutoutError(CutoutErrorCode.DATA_INSECURE_OP, {
+          guidance: FUNCTION_SERIALIZATION,
+          context: value,
+        });
+
       default:
-        throw new Error(
-          `Unknown or unformattable token type encountered during HTML formatting: "${type}"`,
-        );
+        throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {
+          context: value,
+        });
     }
   }
 
@@ -152,17 +154,15 @@ function _appendObject(
   value: object,
 ) {
   state.result += `"${
-    escape(JSON.stringify(value, (_, _value) => {
-      if (typeof _value === "function") {
-        // TODO(#21): Basic error system
-        throw new Error(`
-          A function was found nested inside a given object.
-          Functions cannot be securely stringified.
-          Consider writing a custom format or transforming the function into a serializable value. 
-        `);
+    escape(JSON.stringify(value, (_, objectValue) => {
+      if (typeof objectValue === "function") {
+        throw new CutoutError(CutoutErrorCode.DATA_INSECURE_OP, {
+          guidance: FUNCTION_SERIALIZATION,
+          context: objectValue,
+        });
       }
 
-      return _value;
+      return objectValue;
     }))
   }"`;
 }
