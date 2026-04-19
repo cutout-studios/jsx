@@ -6,8 +6,9 @@ import { CutoutErrorCode } from "./types.ts";
 Deno.test("CutoutError", async (test) => {
   const error = new CutoutError({
     code: CutoutErrorCode.DATA_UNKNOWN,
-    guidance: "Well, this *is* a test after all!",
+    context: function testFunction() {},
+    guidance: "This is a test! No guidance needed!",
   });
 
-  await assertSnapshot(test, error.message);
+  await assertSnapshot(test, String(error));
 });

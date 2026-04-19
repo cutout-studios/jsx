@@ -59,13 +59,13 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
         throw new CutoutError({
           code: CutoutErrorCode.DATA_INSECURE_OP,
           guidance: FUNCTION_SERIALIZATION,
-          context: value
+          context: value,
         });
 
       default:
         throw new CutoutError({
           code: CutoutErrorCode.DATA_UNKNOWN,
-          context: value
+          context: value,
         });
     }
   }
@@ -161,7 +161,7 @@ function _appendObject(
         throw new CutoutError({
           code: CutoutErrorCode.DATA_INSECURE_OP,
           guidance: FUNCTION_SERIALIZATION,
-          context: objectValue
+          context: objectValue,
         });
       }
 
