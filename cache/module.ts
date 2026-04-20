@@ -7,7 +7,7 @@ import type {
 export type CutoutCacheConfig<T> = {
   ttlMS?: number;
   watch?: () => T;
-  compare?: (a: T, b: T) => boolean;
+  compare?: (a: T | undefined, b: T | undefined) => boolean;
 };
 
 export function createCache<T>(
@@ -17,43 +17,56 @@ export function createCache<T>(
     cachedOutput: CutoutOutputToken[] | undefined,
     lastRendered: number;
 
+  const _copyCachedGenerator = (): CutoutGeneratorToken => [
+    CutoutTokenType.GENERATOR,
+    (function* () {
+      yield* cachedOutput!;
+    })(),
+  ];
+
+  const _renderFreshGenerator = (
+    render: (input: T | undefined) => CutoutGeneratorToken,
+  ): CutoutGeneratorToken => {
+    cachedOutput = [...(render(cachedInput)[TOKEN_VALUE_INDEX])];
+    lastRendered = Date.now();
+
+    return _copyCachedGenerator();
+  };
+
   function cache(
     render: (input: T | undefined) => CutoutGeneratorToken,
   ): CutoutGeneratorToken {
-    const hasTimedout = ttlMS !== undefined &&
-      Date.now() - lastRendered < ttlMS;
-
-    const createOutputGenerator = (): CutoutGeneratorToken => [
-      CutoutTokenType.GENERATOR,
-      (function* () {
-        yield* cachedOutput!;
-      })(),
-    ];
-
-    if (cachedOutput !== undefined && hasTimedout) {
-      return createOutputGenerator();
-    }
-
-    const currentInput = watch?.();
-
     if (
-      cachedOutput !== undefined && cachedInput !== undefined &&
-      currentInput !== undefined &&
-      compare(cachedInput, currentInput) &&
-      !hasTimedout
+      ttlMS !== undefined &&
+      Date.now() - lastRendered < ttlMS
     ) {
-      return createOutputGenerator();
+      return _renderFreshGenerator(render);
     }
 
-    cachedInput = currentInput;
-    cachedOutput = [...(render(currentInput)[TOKEN_VALUE_INDEX])];
-    lastRendered = Date.now();
+    if (cachedOutput === undefined) {
+      return _renderFreshGenerator(render);
+    }
+    
+    if (cachedOutput !== undefined && !watch) {
+      return _copyCachedGenerator();
+    }
 
-    return createOutputGenerator();
+    if (cachedOutput !== undefined && watch) {
+      const currentInput = watch();
+
+      if (compare(cachedInput, currentInput)) {
+        return _copyCachedGenerator();
+      }
+
+      cachedInput = currentInput;
+    }
+
+    return _renderFreshGenerator(render);
   }
 
   return Object.assign(cache, {
     clear() {
+      console.log("clear called");
       cachedInput = undefined;
       cachedOutput = undefined;
       lastRendered = 0;

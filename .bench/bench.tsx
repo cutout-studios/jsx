@@ -1,9 +1,9 @@
 // deno-lint-ignore-file import-order/import-order
 
 // Compare SSR (server-side) methods
-import "./.control.ssr.jsx";
-import "../format/dom/.compare.spa.tsx";
+import "./benchPartial.ssr.jsx"; // control
+import "../format/dom/benchPartial.tsx";
 
 // Compare SPA (client-side) methods
-import "./.control.spa.jsx";
-import "../format/html/.compare.ssr.tsx";
+import "./benchPartial.spa.jsx"; // control
+import "../format/html/benchPartial.tsx";
