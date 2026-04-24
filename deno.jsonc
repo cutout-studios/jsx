@@ -10,7 +10,7 @@
     "plugins": [
       "jsr:@ayk/lint-import-order"
     ]
-  },  
+  },
   "tasks": {
     "docs:lint": "deno doc --lint jsx/format/**/module.ts jsx/tokens/module.ts jsx/module.ts jsx/errors/module.ts"
   },
