@@ -15,12 +15,6 @@
     "./tokens": "./tokens/module.ts",
     "./errors": "./errors/module.ts"
   },
-  "fmt": {
-    "indentWidth": 2,
-    "lineWidth": 80,
-    "semiColons": true,
-    "singleQuote": false
-  },
   "imports": {
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
@@ -37,17 +31,10 @@
     "react-dom": "npm:react-dom",
     ".bench": "./.bench/module.ts"
   },
-  "license": "MIT",
-  "lint": {
-    "plugins": [
-      "jsr:@ayk/lint-import-order"
-    ]
-  },
-  "name": "@cutout/jsx",
   "tasks": {
-    "docs:lint": "deno doc --lint format/**/module.ts tokens/module.ts jsx/module.ts errors/module.ts",
     "example:spa": "deno run --allow-net --unstable-bundle --watch-hmr ./format/dom/example/server.tsx",
     "example:ssr": "deno run --allow-net --watch-hmr ./format/html/example.tsx"
   },
+  "name": "@cutout/jsx",
   "version": "0.0.0-alpha.0"
 }

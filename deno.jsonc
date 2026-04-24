@@ -1,4 +1,19 @@
 {
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "semiColons": true,
+    "singleQuote": false
+  },
+  "license": "MIT",
+  "lint": {
+    "plugins": [
+      "jsr:@ayk/lint-import-order"
+    ]
+  },  
+  "tasks": {
+    "docs:lint": "deno doc --lint jsx/format/**/module.ts jsx/tokens/module.ts jsx/module.ts jsx/errors/module.ts"
+  },
   "workspace": [
     "jsx",
     "web"
