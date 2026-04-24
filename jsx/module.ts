@@ -23,7 +23,7 @@ import {
   TOKEN_VALUE_INDEX,
   tokenizeValue,
   UNSERIALIZABLE_LABEL,
-} from "../tokens/module.ts";
+} from "./tokens/module.ts";
 
 /**
  * The core transformation function for our JSX pragma.

@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
+  "exports": {
+    ".": "./module.ts",
+    "./format": "./format/module.ts",
+    "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
+    "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
+    "./jsx-runtime": "./module.ts",
+    "./tokens": "./tokens/module.ts",
+    "./errors": "./errors/module.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert",
+    "@std/fmt": "jsr:@std/fmt",
+    "@std/http/route": "jsr:@std/http/unstable-route",
+    "@std/path": "jsr:@std/path",
+    "@std/testing": "jsr:@std/testing",
+
+    // Deno's recommended headless browser "@b-fuze/deno-dom"
+    // is a fast but incomplete implementation:
+    // "happy-dom" is a complete implementation that more
+    // accurately reflects browser overhead.
+    "happy-dom": "npm:happy-dom",
+    "react": "npm:react",
+    "react-dom": "npm:react-dom",
+    ".bench": "./.bench/module.ts"
+  },
+  "tasks": {
+    "example:spa": "deno run --allow-net --unstable-bundle --watch-hmr ./format/dom/example/server.tsx",
+    "example:ssr": "deno run --allow-net --watch-hmr ./format/html/example.tsx"
+  },
+  "name": "@cutout/jsx",
+  "version": "0.0.0-alpha.0"
+}
