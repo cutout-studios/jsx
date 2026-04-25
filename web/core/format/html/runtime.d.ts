@@ -1,4 +1,4 @@
-import type { JSX as _JSX } from "../../module.ts";
+import type { JSX as _JSX } from "@cutout/jsx";
 
 import type {
   Attributes,

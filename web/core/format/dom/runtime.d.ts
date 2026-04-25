@@ -1,5 +1,5 @@
-import type { JSX as _JSX } from "../../module.ts";
-import type { AnyFunction } from "../../tokens/types.ts";
+import type { JSX as _JSX } from "@cutout/jsx";
+import type { AnyFunction } from "@cutout/jsx/tokens";
 
 import type {
   Attributes,

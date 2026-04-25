@@ -1,9 +1,34 @@
 {
-  "name": "@cutout/web",
-  "version": "0.0.0-alpha.0",
-  "license": "MIT",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
   "exports": {
-    ".": "./module.ts",
+    ".": "./core/module.ts",
+    // TODO: these are to be repurposed for the framework, explicitly.
+    "./format/dom/jsx-runtime": "./core/format/dom/runtime.d.ts",
+    "./format/html/jsx-runtime": "./core/format/html/runtime.d.ts",
     "./worker": "./worker/module.ts"
-  }
+  },
+  "imports": {
+    ".bench": "./.bench/module.ts",
+    "@std/assert": "jsr:@std/assert",
+    "@std/fmt": "jsr:@std/fmt",
+    "@std/http/route": "jsr:@std/http/unstable-route",
+    "@std/path": "jsr:@std/path",
+    "@std/testing": "jsr:@std/testing",
+    // Deno's recommended headless browser "@b-fuze/deno-dom"
+    // is a fast but incomplete implementation:
+    // "happy-dom" is a complete implementation that more
+    // accurately reflects browser overhead.
+    "happy-dom": "npm:happy-dom",
+    "react": "npm:react",
+    "react-dom": "npm:react-dom"
+  },
+  "license": "MIT",
+  "name": "@cutout/web",
+  "version": "0.0.0-alpha.0"
 }

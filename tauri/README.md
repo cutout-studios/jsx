@@ -23,7 +23,7 @@ development.
       [runs everything through the interpreter](https://v8.dev/blog/jitless#:~:text=Essentially%2C%20V8%20switches%20into%20an,pattern%20matching%20is%20likewise%20interpreted.),
       and some patterns — generators in particular — have poor interpreter-mode
       performance. The `@cutout/jsx` renderer
-      [leans on generator-based traversal in places](../jsx/BENCHMARKS.md); we
+      [leans on generator-based traversal in places](../web/BENCHMARKS.md); we
       need a **flattened-generator mode** that emits non-generator equivalents
       for the jitless target.
 

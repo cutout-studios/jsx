@@ -1,10 +1,10 @@
-# `@cutout/jsx` Rendering Benchmarks
+# `@cutout/web` Benchmarks
 
 _Last updated: April 2026_
 
 ## Methodology
 
-The benchmark is a head to head of both React's and `@cutout/jsx`'s respective
+The benchmark is a head to head of both React's and `@cutout/web`'s respective
 rendering methods. Framework-based features - like streaming - are out of scope.
 
 All implementations are currently set up to render both:
@@ -26,7 +26,7 @@ runtimes, but contain identical contents otherwise.
 
 ## Summary
 
-| Scenario  | Environment              | `@cutout/jsx` | React   | Winner                    |
+| Scenario  | Environment              | `@cutout/web` | React   | Winner                    |
 | --------- | ------------------------ | ------------- | ------- | ------------------------- |
 | wikipedia | client-side              | **10.0 ms**   | 20.6 ms | **Cutout (2.07×)**        |
 | 10K rows  | client-side              | **57.0 ms**   | 97.4 ms | **Cutout (1.71×)**        |
@@ -63,34 +63,34 @@ Runtime | Deno 2.7.5 (aarch64-apple-darwin)
 
 group [SSR] wikipedia.org home page
 | react-dom/server          |          2.2 ms |         446.9 | (  1.1 ms …  22.8 ms) |   1.2 ms |  22.6 ms |  22.8 ms |
-| @cutout/jsx/format/html   |          2.4 ms |         413.5 | (  2.1 ms …   5.3 ms) |   2.4 ms |   4.2 ms |   4.2 ms |
+| @cutout/web/format/html   |          2.4 ms |         413.5 | (  2.1 ms …   5.3 ms) |   2.4 ms |   4.2 ms |   4.2 ms |
 
 summary
-  @cutout/jsx/format/html
+  @cutout/web/format/html
      1.08x slower than react-dom/server
 
 group [SSR] 10K rows
 | react-dom/server          |         18.3 ms |          54.7 | ( 16.7 ms …  37.7 ms) |  18.1 ms |  37.7 ms |  37.7 ms |
-| @cutout/jsx/format/html   |         12.3 ms |          81.3 | ( 10.8 ms …  21.2 ms) |  12.2 ms |  21.2 ms |  21.2 ms |
+| @cutout/web/format/html   |         12.3 ms |          81.3 | ( 10.8 ms …  21.2 ms) |  12.2 ms |  21.2 ms |  21.2 ms |
 
 summary
-  @cutout/jsx/format/html
+  @cutout/web/format/html
      1.49x faster than react-dom/server
 
 group [SPA] wikipedia HTML
-| @cutout/jsx/format/dom    |         10.0 ms |         100.2 | (  8.4 ms …  20.8 ms) |  10.4 ms |  20.8 ms |  20.8 ms |
+| @cutout/web/format/dom    |         10.0 ms |         100.2 | (  8.4 ms …  20.8 ms) |  10.4 ms |  20.8 ms |  20.8 ms |
 | react-dom/client          |         20.6 ms |          48.5 | ( 12.1 ms …  39.2 ms) |  36.0 ms |  39.2 ms |  39.2 ms |
 
 summary
-  @cutout/jsx/format/dom
+  @cutout/web/format/dom
      2.07x faster than react-dom/client
 
 group [SPA] 10K rows
-| @cutout/jsx/format/dom    |         57.0 ms |          17.5 | ( 53.5 ms …  64.9 ms) |  57.7 ms |  64.9 ms |  64.9 ms |
+| @cutout/web/format/dom    |         57.0 ms |          17.5 | ( 53.5 ms …  64.9 ms) |  57.7 ms |  64.9 ms |  64.9 ms |
 | react-dom/client          |         97.4 ms |          10.3 | ( 88.4 ms … 118.0 ms) | 108.8 ms | 118.0 ms | 118.0 ms |
 
 summary
-  @cutout/jsx/format/dom
+  @cutout/web/format/dom
      1.71x faster than react-dom/client
 ```
 
@@ -105,17 +105,17 @@ Runtime | Deno 2.7.5 (aarch64-apple-darwin)
 
 group [SSR] wikipedia.org home page
 | react-dom/server          |          5.5 ms |         183.4 | (  4.3 ms …  10.9 ms) |   4.9 ms |  10.1 ms |  10.9 ms |
-| @cutout/jsx/format/html   |          8.9 ms |         112.4 | (  8.3 ms …  10.6 ms) |   8.8 ms |  10.6 ms |  10.6 ms |
+| @cutout/web/format/html   |          8.9 ms |         112.4 | (  8.3 ms …  10.6 ms) |   8.8 ms |  10.6 ms |  10.6 ms |
 
 summary
-  @cutout/jsx/format/html
+  @cutout/web/format/html
      1.63x slower than react-dom/server
 
 group [SSR] 10K rows
 | react-dom/server          |         57.8 ms |          17.3 | ( 55.8 ms …  77.5 ms) |  57.8 ms |  77.5 ms |  77.5 ms |
-| @cutout/jsx/format/html   |         50.4 ms |          19.8 | ( 49.0 ms …  52.4 ms) |  50.8 ms |  52.4 ms |  52.4 ms |
+| @cutout/web/format/html   |         50.4 ms |          19.8 | ( 49.0 ms …  52.4 ms) |  50.8 ms |  52.4 ms |  52.4 ms |
 
 summary
-  @cutout/jsx/format/html
+  @cutout/web/format/html
      1.15x faster than react-dom/server
 ```

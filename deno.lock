@@ -91,6 +91,12 @@
       "jsx": {
         "dependencies": [
           "jsr:@std/assert@*",
+          "jsr:@std/testing@*"
+        ]
+      },
+      "web": {
+        "dependencies": [
+          "jsr:@std/assert@*",
           "jsr:@std/fmt@*",
           "jsr:@std/http@*",
           "jsr:@std/path@*",

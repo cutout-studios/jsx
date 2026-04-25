@@ -1,7 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
 
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { assertSnapshot } from "@std/testing/snapshot";
+import type { CutoutGeneratorToken } from "./tokens/types.ts";
 
 const TEST_GROUP = "jsx";
 

@@ -1,5 +1,5 @@
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { TOKEN_LENGTH } from "./constants.ts";
+import type { CutoutGeneratorToken } from "./types.ts";
 import {
   type CutoutOutputToken,
   CutoutTokenType,
