@@ -6,16 +6,6 @@
 It's inspired in part by the long-abandoned
 [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it anywhere._
 
-In combination with the rich first-party
-[Deno standard library](https://docs.deno.com/runtime/reference/std/) and
-[command line tools](https://docs.deno.com/runtime/reference/cli/), this library
-is intended as the "smallest missing piece" required to enable a
-[full-stack workflow](#full-application) that should stand up to **React +
-Next.js** for a large number of applications.
-
-The [examples that follow](#more-examples) are implemented in such a manner and
-are [competitive with React in terms of rendering performance](./BENCHMARKS.md).
-
 ## How it works
 
 ```tsx
@@ -136,24 +126,6 @@ Deno.serve(
   // [...]
 );
 ```
-
-### Full Application
-
-While a runnable full-stack example is still in development, the Deno +
-`@cutout/jsx` stack maps onto React + Next.js roughly as follows:
-
-| Concern                | React + Next.js         | `@cutout/jsx` + Deno  |
-| ---------------------- | ----------------------- | --------------------- |
-| Package management     | npm + lockfile          | URL Imports           |
-| Formatting             | prettier                | `deno fmt`            |
-| Linting                | eslint                  | `deno lint`           |
-| Testing                | Jest                    | `deno test`           |
-| Build step             | Turbopack/Webpack       | **None** (direct TSX) |
-| JSX rendering          | React + renderer        | `@cutout/jsx`         |
-| Routing                | File-based / App Router | `@std/http`           |
-| HTTP middleware        | Route handlers          | Function composition  |
-| Deployment             | Vercel                  | Deno Deploy           |
-| **Total Dependencies** | Several                 | **One**               |
 
 ---
 
