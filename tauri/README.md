@@ -14,8 +14,9 @@ development.
 
 - [ ] **Ensure Jitless `deno_core` builds and runs on iOS.** Compile `rusty_v8`
       (and by extension `deno_core`) with the jitless configuration, link into a
-      Tauri iOS binary, boot a nontrivial `@cutout/web` server end-to-end.
-      - State of community efforts: https://github.com/denoland/rusty_v8/issues/1640
+      Tauri iOS binary, boot a nontrivial `@cutout/web` server end-to-end. -
+      State of community efforts:
+      https://github.com/denoland/rusty_v8/issues/1640
 - [ ] **Ensure JSX renderer is jitless-friendly.** Jitless V8 interprets
       everything through Ignition, and some patterns — generators in particular
       — have notably poor interpreter-mode performance. The `@cutout/jsx`
