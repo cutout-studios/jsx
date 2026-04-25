@@ -17,9 +17,9 @@ development.
       Tauri iOS binary, boot a nontrivial `@cutout/web` server end-to-end. -
       State of community efforts:
       https://github.com/denoland/rusty_v8/issues/1640
-- [ ] **Ensure JSX renderer is jitless-friendly.** Jitless V8 interprets
-      everything through Ignition, and some patterns — generators in particular
-      — have notably poor interpreter-mode performance. The `@cutout/jsx`
+- [ ] **Ensure `@cutout/jsx` is jitless-friendly.** Jitless V8 [runs
+      everything through the interpreter](https://v8.dev/blog/jitless#:~:text=Essentially%2C%20V8%20switches%20into%20an,pattern%20matching%20is%20likewise%20interpreted.), and some patterns — generators in particular
+      — have poor interpreter-mode performance. The `@cutout/jsx`
       renderer
       [leans on generator-based traversal in places](../jsx/BENCHMARKS.md); we
       need a **flattened-generator mode** that emits non-generator equivalents
