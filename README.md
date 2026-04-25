@@ -8,13 +8,12 @@
 
 ## Contents
 
-| Module                             | Description                                                       | Status              |
-| ---------------------------------- | ----------------------------------------------------------------- | ------------------- |
-| [`@cutout/jsx`](./jsx)             | Write JSX once, use it anywhere. Cutout's core rendering layer.   | **Nearing Release** |
-| [`@cutout/web`](./web)             | Core machinery for building Cutout-style fullstack web apps       | Designing APIs      |
-| [`@cutout/webworker`](./webworker) | Service Worker library for `@cutout/web` (part of `@cutout/web`?) | Placeholder         |
-| [`@cutout/elements`](./elements)   | Accessible and mobile-friendly UI primitives                      | Placeholder         |
-| [`@cutout/tauri`](./tauri/)        | Embed your Cutout Webapp in a cross-platform Tauri shell!         | _Researching..._    |
+| Module                           | Description                                                     | Status              |
+| -------------------------------- | --------------------------------------------------------------- | ------------------- |
+| [`@cutout/jsx`](./jsx)           | Write JSX once, use it anywhere. Cutout's core rendering layer. | **Nearing Release** |
+| [`@cutout/web`](./web)           | Core machinery for building Cutout-style fullstack web apps     | Designing APIs      |
+| [`@cutout/elements`](./elements) | Accessible and mobile-friendly UI primitives                    | Placeholder         |
+| [`@cutout/tauri`](./tauri/)      | Embed your Cutout Webapp in a cross-platform Tauri shell!       | _Researching..._    |
 
 ## Contributing
 

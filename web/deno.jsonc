@@ -2,5 +2,8 @@
   "name": "@cutout/web",
   "version": "0.0.0-alpha.0",
   "license": "MIT",
-  "exports": "./module.ts"
+  "exports": {
+    ".": "./module.ts",
+    "./worker": "./worker/module.ts"
+  }
 }
