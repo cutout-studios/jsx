@@ -1,4 +1,4 @@
-# `@cutout/jsx` Contribution Guide
+# `@cutout/toolbox` Contribution Guide
 
 **Thinking about contributing?** There are a number of ways you can help!
 
