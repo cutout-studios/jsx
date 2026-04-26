@@ -9,15 +9,21 @@
 
 ## iOS de-risking TODOs
 
-iOS forbids JIT-ful processes. De-risking the iOS path blocks this module's
-development.
+iOS forbids JIT-ful processes. All other platforms are in some state accounted
+for. De-risking the iOS path blocks this module's development.
 
-- [ ] **Modify OSS build scripts so Jit-less/FFI-less `deno_runtime` builds and
-      runs on iOS.** Link this into a Tauri iOS binary, boot a nontrivial `Deno`
-      server end-to-end.
+- [ ] Compile and exercise the Deno stack for iOS
+  - [x] Successfully compile jitless `rusty_v8` for iOS Simulator. _See the
+        [`build_rusty_v8_ios_sim.sh`](./build_rusty_v8_ios_sim.sh) script._
 
-> State of community efforts: https://github.com/denoland/rusty_v8/issues/1640.
-> All other platforms are in some state accounted for.
+  > State of community efforts:
+  > https://github.com/denoland/rusty_v8/issues/1640.
+
+  - [ ] Successfully compile `deno_core` with the already compiled `rusty_v8` as
+        dependency.
+  - [ ] Determine which featuresets are easy (`deno_console`, `deno_http`
+        perhaps). Write a wrapper script for this bin: `deno_cutout`.
+  - [ ] Link this binary into a Tauri app and exercise it.
 
 - [ ] **Ensure `@cutout/jsx` is jitless-friendly.** Jitless V8
       [runs everything through the interpreter](https://v8.dev/blog/jitless#:~:text=Essentially%2C%20V8%20switches%20into%20an,pattern%20matching%20is%20likewise%20interpreted.),
