@@ -12,18 +12,15 @@
 iOS forbids JIT-ful processes. All other platforms are in some state accounted
 for. De-risking the iOS path blocks this module's development.
 
-- [ ] Compile and exercise the Deno stack for iOS
-  - [x] Successfully compile jitless `rusty_v8` for iOS Simulator. _See the
-        [`build_rusty_v8_ios_sim.sh`](./build_rusty_v8_ios_sim.sh) script._
+> State of community efforts:
+> https://github.com/denoland/rusty_v8/issues/1640.
 
-  > State of community efforts:
-  > https://github.com/denoland/rusty_v8/issues/1640.
-
+- [ ] Compile and exercise the Deno stack for iOS:
+  - [x] Successfully compile jitless `rusty_v8` for iOS Simulator.
   - [x] Successfully compile `deno_core` with the already compiled `rusty_v8` as
-        dependency.
-  - [ ] Determine which featuresets are easy (`deno_console`, `deno_http`
-        perhaps). Write a wrapper script for this bin: `deno_cutout`.
-  - [ ] Link this binary into a Tauri app and exercise it.
+        dependency. (This is now captured with the `buildApple` deno task.)
+  - [ ] Link `deno_core` into a Tauri app and exercise it on the iOS Simulator.
+  - [ ] Determine which extensions (`deno/lib/ext`) will be easy to add.
 
 - [ ] **Ensure `@cutout/jsx` is jitless-friendly.** Jitless V8
       [runs everything through the interpreter](https://v8.dev/blog/jitless#:~:text=Essentially%2C%20V8%20switches%20into%20an,pattern%20matching%20is%20likewise%20interpreted.),
