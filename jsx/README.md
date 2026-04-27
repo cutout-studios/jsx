@@ -55,4 +55,4 @@ deno myCutoutApp.tsx
 
 ---
 
-[Copyright 2026, Cutout Studios](./LICENSE)
+[Copyright 2026, Cutout Studios](../LICENSE)

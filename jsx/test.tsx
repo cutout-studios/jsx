@@ -91,6 +91,17 @@ Deno.test(
   ),
 );
 
+Deno.test(
+  `${TEST_GROUP} - custom element`,
+  (test) => {
+    const MyElement = ({ hello }: { hello: string }) => <div>{hello}</div>;
+
+    assertCutoutJsxSnapshot(
+      <MyElement hello="Hello, Daniel!" />,
+    )(test);
+  },
+);
+
 function assertCutoutJsxSnapshot([, generator]: CutoutGeneratorToken) {
   return async (test: Deno.TestContext) =>
     await assertSnapshot(test, [...generator]);

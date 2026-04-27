@@ -497,3 +497,24 @@ snapshot[`jsx - fragment 1`] = `
   ],
 ]
 `;
+
+snapshot[`jsx - custom element 1`] = `
+[
+  [
+    11,
+    "div",
+  ],
+  [
+    13,
+    "[[CHILDREN]]",
+  ],
+  [
+    5,
+    "Hello, Daniel!",
+  ],
+  [
+    12,
+    "div",
+  ],
+]
+`;

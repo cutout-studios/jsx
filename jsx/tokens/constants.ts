@@ -38,7 +38,7 @@ export const TOKEN_TYPE_INDEX = 0;
 /**
  * The index of the payload in a token tuple.
  *
- * This constant points to `Value`.
+ * This constant points to the token's value.
  *
  * @example
  * ```ts

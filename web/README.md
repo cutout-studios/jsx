@@ -197,7 +197,7 @@ export const getUsers = xo.defineRoute("/users", async () => {
 		<ul>
 			{
         data.map(
-          user => <li>{user.name}</li>
+          user => <li>{user.name}</li> 
         )
       }
 		</ul>
