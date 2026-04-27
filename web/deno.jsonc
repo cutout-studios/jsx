@@ -11,6 +11,7 @@
     // TODO: these are to be repurposed for the framework, explicitly.
     "./format/dom/jsx-runtime": "./core/format/dom/runtime.d.ts",
     "./format/html/jsx-runtime": "./core/format/html/runtime.d.ts",
+    "./errors": "./core/errors/module.ts",
     "./worker": "./worker/module.ts"
   },
   "imports": {

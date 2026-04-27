@@ -1,9 +1,9 @@
-import { CutoutError, CutoutErrorCode } from "@cutout/jsx/errors";
 import {
   CHILDREN_LABEL,
   CutoutTokenType,
   FRAGMENT_LABEL,
 } from "@cutout/jsx/tokens";
+import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 
 import { VOID } from "../constants/elements.ts";
 import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
