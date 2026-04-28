@@ -6,6 +6,9 @@
 ecosystem. It's inspired in part by the long-abandoned
 [OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it anywhere._
 
+Our generator-based approach is proving suprisingly competitive, going
+[toe-to-toe with React on our latest benchmarks](../web/BENCHMARKS.md).
+
 > [!WARNING]
 > `@cutout/jsx` is pending in-production testing. Use at your own discretion.
 
@@ -69,10 +72,19 @@ setup or build required:
 deno myCutoutApp.tsx
 ```
 
-## Performance
+## Custom Elements
 
-This approach is proving suprisingly competitive, going
-[toe-to-toe with React on our latest benchmarks](../web/BENCHMARKS.md).
+Defining custom elements is as easy as providing a function that takes an
+attributes object and returns JSX:
+
+```tsx
+const MyElement = defineElement<{ hello: string; }>(
+  attributes => <div>{attributes.hello}</div>
+);
+
+const correct = <MyElement hello="123" /> // Works!
+const incorrect = <MyElement hello={123} /> // Type Error.
+```
 
 ---
 
