@@ -208,10 +208,7 @@ export const getUsers = xo.defineRoute("/users", async () => {
 ```tsx
 // Client handling
 xo.defineElement("userList", {
-	#users: undefined,
-	render({ usersFragment }) {
-    return <section>{xo.fetchPartial("/users") ?? "Loading users..."}</section>;
-  };
+  render: () => <section>{this.fetchPartial("/users") ?? "Loading users..."}</section>;
 });
 ```
 
