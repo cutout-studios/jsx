@@ -9,5 +9,5 @@
     "@std/testing": "jsr:@std/testing"
   },
   "name": "@cutout/jsx",
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
