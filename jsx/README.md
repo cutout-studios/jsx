@@ -1,6 +1,7 @@
 # `@cutout/jsx`
 
 [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx)
+[![bundlejs](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)
 
 `@cutout/jsx` is a tiny, generic, interpretable JSX runtime for the Deno
 ecosystem. It's inspired in part by the long-abandoned
@@ -79,7 +80,7 @@ attributes object and returns JSX:
 
 ```tsx
 const MyElement = defineElement<{ hello: string }>(
-  (attributes) => <div>{attributes.hello}</div>,
+  ({ hello }) => <div>{hello}</div>,
 );
 
 const correct = <MyElement hello="123" />; // Works!
