@@ -146,7 +146,7 @@ export type CutoutSymbolToken = AnyCutoutToken<
 
 /**
  * A token wrapping an object.
- * Typically used for props containers.
+ * Typically used for attribute containers.
  */
 export type CutoutObjectToken = AnyCutoutToken<
   CutoutTokenType.OBJECT,
@@ -202,7 +202,7 @@ export type CutoutElementCloseToken = AnyCutoutToken<
 
 /**
  * A token for an attribute key.
- * Used when we need to explicitly tag a key inside a props object.
+ * Used when we need to explicitly tag a key inside an attribute object.
  */
 export type CutoutAttributeToken = AnyCutoutToken<
   CutoutTokenType.ATTRIBUTE,

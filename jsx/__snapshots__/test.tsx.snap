@@ -13,7 +13,7 @@ snapshot[`jsx - simple case 1`] = `
 ]
 `;
 
-snapshot[`jsx - props 1`] = `
+snapshot[`jsx - attributes 1`] = `
 [
   [
     11,
@@ -174,7 +174,7 @@ snapshot[`jsx - mapped children 1`] = `
 ]
 `;
 
-snapshot[`jsx - children + props 1`] = `
+snapshot[`jsx - children + attributes 1`] = `
 [
   [
     11,
@@ -332,7 +332,7 @@ snapshot[`jsx - nested children 1`] = `
 ]
 `;
 
-snapshot[`jsx - nested children + props 1`] = `
+snapshot[`jsx - nested children + attributes 1`] = `
 [
   [
     11,

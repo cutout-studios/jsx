@@ -8,7 +8,7 @@ const TEST_GROUP = "jsx";
 Deno.test(`${TEST_GROUP} - simple case`, assertCutoutJsxSnapshot(<div></div>));
 
 Deno.test(
-  `${TEST_GROUP} - props`,
+  `${TEST_GROUP} - attributes`,
   assertCutoutJsxSnapshot(
     <div style={{ color: "red" }} id="my-cool-div"></div>,
   ),
@@ -37,7 +37,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - children + props`,
+  `${TEST_GROUP} - children + attributes`,
   assertCutoutJsxSnapshot(
     <ul id="main">
       <li class="selected">Child #1</li>
@@ -65,7 +65,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - nested children + props`,
+  `${TEST_GROUP} - nested children + attributes`,
   assertCutoutJsxSnapshot(
     <div id="1">
       <div id="2">

@@ -47,41 +47,41 @@ export namespace JSX {
  * @example
  * ```tsx
  * const MyElement = defineElement<{ hello: string; }>(
- *   props => <div>{props.hello}</div>
+ *   attributes => <div>{attributes.hello}</div>
  * );
  *
  * const correct = <MyElement hello="123" /> // Works!
  * const incorrect = <MyElement hello={123} /> // Type Error.
  * ```
  */
-export type CutoutElementFunction<P = unknown> = (
-  props: P,
+export type CutoutElementFunction<A = Record<string, unknown>> = (
+  attributes: A,
 ) => CutoutGeneratorToken;
 
 /**
  * The core transformation function for `@cutout/jsx`.
  *
  * This is what TypeScript calls when it sees `<MyComponent prop="value">child</MyComponent>`.
- * Instead of returning a virtual DOM node, we return a `CutoutGeneratorToken`.
+ * Instead of returning a node, we return a `CutoutGeneratorToken`.
  * This allows us to lazily evaluate the component tree.
  *
  * @param element The tag name or element function (e.g., "div" or `MyComponent`).
- * @param _elementProps The props object passed to the element.
+ * @param _elementAttributes The attribute object passed to the element.
  * @param _elementChildren Child elements.
  *   Note: The "react" pragma passes children as a separate list, while
- *   "react-jsx" includes them inside props. We handle both cases here.
+ *   "react-jsx" includes them inside the attributes. We handle both cases here.
  *
  * @returns A generator token representing the element structure.
  */
 export const jsx = (
   element: CutoutElementFunction | string,
-  _elementProps: { [key: string]: unknown },
+  _elementAttributes: { [key: string]: unknown },
   ..._elementChildren: unknown[]
 ): CutoutGeneratorToken => {
   const _generator = function* () {
     // 1. Normalize children across "react" and "react-jsx" pragma types.
-    //    We separate children from the rest of the props to handle them separately.
-    let { children, ...props } = _elementProps;
+    //    We separate children from the rest of the attributes to handle them separately.
+    let { children, ...attributes } = _elementAttributes;
     children = children ?? _elementChildren;
 
     // These are both "single values" and need to be wrapped in an array
@@ -92,7 +92,7 @@ export const jsx = (
 
     // 2. If the element is a function, yield said function resolution.
     if (typeof element === "function") {
-      const [_, result] = element({ children, ...props });
+      const [_, result] = element({ children, ...attributes });
       yield* result;
       return;
     }
@@ -101,10 +101,10 @@ export const jsx = (
     // => 3.1. Yield the opening tag.
     yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementOpenToken;
 
-    // => 3.2. Yield all non-child props.
-    for (const key in props) {
+    // => 3.2. Yield all non-child attributes.
+    for (const key in attributes) {
       yield [CutoutTokenType.ATTRIBUTE, key] as CutoutAttributeToken;
-      yield* _forwardTokens(props[key]);
+      yield* _forwardTokens(attributes[key]);
     }
 
     // => 3.3. Yield children.

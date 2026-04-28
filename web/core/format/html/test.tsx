@@ -11,7 +11,7 @@ Deno.test(`${TEST_GROUP} - simple case`, (test) =>
   assertSnapshot(test, html(<div></div>)));
 
 Deno.test(
-  `${TEST_GROUP} - props`,
+  `${TEST_GROUP} - attributes`,
   (test) =>
     assertSnapshot(
       test,
@@ -50,7 +50,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - children + props`,
+  `${TEST_GROUP} - children + attributes`,
   (test) =>
     assertSnapshot(
       test,
@@ -103,7 +103,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - nested children + props`,
+  `${TEST_GROUP} - nested children + attributes`,
   (test) =>
     assertSnapshot(
       test,
