@@ -1,13 +1,14 @@
 # `@cutout/web`
 
 A close-to-native library for meant to take full advantage of
-[`@cutout/jsx`](../jsx/)'s streaming architechture.
+[`@cutout/jsx`](../jsx/)'s streaming architecture.
 
 ### Likely Requirements
 
 - Deno 2.4+ (for `Deno.bundle`).
-- Modern browsers with Declarative Shadow DOM support: Chrome 111+, Safari
-  16.4+, Firefox 123+.
+- Modern browsers with
+  [Declarative Shadow DOM](https://web.dev/articles/declarative-shadow-dom)
+  support.
 
 > [!CAUTION]
 > `@cutout/web` is currently being designed. Feel free to weigh in, but there's
@@ -124,7 +125,7 @@ export const storePage = xo.defineRoute("/store/:id", ({ id }) => {
 
 The `xo.html` format will return a DSD-compliant HTML response. Note the
 generated importmap and script imports; these'll be formulated by walking the
-`@cutout/jsx` IR.
+`@cutout/jsx` IR. An example output:
 
 ```html
 <!-- ... -->
@@ -214,7 +215,7 @@ xo.defineElement("userList", {
 });
 ```
 
-## Dependency reductions
+### Dependency reductions
 
 With access to both Deno's standard library and `@cutout/jsx`'s versatility, the
 number of third-party dependencies required to author your application is
@@ -234,7 +235,7 @@ greatly reduced:
 | Deployment             | Vercel                  | Deno Deploy           |
 | **Total Dependencies** | Several                 | **One**               |
 
-## Prior art studied
+### Prior art studied
 
 - **React/Next.js** - a response to these tools, while still keeping JSX parts
   familiar.

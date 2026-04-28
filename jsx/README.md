@@ -4,7 +4,7 @@
 
 `@cutout/jsx` is a tiny, generic, interpretable JSX runtime for the Deno
 ecosystem. It's inspired in part by the long-abandoned
-[OpenJSX](https://github.com/OpenJSX). _Write JSX once, use it anywhere._
+[OpenJSX](https://github.com/OpenJSX). **_Write JSX once, use it anywhere._**
 
 Our generator-based approach is proving suprisingly competitive, going
 [toe-to-toe with React on our latest benchmarks](../web/BENCHMARKS.md).
@@ -72,7 +72,7 @@ setup or build required:
 deno myCutoutApp.tsx
 ```
 
-## Custom Elements
+### Custom Elements
 
 Defining custom elements is as easy as providing a function that takes an
 attributes object and returns JSX:
@@ -85,6 +85,12 @@ const MyElement = defineElement<{ hello: string }>(
 const correct = <MyElement hello="123" />; // Works!
 const incorrect = <MyElement hello={123} />; // Type Error.
 ```
+
+## What's next
+
+If you're interested in seeing how to most effectively leverage the
+`@cutout/jsx` rendering approach, consider reviewing the proposed
+[`@cutout/web`](./web/).
 
 ---
 
