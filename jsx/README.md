@@ -78,12 +78,12 @@ Defining custom elements is as easy as providing a function that takes an
 attributes object and returns JSX:
 
 ```tsx
-const MyElement = defineElement<{ hello: string; }>(
-  attributes => <div>{attributes.hello}</div>
+const MyElement = defineElement<{ hello: string }>(
+  (attributes) => <div>{attributes.hello}</div>,
 );
 
-const correct = <MyElement hello="123" /> // Works!
-const incorrect = <MyElement hello={123} /> // Type Error.
+const correct = <MyElement hello="123" />; // Works!
+const incorrect = <MyElement hello={123} />; // Type Error.
 ```
 
 ---
