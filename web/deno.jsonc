@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsxImportSource": "jsr:@cutout/jsx",
     "lib": [
       "dom",
       "deno.ns",
