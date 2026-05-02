@@ -1,13 +1,10 @@
 import { dom } from "./format/dom/main.ts";
 
 import type { CutoutElementFunction } from "@cutout/jsx";
+import type { ShapeDefinition, ShapeFromDefinition } from "./types.ts";
 
-// TODO(!): fully define these types
-type CWElementAttributesDefinition = Record<string, object>;
-type CWElementAttributes = Record<string, unknown>;
-
-interface CWElementDefinition<
-  D extends CWElementAttributesDefinition,
+interface ElementDefinition<
+  D extends ShapeDefinition,
 > {
   connectedCallback?: () => void | Promise<void>;
   attributeChangedCallback?: (
@@ -17,19 +14,19 @@ interface CWElementDefinition<
   ) => void | Promise<void>;
   disconnectedCallback?: () => void | Promise<void>;
   stylesheet?: CSSStyleSheet;
-  render?: CutoutElementFunction<CWElementAttributes>;
+  render?: CutoutElementFunction<ShapeFromDefinition<D>>;
   attributes?: D;
 }
 
 // TODO: full API coverage
-export function defineElement<D extends CWElementAttributesDefinition>(
+export function defineElement<D extends ShapeDefinition>(
   name: string,
   {
     render = () => <slot></slot>,
     ...definition
-  }: CWElementDefinition<D>,
+  }: ElementDefinition<D>,
 ) {
-  const templateRender = (attributes: D) => (
+  const templateRender = (attributes: ShapeFromDefinition<D>) => (
     <template shadowRootMode="open">
       {render(attributes)}
     </template>
@@ -124,7 +121,7 @@ export function defineElement<D extends CWElementAttributesDefinition>(
 
       this.shadowRoot!.replaceChildren(
         ...Array.from(
-          dom(render(this as CWElementAttributes), {
+          dom(render(this as ShapeFromDefinition<D>), {
             event: { signal: this.#eventController.signal },
           }),
         ),
@@ -141,7 +138,10 @@ export function defineElement<D extends CWElementAttributesDefinition>(
   }
 
   const _ = { name };
-  const result = (attributes: D, { dsd = true }: { dsd: boolean }) => {
+  const result = (
+    attributes: ShapeFromDefinition<D>,
+    { dsd = true }: { dsd: boolean },
+  ) => {
     if (!dsd) {
       return <_.name {...attributes}></_.name>;
     }
