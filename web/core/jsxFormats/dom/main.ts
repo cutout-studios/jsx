@@ -6,8 +6,8 @@ import {
 import type { CutoutFormatter } from "../types.ts";
 
 type _FormatOptions = {
-  event?: AddEventListenerOptions
-}
+  event?: AddEventListenerOptions;
+};
 
 /**
  * A formatter that creates a collection of DOM element objects, for
@@ -19,7 +19,7 @@ type _FormatOptions = {
  */
 export const dom: CutoutFormatter<HTMLCollection, _FormatOptions> = (
   [, generator],
-  config?: _FormatOptions
+  config?: _FormatOptions,
 ): HTMLCollection => {
   const state: _FormatState = {
     root: globalThis.document.createDocumentFragment(),
@@ -172,6 +172,6 @@ function _addEventListener(
   state.pointers.element.addEventListener(
     state.pointers.attribute.replace(/^on/, ""),
     value,
-    options
+    options,
   );
 }

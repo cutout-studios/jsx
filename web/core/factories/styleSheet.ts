@@ -1,5 +1,6 @@
-// KISS for now.
-export function defineStylesheet(...rules: CSSRule[]) {
+import "@cutout/polyfill";
+
+export function createStylesheet(...rules: CSSRule[]) {
   const result = new CSSStyleSheet();
 
   for (const rule of rules) {

@@ -4,8 +4,9 @@
  * "tokenizeValue" is an important utilty: it transforms arbitrary JavaScript data into tokens.
  */
 
+import type { AnyFunction } from "@cutout/common";
+
 import {
-  type AnyFunction,
   type CutoutOutputToken,
   CutoutTokenType,
   type UnknownCutoutToken,

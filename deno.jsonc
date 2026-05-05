@@ -12,9 +12,10 @@
     ]
   },
   "tasks": {
-    "docs:lint": "deno doc --lint jsx/tokens/module.ts jsx/module.ts"
+    "docs:lint": "deno doc --lint common/module.ts jsx/tokens/module.ts jsx/module.ts"
   },
   "workspace": [
+    "common",
     "jsx",
     "polyfill",
     "web",

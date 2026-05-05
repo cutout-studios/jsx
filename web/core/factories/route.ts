@@ -1,6 +1,7 @@
 import "@cutout/polyfill";
 import type { Route } from "@std/http/route";
-import type { ShapeFromDefinition, ShapeDefinition } from "./types.ts";
+import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
+import { parseRawShapeFromDefinition } from "../types.ts";
 
 const DEFAULT_RESPONSE = new Response("Not Implemented.", { status: 501 });
 
@@ -15,13 +16,13 @@ enum SupportedRouteMethod {
 type RouteDefinition<D extends ShapeDefinition> = {
   method?: SupportedRouteMethod;
   parameters: D;
-  render: ( // TODO: parameter parsing
+  render: (
     parameters: ShapeFromDefinition<D>,
     request: Request,
   ) => Response;
 };
 
-export function defineRoute<D extends ShapeDefinition>(
+export function createRoute<D extends ShapeDefinition>(
   pathname: string,
   {
     render = () => DEFAULT_RESPONSE,
@@ -32,8 +33,15 @@ export function defineRoute<D extends ShapeDefinition>(
     method: definition.method,
     pattern: new URLPattern({ pathname }),
 
-    // TODO: collapse params across url, querystring, body
-    handler: (request, { pathname: { groups: parameters } }) =>
-      render(parameters, request),
+    // TODO: this is very basic.
+    handler: async (request, { pathname: { groups: parameters } }) => {
+      const requestBody = !request.bodyUsed && (await request.json()) || {};
+      const urlParameters = parseRawShapeFromDefinition<D>(parameters, definition.parameters);
+      
+      return render(
+        Object.assign({}, requestBody, urlParameters),
+        request,
+      ),
+    }
   };
 }

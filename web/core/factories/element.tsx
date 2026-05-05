@@ -1,7 +1,7 @@
-import { dom } from "./format/dom/main.ts";
-
 import type { CutoutElementFunction } from "@cutout/jsx";
-import type { ShapeDefinition, ShapeFromDefinition } from "./types.ts";
+
+import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
+import { dom } from "../format/dom/main.ts";
 
 interface ElementDefinition<
   D extends ShapeDefinition,
@@ -19,7 +19,7 @@ interface ElementDefinition<
 }
 
 // TODO: full API coverage
-export function defineElement<D extends ShapeDefinition>(
+export function createElement<D extends ShapeDefinition>(
   name: string,
   {
     render = () => <slot></slot>,
@@ -130,18 +130,21 @@ export function defineElement<D extends ShapeDefinition>(
     }
   };
 
-  if (!globalThis.customElements?.get(`xo-${name}`)) {
-    globalThis.customElements.define(`xo-${name}`, element);
-  } else {
-    // TODO: warning system (like error system)
-    console.warn(`${name} already defined.`);
-  }
-
   const _ = { name };
   const result = (
     attributes: ShapeFromDefinition<D>,
-    { dsd = true }: { dsd: boolean },
+    { dsd = true, registry = globalThis.customElements }: {
+      dsd: boolean;
+      registry: CustomElementRegistry;
+    },
   ) => {
+    if (!registry?.get(`xo-${name}`)) {
+      registry.define(`xo-${name}`, element);
+    } else {
+      // TODO: warning system (like error system)
+      console.warn(`${name} already defined.`);
+    }
+
     if (!dsd) {
       return <_.name {...attributes}></_.name>;
     }

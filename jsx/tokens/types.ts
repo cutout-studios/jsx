@@ -1,3 +1,5 @@
+import type { AnyFunction } from "@cutout/common";
+
 /**
  * @packageDocumentation
  * Types for the @cutout/jsx runtime.
@@ -161,11 +163,6 @@ export type CutoutArrayToken = AnyCutoutToken<
   CutoutTokenType.ARRAY,
   Array<unknown>
 >;
-
-/**
- * A function with unknown arguments and return.
- */
-export type AnyFunction = (...args: unknown[]) => unknown;
 
 /**
  * A token wrapping a function.
