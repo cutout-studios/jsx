@@ -12,6 +12,7 @@ possible to their respective targets.
 
 | Module                            | Description                                                      | Status                                                                  |
 | --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service.                                 | **SHIM IMPLEMENTATION**                                                 |
 | [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 | [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
 | [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |

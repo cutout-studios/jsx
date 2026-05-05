@@ -12,7 +12,8 @@
     ]
   },
   "tasks": {
-    "docs:lint": "deno doc --lint jsx/tokens/module.ts jsx/module.ts"
+    "docs:lint": "deno doc --lint jsx/tokens/module.ts jsx/module.ts",
+    "chat": "./chat/run"
   },
   "workspace": [
     "jsx",
