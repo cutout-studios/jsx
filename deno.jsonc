@@ -13,6 +13,7 @@
   },
   "tasks": {
     "docs:lint": "deno doc --lint common/module.ts jsx/tokens/module.ts jsx/module.ts"
+    "chat": "./chat/run"
   },
   "workspace": [
     "common",
