@@ -6,7 +6,8 @@ export const ERROR_CODE_MESSAGES = {
     "`@cutout/web` was requested to perform an insecure operation.",
   [CutoutErrorCode.OPERATION_REDUNDANT]:
     "`@cutout/web` was requested to re-perform an operation unnecessarily.",
-  [CutoutErrorCode.DATA_CORRUPTED]: "`@cutout/web` could not unpack corrupted data."
+  [CutoutErrorCode.DATA_CORRUPTED]:
+    "`@cutout/web` could not unpack corrupted data.",
 };
 
 export const CONTEXT_MAX_SIZE = 100;

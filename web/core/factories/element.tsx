@@ -154,8 +154,8 @@ export function createElement<D extends ShapeDefinition>(
     } else {
       console.warn(
         new CutoutError(CutoutErrorCode.OPERATION_REDUNDANT, {
-          context: `Registering xo-${name}.`
-        }).toString()
+          context: `Registering xo-${name}.`,
+        }).toString(),
       );
     }
 

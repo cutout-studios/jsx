@@ -12,12 +12,12 @@ export enum CutoutErrorCode {
   OPERATION_INSECURE = "OPERATION_INSECURE",
 
   /** The system has been instructed to do an operation deemed rendundant.  */
-  OPERATION_REDUNDANT = "OPERATION_REDUNDANT"
+  OPERATION_REDUNDANT = "OPERATION_REDUNDANT",
 }
 
 export enum CutoutSupportedHTTPCode {
   SERVER_ERROR = 500,
-  NOT_IMPLEMENTED = 501
+  NOT_IMPLEMENTED = 501,
 }
 
 export type CutoutErrorOptions = {

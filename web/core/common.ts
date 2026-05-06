@@ -45,17 +45,17 @@ export function parseRawShapeFromDefinition<D extends ShapeDefinition>(
         } catch (error) {
           throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
             context: rawShape[key],
-            cause: error
+            cause: error,
           });
         }
         break;
       case Function:
-          throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
-            context: rawShape[key],
-          });
+        throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
+          context: rawShape[key],
+        });
       default:
         throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {
-          context: rawShape[key]
+          context: rawShape[key],
         });
     }
 
