@@ -7,9 +7,13 @@ import {
   ERROR_CODE_MESSAGES,
   GUIDANCE_MISSING_MESSAGE,
 } from "./constants.ts";
-import type { CutoutErrorCode, CutoutErrorOptions } from "./types.ts";
+import {
+  type CutoutErrorCode,
+  type CutoutErrorOptions,
+  CutoutSupportedHTTPCode,
+} from "./types.ts";
 
-export { CutoutErrorCode } from "./types.ts";
+export { CutoutErrorCode, CutoutSupportedHTTPCode } from "./types.ts";
 
 /**
  * A wrapper class for the native Error, that
@@ -19,6 +23,7 @@ export { CutoutErrorCode } from "./types.ts";
 export class CutoutError extends Error {
   /** The canonical Cutout Error code. */
   code: CutoutErrorCode;
+  httpCode?: CutoutSupportedHTTPCode;
   #context?: unknown;
   #guidance?: string;
 
@@ -35,11 +40,17 @@ export class CutoutError extends Error {
    */
   constructor(
     code: CutoutErrorCode,
-    { guidance, context, ...options }: CutoutErrorOptions,
+    {
+      guidance,
+      context,
+      httpCode = CutoutSupportedHTTPCode.SERVER_ERROR,
+      ...options
+    }: CutoutErrorOptions,
   ) {
     super(`[${code}]: ${ERROR_CODE_MESSAGES[code]}`, options);
 
     this.code = code;
+    this.httpCode = httpCode;
     this.#context = context;
     this.#guidance = guidance;
   }

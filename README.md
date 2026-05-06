@@ -10,15 +10,14 @@ possible to their respective targets.
 
 ## Contents
 
-| Module                            | Description                                                      | Status                                                                  |
+| Module                            | Planned Description                                              | Status                                                                  |
 | --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | [`@cutout/common`](./common/)     | Shared utilities across the Toolbox.                             | _Not published_                                                         |
-| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service.                                 | **SHIM IMPLEMENTATION**                                                 |
 | [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 | [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
-| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
-| [`@cutout/polyfill`](./polyfill/) | Server-side polyfill for important browser APIs.                 | **PLACEHOLDER**                                                         |
 | [`@cutout/elements`](./elements/) | Accessible and mobile-friendly Web UI primitives.                | **PLACEHOLDER**                                                         |
+| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
+| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service with GUI.                        | **SHIM**. No GUI yet.                                                   |
 
 ### Who we are
 

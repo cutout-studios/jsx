@@ -4,11 +4,17 @@
     "jsr:@ayk/lint-import-order@*": "0.1.0",
     "jsr:@std/assert@*": "1.0.19",
     "jsr:@std/assert@^1.0.17": "1.0.19",
+    "jsr:@std/async@^1.1.0": "1.2.0",
+    "jsr:@std/data-structures@^1.0.10": "1.0.10",
+    "jsr:@std/fmt@*": "1.0.10",
     "jsr:@std/fs@^1.0.22": "1.0.23",
+    "jsr:@std/http@*": "1.0.25",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@*": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@std/testing@*": "1.0.17",
+    "npm:cssom@*": "0.5.0",
+    "npm:cssom@0.5": "0.5.0",
     "npm:happy-dom@*": "20.9.0",
     "npm:react-dom@*": "19.2.5_react@19.2.5",
     "npm:react@*": "19.2.5"
@@ -23,11 +29,23 @@
         "jsr:@std/internal"
       ]
     },
+    "@std/async@1.2.0": {
+      "integrity": "c059c6f6d95ca7cc012ae8e8d7164d1697113d54b0b679e4372b354b11c2dee5"
+    },
+    "@std/data-structures@1.0.10": {
+      "integrity": "f574f86b0e07c69b9edc555fcc814b57d29258bad39fd5a34ba8a80ecf033cfe"
+    },
+    "@std/fmt@1.0.10": {
+      "integrity": "90dfba288802ac6de82fb31d0917eb9e4450b9925b954d5e51fc29ac07419db5"
+    },
     "@std/fs@1.0.23": {
       "integrity": "3ecbae4ce4fee03b180fa710caff36bb5adb66631c46a6460aaad49515565a37",
       "dependencies": [
         "jsr:@std/path@^1.1.4"
       ]
+    },
+    "@std/http@1.0.25": {
+      "integrity": "577b4252290af1097132812b339fffdd55fb0f4aeb98ff11bdbf67998aa17193"
     },
     "@std/internal@1.0.12": {
       "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
@@ -42,6 +60,8 @@
       "integrity": "87bdc2700fa98249d48a17cd72413352d3d3680dcfbdb64947fd0982d6bbf681",
       "dependencies": [
         "jsr:@std/assert@^1.0.17",
+        "jsr:@std/async",
+        "jsr:@std/data-structures",
         "jsr:@std/fs",
         "jsr:@std/internal",
         "jsr:@std/path@^1.1.4"
@@ -63,6 +83,9 @@
       "dependencies": [
         "@types/node"
       ]
+    },
+    "cssom@0.5.0": {
+      "integrity": "sha512-iKuQcq+NdHqlAcwUY0o/HL69XQrUaQdMjmStJ8JFmUaiiQErlhrmuigkg/CU4E2J0IyUKUrMAgl36TvN67MqTw=="
     },
     "entities@7.0.1": {
       "integrity": "sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA=="
@@ -102,6 +125,9 @@
     }
   },
   "workspace": {
+    "dependencies": [
+      "npm:cssom@0.5"
+    ],
     "members": {
       "jsx": {
         "dependencies": [
@@ -111,11 +137,13 @@
       },
       "web": {
         "dependencies": [
+          "jsr:@cutout/jsx@*",
           "jsr:@std/assert@*",
           "jsr:@std/fmt@*",
           "jsr:@std/http@*",
           "jsr:@std/path@*",
           "jsr:@std/testing@*",
+          "npm:cssom@*",
           "npm:happy-dom@*",
           "npm:react-dom@*",
           "npm:react@*"

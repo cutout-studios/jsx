@@ -1,10 +1,11 @@
+import { CutoutError, CutoutErrorCode } from "@cutout/web";
 import type {
   InstanceTypeFromConstructor,
   ShapeDefinition,
   ShapeFromDefinition,
 } from "./types.ts";
 
-// TODO: nested definitions
+// TODO(#51): nested element attribute definitions
 export function parseRawShapeFromDefinition<D extends ShapeDefinition>(
   rawShape: Record<string, string | undefined>,
   definition: D,
@@ -41,13 +42,21 @@ export function parseRawShapeFromDefinition<D extends ShapeDefinition>(
       case Object:
         try {
           value = JSON.parse(rawShape[key]);
-        } catch {
-          // TODO: Error?
+        } catch (error) {
+          throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
+            context: rawShape[key],
+            cause: error
+          });
         }
         break;
       case Function:
+          throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
+            context: rawShape[key],
+          });
       default:
-        // TODO: Error
+        throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {
+          context: rawShape[key]
+        });
     }
 
     result = Object.assign({}, result, { [key]: value });

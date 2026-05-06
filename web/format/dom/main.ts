@@ -5,7 +5,7 @@ import {
 } from "@cutout/jsx/tokens";
 import type { CutoutFormatter } from "../types.ts";
 
-type _FormatOptions = {
+type DOMFormatOptions = {
   event?: AddEventListenerOptions;
 };
 
@@ -14,12 +14,12 @@ type _FormatOptions = {
  * client-side rendering.
  *
  * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
- * @param {AbortController} controller TODO: event options? general config?
+ * @param {DOMFormatOptions} options Options for customizing the DOM generation.
  * @returns {HTMLCollection} The created DOM element objects.
  */
-export const dom: CutoutFormatter<HTMLCollection, _FormatOptions> = (
+export const dom: CutoutFormatter<HTMLCollection, DOMFormatOptions> = (
   [, generator],
-  config?: _FormatOptions,
+  options,
 ): HTMLCollection => {
   const state: _FormatState = {
     root: globalThis.document.createDocumentFragment(),
@@ -48,10 +48,11 @@ export const dom: CutoutFormatter<HTMLCollection, _FormatOptions> = (
         _handleObject(state, value);
         break;
       case CutoutTokenType.FUNCTION:
-        // NOTE: this should _generally_ be fine, but it may evenutally
-        // behoove us to memoize these intermediate listener functions
-        // and/or attach an abort controller to the element
-        _addEventListener(state, (event: Event) => value(event), config?.event);
+        _addEventListener(
+          state,
+          (event: Event) => value(event),
+          options?.event,
+        );
         break;
       case CutoutTokenType.SYMBOL:
       case CutoutTokenType.NULL:

@@ -1,6 +1,6 @@
 import type { AnyArray, AnyFunction, AnyShape } from "@cutout/common";
 
-// TODO: nested definitions
+// TODO(#51): nested attribute definitions
 type ShapeValueConstructors =
   | typeof Number
   | typeof String

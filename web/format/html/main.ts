@@ -3,12 +3,14 @@ import {
   CutoutTokenType,
   FRAGMENT_LABEL,
 } from "@cutout/jsx/tokens";
-import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
+import { CutoutError, CutoutErrorCode } from "@cutout/web";
 
 import { VOID } from "../constants/elements.ts";
 import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
+
+// TODO: compile imports and import map (hard)
 
 const VOID_SET: Set<string> = new Set(VOID);
 
@@ -18,7 +20,7 @@ const VOID_SET: Set<string> = new Set(VOID);
  * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
  * @returns {string} The formatted HTML.
  */
-export const html: CutoutFormatter<string> = ([, generator]): string => {
+export const html: CutoutFormatter<Response> = ([, generator]) => {
   const state: _FormatState = {
     result: "",
     context: {
@@ -56,7 +58,7 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
       case CutoutTokenType.UNDEFINED:
         break;
       case CutoutTokenType.FUNCTION:
-        throw new CutoutError(CutoutErrorCode.DATA_INSECURE_OP, {
+        throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
           guidance: FUNCTION_SERIALIZATION,
           context: value,
         });
@@ -68,7 +70,11 @@ export const html: CutoutFormatter<string> = ([, generator]): string => {
     }
   }
 
-  return state.result;
+  return new Response(state.result, {
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+    },
+  });
 };
 
 type _FormatState = {
@@ -156,7 +162,7 @@ function _appendObject(
   state.result += `"${
     escape(JSON.stringify(value, (_, objectValue) => {
       if (typeof objectValue === "function") {
-        throw new CutoutError(CutoutErrorCode.DATA_INSECURE_OP, {
+        throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
           guidance: FUNCTION_SERIALIZATION,
           context: objectValue,
         });

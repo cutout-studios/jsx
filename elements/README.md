@@ -1,6 +1,8 @@
 # `@cutout/elements`
 
-_TODO: accessible, mobile-friendly, style-agnostic UI primitives_
+Accessible, mobile-friendly, style-agnostic UI primitives.
+
+_TODO_
 
 > [!CAUTION]
 > This is just a placeholder.

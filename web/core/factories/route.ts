@@ -1,9 +1,11 @@
-import "@cutout/polyfill";
 import type { Route } from "@std/http/route";
+import { parseRawShapeFromDefinition } from "../common.ts";
+import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.ts";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
-import { parseRawShapeFromDefinition } from "../types.ts";
 
-const DEFAULT_RESPONSE = new Response("Not Implemented.", { status: 501 });
+const DEFAULT_RESPONSE = new Response("Not Implemented.", {
+  status: CutoutSupportedHTTPCode.NOT_IMPLEMENTED,
+});
 
 enum SupportedRouteMethod {
   GET = "GET",
@@ -33,15 +35,35 @@ export function createRoute<D extends ShapeDefinition>(
     method: definition.method,
     pattern: new URLPattern({ pathname }),
 
-    // TODO: this is very basic.
     handler: async (request, { pathname: { groups: parameters } }) => {
       const requestBody = !request.bodyUsed && (await request.json()) || {};
-      const urlParameters = parseRawShapeFromDefinition<D>(parameters, definition.parameters);
-      
-      return render(
-        Object.assign({}, requestBody, urlParameters),
-        request,
-      ),
-    }
+      const urlParameters = parseRawShapeFromDefinition<D>(
+        parameters,
+        definition.parameters,
+      );
+
+      try {
+        return render(
+          Object.assign({}, requestBody, urlParameters),
+          request,
+        );
+      } catch (error) {
+        if (error instanceof CutoutError) {
+          return new Response(error.toString(), {
+            status: error.httpCode,
+          });
+        }
+
+        if (error instanceof Error) {
+          return new Response(error.message, {
+            status: CutoutSupportedHTTPCode.SERVER_ERROR,
+          });
+        }
+
+        return new Response(String(error), {
+          status: CutoutSupportedHTTPCode.SERVER_ERROR,
+        });
+      }
+    },
   };
 }

@@ -155,7 +155,7 @@ function* _forwardTokens(value: unknown, debug = false) {
     yield token;
   }
 
-  // TODO(#47): implement jsxDEV to exercise the `debug` option.
+  // (#47): implement jsxDEV to exercise the `debug` option.
   if (token[TOKEN_TYPE_INDEX] === CutoutTokenType.UNKNOWN && debug) {
     let unknownValue;
 

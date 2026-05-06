@@ -1,1 +1,1 @@
-// TODO: utility to read manifest and cache assets
+// TODO(#54): basic service worker implementation

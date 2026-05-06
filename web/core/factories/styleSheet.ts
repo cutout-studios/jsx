@@ -1,4 +1,4 @@
-import "@cutout/polyfill";
+import "cssom";
 
 export function createStylesheet(...rules: CSSRule[]) {
   const result = new CSSStyleSheet();

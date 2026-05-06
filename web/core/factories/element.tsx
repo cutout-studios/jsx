@@ -1,7 +1,9 @@
 import type { CutoutElementFunction } from "@cutout/jsx";
 
+import { dom } from "../../format/dom/main.ts";
+import { CutoutErrorCode } from "../errors/module.ts";
+import { CutoutError } from "../errors/module.ts";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
-import { dom } from "../format/dom/main.ts";
 
 interface ElementDefinition<
   D extends ShapeDefinition,
@@ -18,7 +20,7 @@ interface ElementDefinition<
   attributes?: D;
 }
 
-// TODO: full API coverage
+// TODO(#51): nested attribute definitions
 export function createElement<D extends ShapeDefinition>(
   name: string,
   {
@@ -32,8 +34,8 @@ export function createElement<D extends ShapeDefinition>(
     </template>
   );
 
-  // TODO: flatten attributes into dot syntax
-  //   Note: the Proxy will have to return sub-proxy objects.
+  // TODO(#51): nested attribute definitions
+  // => Note: the Proxy will have to return sub-proxy objects.
   const observedAttributes = new Set(Object.keys(definition?.attributes ?? {}));
 
   const element = class extends HTMLElement {
@@ -44,11 +46,13 @@ export function createElement<D extends ShapeDefinition>(
     constructor() {
       super();
 
-      // TODO(!): make sure this accounts for existing properties via Reflect
-      //   and parses incoming/outgoing values
       return new Proxy(this, {
         get: (self, key) => {
           key = String(key);
+
+          if (Reflect.has(self, key)) {
+            return Reflect.get(self, key);
+          }
 
           if (observedAttributes.has(key)) {
             return self.getAttribute(String(key));
@@ -56,6 +60,10 @@ export function createElement<D extends ShapeDefinition>(
         },
         set: (self, key, value) => {
           key = String(key);
+
+          if (Reflect.has(self, key)) {
+            return Reflect.defineProperty(self, key, value);
+          }
 
           if (observedAttributes.has(key)) {
             self.setAttribute(String(key), value);
@@ -67,6 +75,10 @@ export function createElement<D extends ShapeDefinition>(
         deleteProperty: (self, key) => {
           key = String(key);
 
+          if (Reflect.has(self, key)) {
+            return Reflect.deleteProperty(self, key);
+          }
+
           if (observedAttributes.has(key)) {
             self.removeAttribute(String(key));
             return true;
@@ -77,10 +89,9 @@ export function createElement<D extends ShapeDefinition>(
       });
     }
 
-    // fetchPartial() {
-    //   TODO: we need to track each fetch, return `undefined`
-    //   if it's triggered, and then #doRender when it's loaded.
-    // }
+    // TODO(#52): implement - we need to track each fetch, return `undefined`
+    // if it's triggered, and then #doRender when it's loaded.
+    // fetchPartial() {}
 
     connectedCallback() {
       requestAnimationFrame(
@@ -141,8 +152,11 @@ export function createElement<D extends ShapeDefinition>(
     if (!registry?.get(`xo-${name}`)) {
       registry.define(`xo-${name}`, element);
     } else {
-      // TODO: warning system (like error system)
-      console.warn(`${name} already defined.`);
+      console.warn(
+        new CutoutError(CutoutErrorCode.OPERATION_REDUNDANT, {
+          context: `Registering xo-${name}.`
+        }).toString()
+      );
     }
 
     if (!dsd) {
@@ -152,7 +166,7 @@ export function createElement<D extends ShapeDefinition>(
     return (
       <_.name {...attributes}>
         <style>
-          {/* TODO: merge rules? */}
+          {/* TODO(#53): merge/manage DSD style rules */}
           {Array.from(definition.stylesheet?.cssRules ?? []).map((rule) =>
             rule.cssText
           ).join("\n")}
@@ -164,8 +178,7 @@ export function createElement<D extends ShapeDefinition>(
 
   return Object.assign(result, {
     name,
-    // TODO: SSR metadata
-    // definitionFile: new URL(""),
-    // dependencies: ...
+    // TODO: metadata for compiling imports and import map (hard)
+    // => definitionFile: new URL(""),
   });
 }

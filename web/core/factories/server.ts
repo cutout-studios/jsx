@@ -11,7 +11,11 @@ export function createServer(
       },
       route(
         definition.routes,
-        (request) => definition.default.handler(request),
+        (request) =>
+          definition.default.handler(
+            request,
+            new URLPattern("").exec(new URL(request.url))!,
+          ),
       ),
     );
 }
