@@ -2,5 +2,8 @@
   "name": "@cutout/elements",
   "version": "0.0.0-alpha.0",
   "license": "MIT",
-  "exports": "./module.ts"
+  "exports": "./module.ts",
+  "tasks": {
+    "docs:lint": "deno docs --lint ./module.ts"
+  }
 }

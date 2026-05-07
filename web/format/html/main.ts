@@ -10,7 +10,7 @@ import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
-// TODO: compile imports and import map (hard)
+// TODO: compile imports and import map
 
 const VOID_SET: Set<string> = new Set(VOID);
 

@@ -4,6 +4,8 @@ export const ERROR_CODE_MESSAGES = {
   [CutoutErrorCode.DATA_UNKNOWN]: "`@cutout/web` has encountered unknown data.",
   [CutoutErrorCode.OPERATION_INSECURE]:
     "`@cutout/web` was requested to perform an insecure operation.",
+  [CutoutErrorCode.OPERATION_READONLY]:
+    "`@cutout/web` was requested to perform a write operation on a readonly value.",
   [CutoutErrorCode.OPERATION_REDUNDANT]:
     "`@cutout/web` was requested to re-perform an operation unnecessarily.",
   [CutoutErrorCode.DATA_CORRUPTED]:

@@ -1,8 +1,11 @@
+/// <reference lib="dom" />
+
 import {
   CHILDREN_LABEL,
   CutoutTokenType,
   FRAGMENT_LABEL,
 } from "@cutout/jsx/tokens";
+
 import type { CutoutFormatter } from "../types.ts";
 
 type DOMFormatOptions = {

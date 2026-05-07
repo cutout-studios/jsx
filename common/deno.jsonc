@@ -1,4 +1,7 @@
 {
   "name": "@cutout/common",
-  "exports": "./module.ts"
+  "exports": "./module.ts",
+  "tasks": {
+    "docs:lint": "deno doc --lint ./module.ts"
+  }
 }

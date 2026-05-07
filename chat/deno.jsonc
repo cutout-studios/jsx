@@ -1,3 +1,5 @@
 {
-  "name": "@cutout/chat"
+  "tasks": {
+    "run": "./run"
+  }
 }
