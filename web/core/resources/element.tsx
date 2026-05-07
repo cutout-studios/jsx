@@ -3,7 +3,7 @@
 import type { CutoutElementFunction } from "@cutout/jsx";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
-import { dom } from "../../format/dom/main.ts";
+import { dom } from "../../format/dom/module.ts";
 import { getCallerLocation, parseRawValue } from "../common.ts";
 import { CutoutErrorCode } from "../errors/module.ts";
 import { CutoutError } from "../errors/module.ts";

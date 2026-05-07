@@ -17,7 +17,7 @@ possible to their respective targets.
 | [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
 | [`@cutout/elements`](./elements/) | Accessible and mobile-friendly Web UI primitives.                | **PLACEHOLDER**                                                         |
 | [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
-| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service with GUI.                        | **SHIM**. No GUI yet.                                                   |
+| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service.                                 | **SHIM**                                                                |
 
 ### Who we are
 

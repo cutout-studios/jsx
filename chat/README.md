@@ -18,3 +18,7 @@ lms get qwen/qwen3.6-35b-a3b # or your favorite
 ```sh
 deno task --cwd=chat run
 ```
+
+---
+
+[Copyright 2026, Cutout Studios](../LICENSE)

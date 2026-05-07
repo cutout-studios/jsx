@@ -3,7 +3,7 @@
 
 import { assertSnapshot } from "@std/testing/snapshot";
 import { Window } from "happy-dom";
-import { dom } from "./main.ts";
+import { dom } from "./module.ts";
 
 const TEST_GROUP = "format/dom";
 

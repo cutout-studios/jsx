@@ -1,3 +1,3 @@
 export * from "./types.ts";
-export * from "./html/main.ts";
-export * from "./dom/main.ts";
+export * from "./html/module.ts";
+export * from "./dom/module.ts";

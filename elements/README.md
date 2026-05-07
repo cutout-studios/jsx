@@ -9,24 +9,25 @@ _TODO_
 
 ## Target V1 Catalog
 
-### Layout
+### Elements
 
-- Row
-- Layer
+#### Layout
 
-### Content
+- Row `<Row></Row>`
+  - List `<Row.List></Row.List>`
+- Layer `<Layer></Layer>`
 
-- Text
-- Media (Image)
-- Skeleton
+#### Content
 
-- Input
-  - Button
-    - Link
+- Skeleton `<Skeleton></Skeleton>` (composes Row)
+- Text `<Text></Text>` (composes Row)
+- Image `<Image></Image>` (composes Row)
+- Input `<Input></Input>` (composes Row)
+  - Form `<Input.Form></Input.Form>` (composes Row.List)
+  - Button `<Input.Button></Input.Button>` (composes Row)
+    - Link `<Input.Button.Link></Input.Button.Link>` (composes Row)
+    - Menu `<Input.Button.Menu></Input.Button.Menu>` (composes Row.List)
 
-### Compound
+### Styles
 
-- List
-  - Form
-  - Menu
-  - Table
+...

@@ -1,7 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { Window } from "happy-dom";
-import { dom } from "./main.ts";
+import { dom } from "./module.ts";
 import { BenchGroups, cutout } from ".bench";
 
 const LIBRARY = "@cutout/jsx/format/dom";
