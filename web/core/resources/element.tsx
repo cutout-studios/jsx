@@ -4,7 +4,10 @@ import type { CutoutElementFunction } from "@cutout/jsx";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 import { dom } from "../../format/dom/module.ts";
-import { getCallerLocation, parseRawValue } from "../common.ts";
+import {
+  getCallerLocation,
+  parseRawValue,
+} from "../common.ts";
 import { CutoutErrorCode } from "../errors/module.ts";
 import { CutoutError } from "../errors/module.ts";
 import type {
@@ -44,95 +47,28 @@ export function createElement<D extends ShapeDefinition>(
     </template>
   );
 
-  // TODO(#51): nested attribute definitions
-  // => Note: the Proxy will have to return sub-proxy objects.
-  const observedAttributes = new Set(Object.keys(definition?.attributes ?? {}));
+  const _stylesheet = Array.isArray(definition.stylesheet)
+    ? definition.stylesheet
+    : [definition.stylesheet!];
+
+  const observedAttributes = Array.from(new Set(Object.keys(definition?.attributes ?? {})));
 
   const element = class extends HTMLElement {
-    static observedAttributes = Array.from(observedAttributes);
+    static observedAttributes = observedAttributes;
 
+    #pendingAttributeChange?: number;
     #eventController = new AbortController();
     #isRendering = false;
 
-    constructor() {
-      super();
-
-      return new Proxy(this, {
-        get: (self, key) => {
-          key = String(key);
-
-          if (Object.hasOwn(self, key)) {
-            return parseRawValue(
-              String(Reflect.get(self, key)),
-              definition.attributes![key],
-            );
-          }
-
-          if (observedAttributes.has(key)) {
-            return parseRawValue(
-              self.getAttribute(String(key))!,
-              definition.attributes![key],
-            );
-          }
-
-          return undefined;
-        },
-        set: (self, key, value) => {
-          if (this.#isRendering) {
-            console.warn(
-              new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
-                context: { name, key, value },
-                guidance:
-                  "Move data management outside of the element render loop.",
-              }).toString(),
-            );
-
-            return true;
-          }
-
-          key = String(key);
-
-          if (Object.hasOwn(self, key)) {
-            Reflect.set(self, key, value);
-          }
-
-          if (observedAttributes.has(key)) {
-            self.setAttribute(String(key), value);
-          }
-
-          return true;
-        },
-        deleteProperty: (self, key) => {
-          if (this.#isRendering) {
-            console.warn(
-              new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
-                context: { name, key },
-                guidance:
-                  "Move data management outside of the element render loop.",
-              }).toString(),
-            );
-
-            return true;
-          }
-
-          key = String(key);
-
-          if (Object.hasOwn(self, key)) {
-            Reflect.deleteProperty(self, key);
-          }
-
-          if (observedAttributes.has(key)) {
-            self.removeAttribute(String(key));
-          }
-
-          return true;
-        },
-      });
+    get observedAttributes(): ShapeFromDefinition<D> {
+      return observedAttributes.reduce((result, attributeName) => ({
+        ...result,
+        [attributeName]: parseRawValue(
+          this.getAttribute(attributeName)!,
+          definition.attributes![attributeName],
+        ),
+      }), {} as ShapeFromDefinition<D>);
     }
-
-    // TODO(#52): implement - we need to track each fetch, return `undefined`
-    // if it's triggered, and then #doRender when it's loaded.
-    // fetchPartial() {}
 
     async connectedCallback() {
       await definition.connectedCallback?.();
@@ -144,8 +80,18 @@ export function createElement<D extends ShapeDefinition>(
       oldValue: unknown,
       newValue: unknown,
     ) {
+      clearInterval(this.#pendingAttributeChange);
+
+      // TODO: do we even want to expose this? They may want to skip the render.
       await definition.attributeChangedCallback?.(name, oldValue, newValue);
-      this.#doRender();
+
+      // Defer render until the current render is completed.
+      this.#pendingAttributeChange = setInterval(() => {
+        if (this.#isRendering) return;
+
+        clearInterval(this.#pendingAttributeChange);
+        this.#doRender();
+      }, 60); // TODO: requestAnimationFrame loop?
     }
 
     async disconnectedCallback() {
@@ -165,11 +111,7 @@ export function createElement<D extends ShapeDefinition>(
       if (definition.stylesheet) {
         const stylesheet = new CSSStyleSheet();
 
-        for (
-          const rule of Array.isArray(definition.stylesheet)
-            ? definition.stylesheet
-            : [definition.stylesheet]
-        ) {
+        for (const rule of _stylesheet) {
           stylesheet.insertRule(rule.cssText);
         }
 
@@ -180,7 +122,7 @@ export function createElement<D extends ShapeDefinition>(
         () => {
           this.shadowRoot!.replaceChildren(
             ...Array.from(
-              dom(templateRender(this as ShapeFromDefinition<D>), {
+              dom(templateRender(this.observedAttributes), {
                 event: { signal: this.#eventController.signal },
               }),
             ),
@@ -229,9 +171,7 @@ export function createElement<D extends ShapeDefinition>(
 
   return Object.assign(result, {
     location: getCallerLocation()!,
-    // TODO: gather sub-elements
-    dependencies: Array.isArray(definition.stylesheet)
-      ? definition.stylesheet
-      : [definition.stylesheet!],
+    // TODO: gather sub-elements?
+    dependencies: _stylesheet
   });
 }
