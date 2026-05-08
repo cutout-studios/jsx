@@ -82,16 +82,23 @@ export function createElement<D extends ShapeDefinition>(
     ) {
       clearInterval(this.#pendingAttributeChange);
 
-      // TODO: do we even want to expose this? They may want to skip the render.
       await definition.attributeChangedCallback?.(name, oldValue, newValue);
 
       // Defer render until the current render is completed.
-      this.#pendingAttributeChange = setInterval(() => {
-        if (this.#isRendering) return;
+      const tick = () => {
+        if (this.#isRendering) {
+          this.#pendingAttributeChange = requestAnimationFrame(tick);
+          return;
+        }
 
-        clearInterval(this.#pendingAttributeChange);
+        if (typeof this.#pendingAttributeChange !== "undefined") {
+          cancelAnimationFrame(this.#pendingAttributeChange);
+        }
+
         this.#doRender();
-      }, 60); // TODO: requestAnimationFrame loop?
+      };
+
+      this.#pendingAttributeChange = requestAnimationFrame(tick);
     }
 
     async disconnectedCallback() {
@@ -118,8 +125,12 @@ export function createElement<D extends ShapeDefinition>(
         this.shadowRoot!.adoptedStyleSheets = [stylesheet];
       }
 
+      // TODO: preserve focus, scroll - walk the current tree, note which elements do and do not have
+      // scroll/focus, make best effort selectors (id -> key -> nth-child), then attempt reapply after tree has been
+      // re-added.
       globalThis.requestAnimationFrame(
         () => {
+          // TODO(#56): bind stores
           this.shadowRoot!.replaceChildren(
             ...Array.from(
               dom(templateRender(this.observedAttributes), {
@@ -171,7 +182,5 @@ export function createElement<D extends ShapeDefinition>(
 
   return Object.assign(result, {
     location: getCallerLocation()!,
-    // TODO: gather sub-elements?
-    dependencies: _stylesheet
   });
 }

@@ -41,7 +41,6 @@ export type ShapeFromDefinition<T extends ShapeDefinition> = {
 
 type Resource = {
   readonly location: URL;
-  readonly dependencies?: Resource[];
 };
 type StaticResource<T extends object> = T & Resource;
 type DynamicResource<T, D extends ShapeDefinition, O = unknown> =

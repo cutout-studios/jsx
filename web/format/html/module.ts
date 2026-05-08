@@ -10,8 +10,6 @@ import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
-// TODO: compile imports and import map
-
 const VOID_SET: Set<string> = new Set(VOID);
 
 /**
@@ -70,6 +68,8 @@ export const html: CutoutFormatter<Response> = ([, generator]) => {
     }
   }
 
+  // TODO: gather importmap from resource locations
+  // => ah, we need to have a "reserved attribute" for this. not a "resource"
   return new Response(state.result, {
     headers: {
       "content-type": "text/html; charset=utf-8",
