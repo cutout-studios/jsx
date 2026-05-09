@@ -1,6 +1,6 @@
 import type { Route } from "@std/http/route";
 
-import { getCallerLocation, parseRawShapeFromDefinition } from "../common.ts";
+import { parseRawShapeFromDefinition } from "../common.ts";
 import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.ts";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
 
