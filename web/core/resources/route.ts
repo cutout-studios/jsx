@@ -32,11 +32,12 @@ export function createRoute<D extends ShapeDefinition>(
     ...definition
   }: RouteDefinition<D>,
 ): Route {
-  const route: Route = {
+  return {
     method: definition.method,
     pattern: new URLPattern({ pathname }),
 
     handler: async (request, { pathname: { groups: parameters } }) => {
+      // TODO: better handling. if it's not json, don't try it
       const requestBody = !request.bodyUsed && (await request.json()) || {};
       const urlParameters = definition.parameters
         ? parseRawShapeFromDefinition<D>(
@@ -69,8 +70,4 @@ export function createRoute<D extends ShapeDefinition>(
       }
     },
   };
-
-  return Object.assign(route, {
-    location: getCallerLocation()!,
-  });
 }

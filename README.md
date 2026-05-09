@@ -14,6 +14,7 @@ possible to their respective targets.
 | --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | [`@cutout/common`](./common/)     | Shared utilities across the Toolbox.                             | _Not published_                                                         |
 | [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
+| [`@cutout/polyfill`](./polyfill/) | Server-side polyfill for DOM apis.                               | **STUB**                                                                |
 | [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
 | [`@cutout/elements`](./elements/) | Accessible and mobile-friendly Web UI primitives.                | **PLACEHOLDER**                                                         |
 | [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |

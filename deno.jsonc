@@ -14,6 +14,7 @@
   "workspace": [
     "common",
     "jsx",
+    "polyfill",
     "web",
     "elements",
     "tauri",
