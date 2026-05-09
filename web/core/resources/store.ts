@@ -1,4 +1,3 @@
-
 // TODO(#52): implement fetchPartial - we need to track each fetch, return `undefined`
 // if it's triggered, and then #doRender when it's loaded.
 // This might live outside the element as well.

@@ -118,9 +118,89 @@ export function createElement<D extends ShapeDefinition>(
         this.shadowRoot!.adoptedStyleSheets = [stylesheet];
       }
 
-      // TODO: preserve focus, scroll - walk the current tree, note which elements do and do not have
-      // scroll/focus, make best effort selectors (id -> key -> nth-child), then attempt reapply after tree has been
-      // re-added.
+      const selectorStates: Record<
+        string,
+        {
+          focus: boolean;
+          scroll?: { left: number; top: number };
+          popover: boolean;
+        }
+      > = {};
+
+      const bestSelector = (element: HTMLElement, index?: number) => {
+        const tag = element.tagName;
+        const id = element.id;
+
+        if (id) {
+          return `${tag}#${id}`;
+        }
+
+        const key = element.getAttribute("key");
+
+        if (key) {
+          return `${tag}[key=${key}]`;
+        }
+
+        if (index) {
+          return `${tag}:nth-of-type(${index})`;
+        }
+
+        return tag;
+      };
+
+      const elementStack: [element: HTMLElement, index: number][] = [];
+
+      for (let i = 0; i < this.shadowRoot!.childNodes.length; i++) {
+        elementStack.push([this.shadowRoot!.childNodes[i] as HTMLElement, i]);
+      }
+
+      const selectorStack = [];
+
+      while (elementStack.length) {
+        const [currentElement, currentIndex] = elementStack.pop()!;
+
+        selectorStack.push(bestSelector(currentElement, currentIndex));
+
+        if (currentElement.childNodes.length) {
+          for (let i = 0; i < currentElement.childNodes.length; i++) {
+            elementStack.push([currentElement.childNodes[i] as HTMLElement, i]);
+          }
+
+          continue;
+        }
+
+        let hasState = false;
+        const states = {
+          focus: false,
+          popover: false,
+          scroll: { top: 0, left: 0 },
+        };
+
+        if (document.activeElement === currentElement) {
+          hasState = true;
+          states.focus = true;
+        }
+
+        if (currentElement?.matches(":popover-open")) {
+          hasState = true;
+          states.popover = true;
+        }
+
+        if (currentElement.scrollTop || currentElement.scrollLeft) {
+          hasState = true;
+          states.scroll = {
+            top: currentElement.scrollTop,
+            left: currentElement.scrollLeft,
+          };
+        }
+
+        if (hasState) {
+          selectorStates[selectorStack.join(" > ")] = states;
+        }
+
+        selectorStack.pop();
+      }
+
       globalThis.requestAnimationFrame(
         () => {
           // TODO(#56): bind stores
@@ -132,6 +212,34 @@ export function createElement<D extends ShapeDefinition>(
             ),
           );
           this.shadowRoot!.appendChild(this.shadowRoot!.cloneNode(true));
+
+          for (const selector in selectorStates) {
+            const { focus, scroll, popover } = selectorStates[selector];
+
+            const element = document.querySelector(selector) as HTMLElement;
+
+            if (!element) {
+              console.warn(new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
+                context: { name, selector, method: "querySelector" },
+                guidance:
+                  "Consider explicitly setting an `id` or `key` on this element to preserve its browser state between renders.",
+              }).toString());
+              continue;
+            }
+
+            if (focus) {
+              element.focus();
+            }
+
+            if (scroll) {
+              element.scrollBy(scroll);
+            }
+
+            if (popover) {
+              element.showPopover();
+            }
+          }
+
           this.#isRendering = false;
         },
       );
@@ -141,7 +249,7 @@ export function createElement<D extends ShapeDefinition>(
   const _ = { name };
   const result = (
     attributes: ShapeFromDefinition<D>,
-    { dsd = true, registry = globalThis.customElements }
+    { dsd = true, registry = globalThis.customElements },
   ): CutoutGeneratorToken => {
     if (!registry?.get(`xo-${name}`)) {
       registry.define(`xo-${name}`, element);
@@ -161,10 +269,7 @@ export function createElement<D extends ShapeDefinition>(
       <_.name {...attributes}>
         <style>
           {/* TODO(#53): merge/manage DSD style rules */}
-          {(Array.isArray(definition.stylesheet)
-            ? definition.stylesheet
-            : [definition.stylesheet]).map((rule) => rule?.cssText)
-            .join("\n")}
+          {_stylesheet.map((rule) => rule.cssText).join("\n")}
         </style>
         {templateRender(attributes)}
       </_.name>

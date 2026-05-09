@@ -11,6 +11,9 @@ export enum CutoutErrorCode {
   /** The system has been instructed to do an operation deemed insecure. */
   OPERATION_INSECURE = "OPERATION_INSECURE",
 
+  /** The system simply could not complete the operation. */
+  OPERATION_FAILURE = "OPERATION_FAILURE",
+
   /** The system was requested to perform a write operation on a readonly value. */
   OPERATION_READONLY = "OPERATION_READONLY",
 

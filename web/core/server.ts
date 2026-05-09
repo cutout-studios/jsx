@@ -1,4 +1,4 @@
-import { route, type Route } from "@std/http/route";
+import { type Route, route } from "@std/http/route";
 
 export function createServer(
   routes: Route[],

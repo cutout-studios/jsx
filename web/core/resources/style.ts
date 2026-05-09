@@ -3,5 +3,5 @@ export function createStyle(cssText: string): CSSRule {
 
   result.cssText = cssText;
 
-  return result
+  return result;
 }

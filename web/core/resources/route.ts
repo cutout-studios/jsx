@@ -2,11 +2,7 @@ import type { Route } from "@std/http/route";
 
 import { getCallerLocation, parseRawShapeFromDefinition } from "../common.ts";
 import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.ts";
-import type {
-  RouteResource,
-  ShapeDefinition,
-  ShapeFromDefinition,
-} from "../types.ts";
+import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
 
 const DEFAULT_RESPONSE = new Response("Not Implemented.", {
   status: CutoutSupportedHTTPCode.NOT_IMPLEMENTED,
@@ -35,7 +31,7 @@ export function createRoute<D extends ShapeDefinition>(
     render = () => DEFAULT_RESPONSE,
     ...definition
   }: RouteDefinition<D>,
-): RouteResource {
+): Route {
   const route: Route = {
     method: definition.method,
     pattern: new URLPattern({ pathname }),
