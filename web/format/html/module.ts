@@ -10,6 +10,8 @@ import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
 import type { CutoutFormatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
+const METADATA_PROPERTY_LOCATION = "data-xo-location";
+
 const VOID_SET: Set<string> = new Set(VOID);
 
 /**
@@ -24,6 +26,7 @@ export const html: CutoutFormatter<Response> = ([, generator]) => {
     context: {
       property: true,
       fragment: false,
+      location: false,
     },
   };
 
@@ -68,8 +71,6 @@ export const html: CutoutFormatter<Response> = ([, generator]) => {
     }
   }
 
-  // TODO: gather importmap from resource locations
-  // => ah, we need to have a "reserved attribute" for this. not a "resource"
   return new Response(state.result, {
     headers: {
       "content-type": "text/html; charset=utf-8",
@@ -82,7 +83,9 @@ type _FormatState = {
   context: {
     property: boolean;
     fragment: boolean;
+    location: boolean;
   };
+  location?: URL;
 };
 
 // Cognitive conveience methods
@@ -124,7 +127,19 @@ function _addProperty(
 
   if (value === CHILDREN_LABEL) {
     state.result += ">";
+
+    if (state.location) {
+      state.result +=
+        `<script src="${state.location.pathname}" type="module" defer></script>`;
+      state.location = undefined;
+    }
+
     return state.context.property = false;
+  }
+
+  if (value === METADATA_PROPERTY_LOCATION) {
+    state.context.location = true;
+    return;
   }
 
   state.result += ` ${value}=`;
@@ -159,6 +174,12 @@ function _appendObject(
   state: _FormatState,
   value: object,
 ) {
+  if (state.context.location) {
+    state.location = value as URL;
+    state.context.location = false;
+    return;
+  }
+
   state.result += `"${
     escape(JSON.stringify(value, (_, objectValue) => {
       if (typeof objectValue === "function") {

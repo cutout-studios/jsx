@@ -1,6 +1,4 @@
 import type { AnyArray, AnyFunction, AnyShape } from "@cutout/common";
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
-import type { Route } from "@std/http/route";
 
 // TODO(#51): nested attribute definitions
 export type ShapeValueConstructor =
@@ -38,29 +36,3 @@ export type InstanceTypeFromConstructor<C> = C extends typeof Number ? number
 export type ShapeFromDefinition<T extends ShapeDefinition> = {
   [K in keyof T]?: InstanceTypeFromConstructor<T[K]>;
 };
-
-type Resource = {
-  readonly location: URL;
-};
-type StaticResource<T extends object> = T & Resource;
-type DynamicResource<T, D extends ShapeDefinition, O = unknown> =
-  & ((
-    attributes: ShapeFromDefinition<D>,
-    options?: O,
-  ) => T)
-  & Resource
-  & { readonly attributes?: D };
-
-export type RouteResource = StaticResource<Route>;
-
-export type ElementResourceOptions = {
-  dsd?: boolean;
-  registry?: CustomElementRegistry;
-};
-
-export type ElementResource<D extends ShapeDefinition> = DynamicResource<
-  CutoutGeneratorToken,
-  D,
-  ElementResourceOptions
->;
-export type StyleResource = StaticResource<CSSRule>;

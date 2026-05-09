@@ -1,10 +1,9 @@
-import { route } from "@std/http/route";
-import type { RouteResource } from "./types.ts";
+import { route, type Route } from "@std/http/route";
 
 export function createServer(
-  routes: RouteResource[],
+  routes: Route[],
   // TODO: app root(s) to serve files
-  definition: { defaultRoute: RouteResource },
+  definition: { defaultRoute: Route },
 ) {
   return (location: string = "[::1]:0") =>
     Deno.serve(

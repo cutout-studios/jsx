@@ -4,19 +4,10 @@ import type { CutoutElementFunction } from "@cutout/jsx";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 import { dom } from "../../format/dom/module.ts";
-import {
-  getCallerLocation,
-  parseRawValue,
-} from "../common.ts";
+import { getCallerLocation, parseRawValue } from "../common.ts";
 import { CutoutErrorCode } from "../errors/module.ts";
 import { CutoutError } from "../errors/module.ts";
-import type {
-  ElementResource,
-  ElementResourceOptions,
-  ShapeDefinition,
-  ShapeFromDefinition,
-  StyleResource,
-} from "../types.ts";
+import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
 
 interface ElementDefinition<
   D extends ShapeDefinition,
@@ -28,7 +19,7 @@ interface ElementDefinition<
     newValue: unknown,
   ) => void | Promise<void>;
   disconnectedCallback?: () => void | Promise<void>;
-  stylesheet?: StyleResource | StyleResource[];
+  stylesheet?: CSSRule | CSSRule[];
   render?: CutoutElementFunction<ShapeFromDefinition<D>>;
   attributes?: D;
 }
@@ -40,9 +31,9 @@ export function createElement<D extends ShapeDefinition>(
     render = () => <slot></slot>,
     ...definition
   }: ElementDefinition<D>,
-): ElementResource<D> {
+) {
   const templateRender = (attributes: ShapeFromDefinition<D>) => (
-    <template shadowRootMode="open">
+    <template shadowRootMode="open" data-xo-location={getCallerLocation()}>
       {render(attributes)}
     </template>
   );
@@ -51,7 +42,9 @@ export function createElement<D extends ShapeDefinition>(
     ? definition.stylesheet
     : [definition.stylesheet!];
 
-  const observedAttributes = Array.from(new Set(Object.keys(definition?.attributes ?? {})));
+  const observedAttributes = Array.from(
+    new Set(Object.keys(definition?.attributes ?? {})),
+  );
 
   const element = class extends HTMLElement {
     static observedAttributes = observedAttributes;
@@ -148,9 +141,7 @@ export function createElement<D extends ShapeDefinition>(
   const _ = { name };
   const result = (
     attributes: ShapeFromDefinition<D>,
-    { dsd = true, registry = globalThis.customElements }:
-      | ElementResourceOptions
-      | undefined = {},
+    { dsd = true, registry = globalThis.customElements }
   ): CutoutGeneratorToken => {
     if (!registry?.get(`xo-${name}`)) {
       registry.define(`xo-${name}`, element);
@@ -180,7 +171,5 @@ export function createElement<D extends ShapeDefinition>(
     );
   };
 
-  return Object.assign(result, {
-    location: getCallerLocation()!,
-  });
+  return result;
 }
