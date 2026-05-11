@@ -55,10 +55,16 @@ export function parseRawValue(value: string, ctor: ShapeValueConstructor) {
   }
 }
 
-export function getCallerLocation(stack = new Error().stack) {
-  const [_self, _current, callerFrame] = stack?.split(/\n\s+at\s/) ?? [];
-
+// TODO: This doesn't really work? We need something more thought through.
+const PARENT_CALLER = 3
+export function getParentCallerLocation() {
+  const trace = new Error().stack?.split(/\n\s+at\s/) ?? [];
+  const callerFrame = trace[PARENT_CALLER];
   if (!callerFrame) return undefined;
 
-  return new URL(callerFrame);
+  const [match] = callerFrame.match(/(file|https?|ftp):\/\/[^:\s]+:\d+(?::\d+)?/) ?? [];
+
+  if (!match) return;
+
+  return new URL(match);
 }

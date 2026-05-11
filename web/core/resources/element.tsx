@@ -4,7 +4,7 @@ import type { CutoutElementFunction } from "@cutout/jsx";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 import { dom } from "../../format/dom/module.ts";
-import { getCallerLocation, parseRawValue } from "../common.ts";
+import { getParentCallerLocation, parseRawValue } from "../common.ts";
 import { CutoutErrorCode } from "../errors/module.ts";
 import { CutoutError } from "../errors/module.ts";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
@@ -32,8 +32,10 @@ export function createElement<D extends ShapeDefinition>(
     ...definition
   }: ElementDefinition<D>,
 ) {
+  const callerLocation = getParentCallerLocation();
+
   const templateRender = (attributes: ShapeFromDefinition<D>) => (
-    <template shadowRootMode="open" data-xo-location={getCallerLocation()}>
+    <template shadowRootMode="open" data-xo-location={callerLocation}>
       {render(attributes)}
     </template>
   );
@@ -148,6 +150,7 @@ export function createElement<D extends ShapeDefinition>(
         return tag;
       };
 
+      // TODO: cognitive convenience methods
       const elementStack: [element: HTMLElement, index: number][] = [];
 
       for (let i = 0; i < this.shadowRoot!.childNodes.length; i++) {
@@ -221,7 +224,7 @@ export function createElement<D extends ShapeDefinition>(
             if (!element) {
               console.warn(new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
                 context: { name, selector, method: "querySelector" },
-                guidance:
+                guidance: // TODO: add to 'constants'
                   "Consider explicitly setting an `id` or `key` on this element to preserve its browser state between renders.",
               }).toString());
               continue;
@@ -246,17 +249,17 @@ export function createElement<D extends ShapeDefinition>(
     }
   };
 
-  const _ = { name };
+  const _ = { name: `xo-${name}` };
   const result = (
     attributes: ShapeFromDefinition<D>,
-    { dsd = true, registry = globalThis.customElements },
+    { dsd = true, registry = globalThis.customElements } = {},
   ): CutoutGeneratorToken => {
     if (!registry?.get(`xo-${name}`)) {
       registry.define(`xo-${name}`, element);
     } else {
       console.warn(
         new CutoutError(CutoutErrorCode.OPERATION_REDUNDANT, {
-          context: `Registering \`xo-${name}.\``,
+          context: { name: `xo-${name}` },
         }).toString(),
       );
     }
@@ -265,11 +268,12 @@ export function createElement<D extends ShapeDefinition>(
       return <_.name {...attributes}></_.name>;
     }
 
+    // TODO: omit `style` if no stylesheet
     return (
       <_.name {...attributes}>
         <style>
           {/* TODO(#53): merge/manage DSD style rules */}
-          {_stylesheet.map((rule) => rule.cssText).join("\n")}
+          {_stylesheet.map((rule) => rule?.cssText).join("\n")}
         </style>
         {templateRender(attributes)}
       </_.name>

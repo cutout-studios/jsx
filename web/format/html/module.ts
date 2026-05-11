@@ -129,7 +129,7 @@ function _addProperty(
     state.result += ">";
 
     if (state.location) {
-      state.result +=
+      state.result += // TODO: make relative to the app root
         `<script src="${state.location.pathname}" type="module" defer></script>`;
       state.location = undefined;
     }

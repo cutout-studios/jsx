@@ -1,3 +1,4 @@
+import type { AnyShape } from "@cutout/common";
 import type { Route } from "@std/http/route";
 
 import { parseRawShapeFromDefinition } from "../common.ts";
@@ -37,8 +38,8 @@ export function createRoute<D extends ShapeDefinition>(
     pattern: new URLPattern({ pathname }),
 
     handler: async (request, { pathname: { groups: parameters } }) => {
-      // TODO: better handling. if it's not json, don't try it
-      const requestBody = !request.bodyUsed && (await request.json()) || {};
+      // TODO: unify this
+      const requestBody = await _parseRequest(request) || {};
       const urlParameters = definition.parameters
         ? parseRawShapeFromDefinition<D>(
           parameters,
@@ -51,7 +52,7 @@ export function createRoute<D extends ShapeDefinition>(
           Object.assign({}, requestBody, urlParameters),
           request,
         );
-      } catch (error) {
+      } catch (error) { // TODO: dev vs. prod level of error
         if (error instanceof CutoutError) {
           return new Response(error.toString(), {
             status: error.httpCode,
@@ -59,7 +60,7 @@ export function createRoute<D extends ShapeDefinition>(
         }
 
         if (error instanceof Error) {
-          return new Response(error.message, {
+          return new Response(error.stack ?? error.message, {
             status: CutoutSupportedHTTPCode.SERVER_ERROR,
           });
         }
@@ -70,4 +71,30 @@ export function createRoute<D extends ShapeDefinition>(
       }
     },
   };
+}
+
+async function _parseRequest(request: Request) {
+  if (request.bodyUsed) {
+    return null; // TODO: error?
+  }
+
+  const contentType = (request.headers.get('content-type') ?? '').toLocaleLowerCase();
+
+  // TODO: SupportedRouteContentType
+  if (contentType.includes('application/json')) {
+    return request.json();
+  }
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await request.formData();
+    const result: AnyShape = {};
+    for (const [key, value] of formData.entries()) {
+      result[key] = value;
+    }
+
+    return result;
+  }
+
+
+  return null;
 }

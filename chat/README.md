@@ -10,7 +10,7 @@
 
 ```sh
 curl -fsSL https://lmstudio.ai/install.sh | bash
-lms get qwen/qwen3.6-35b-a3b # or your favorite
+lms get qwen/qwen3.6-35b-a3b
 ```
 
 2. Execute the task:

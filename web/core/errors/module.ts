@@ -1,6 +1,6 @@
 import { relative } from "@std/path";
 
-import { getCallerLocation } from "../common.ts";
+import { getParentCallerLocation } from "../common.ts";
 import {
   CONTEXT_MAX_SIZE,
   CONTEXT_MISSING_MESSAGE,
@@ -66,7 +66,7 @@ export class CutoutError extends Error {
    * ```
    */
   get callLocation(): string | undefined {
-    const caller = getCallerLocation(this.stack);
+    const caller = getParentCallerLocation(this.stack);
 
     if (!caller) return undefined;
 
