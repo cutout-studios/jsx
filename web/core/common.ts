@@ -57,8 +57,8 @@ export function parseRawValue(value: string, ctor: ShapeValueConstructor) {
 
 // TODO: This doesn't really work? We need something more thought through.
 const PARENT_CALLER = 3
-export function getParentCallerLocation() {
-  const trace = new Error().stack?.split(/\n\s+at\s/) ?? [];
+export function getParentCallerLocation(stack = new Error().stack) {
+  const trace =  stack?.split(/\n\s+at\s/) ?? [];
   const callerFrame = trace[PARENT_CALLER];
   if (!callerFrame) return undefined;
 

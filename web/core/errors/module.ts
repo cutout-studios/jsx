@@ -119,7 +119,7 @@ export class CutoutError extends Error {
     return [
       this.message,
       `  - **Call Location:** ${this.callLocation}`,
-      `  - **Context:** ${this.context}`,
+      `  - **Context:** ${JSON.stringify(this.context)}`,
       `  - **Guidance:** ${this.guidance}`,
     ].join("\n");
   }
