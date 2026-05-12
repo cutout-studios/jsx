@@ -2,7 +2,7 @@ import type { AnyShape } from "@cutout/common";
 import type { Route } from "@std/http/route";
 
 import { parseRawShapeFromDefinition } from "../common.ts";
-import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.ts";
+import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.tsx";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
 
 const DEFAULT_RESPONSE = new Response("Not Implemented.", {

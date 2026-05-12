@@ -13,6 +13,7 @@ import {
   type CutoutErrorOptions,
   CutoutSupportedHTTPCode,
 } from "./types.ts";
+import { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 export { CutoutErrorCode, CutoutSupportedHTTPCode } from "./types.ts";
 
@@ -123,4 +124,36 @@ export class CutoutError extends Error {
       `  - **Guidance:** ${this.guidance}`,
     ].join("\n");
   }
+
+  toJSX(): CutoutGeneratorToken {
+    return (
+      <div data-xo-error={this.code}>
+        <h2>{this.message}</h2>
+        <dl>
+          <dt>Call Location</dt>
+          <dd>{this.callLocation}</dd>
+          <dt>Context</dt>
+          <dd>{this.context}</dd>
+          <dt>Guidance</dt>
+          <dd>{this.guidance}</dd>
+        </dl>
+      </div>
+    )
+  }
 }
+
+
+
+// TODO: implement better stack parser
+// const PARENT_CALLER = 3
+// export function getParentCallerLocation(stack = new Error().stack) {
+//   const trace =  stack?.split(/\n\s+at\s/) ?? [];
+//   const callerFrame = trace[PARENT_CALLER];
+//   if (!callerFrame) return undefined;
+
+//   const [match] = callerFrame.match(/(file|https?|ftp):\/\/[^:\s]+:\d+(?::\d+)?/) ?? [];
+
+//   if (!match) return;
+
+//   return new URL(match);
+// }

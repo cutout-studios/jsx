@@ -1,6 +1,6 @@
 import { assertSnapshot } from "@std/testing/snapshot";
 
-import { CutoutError } from "./module.ts";
+import { CutoutError } from "./module.tsx";
 import { CutoutErrorCode } from "./types.ts";
 
 Deno.test("CutoutError", async (test) => {

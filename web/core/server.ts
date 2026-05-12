@@ -4,10 +4,16 @@ import { CutoutError, CutoutErrorCode } from "@cutout/web";
 import { serveDir } from "@std/http/file-server";
 import { type Route, route } from "@std/http/route";
 
+type CutoutServerOptions = {
+  routes: Route[];
+  systemRoot: URL;
+  errorHandler: (error: CutoutError) => Response
+}
+
+
 // TODO: more specific error types
 export function createServer(
-  routes: Route[],
-  definition: { appRoot: URL; errorHandler: (error: CutoutError) => Response },
+  { routes, systemRoot, errorHandler }: CutoutServerOptions
 ) {
   return (location: URL = new URL("http://[::1]:0")) => {
     Deno.serve(
@@ -20,7 +26,7 @@ export function createServer(
           method: ["GET"],
           pattern: new URLPattern({
             // TODO: the path math here is bad
-            pathname: definition.appRoot.pathname + "/*",
+            pathname: systemRoot.pathname + "/*",
           }),
           handler: async (request) => {
             const fileURL = new URL(request.url);
@@ -41,7 +47,7 @@ export function createServer(
               });
 
               if (result.errors) {
-                return definition.errorHandler(
+                return errorHandler(
                   new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
                     context: request,
                   }),
@@ -49,7 +55,7 @@ export function createServer(
               }
 
               if (!result.outputFiles) {
-                return definition.errorHandler(
+                return errorHandler(
                   new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
                     context: request,
                   }),
@@ -61,7 +67,7 @@ export function createServer(
               );
 
               if (!builtFile) {
-                return definition.errorHandler(
+                return errorHandler(
                   new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
                     context: request,
                   }),
@@ -75,11 +81,11 @@ export function createServer(
               });
             }
 
-            return serveDir(request, { fsRoot: definition.appRoot.toString() });
+            return serveDir(request, { fsRoot: systemRoot.toString() });
           },
         }, ...routes],
         (request) =>
-          definition.errorHandler(
+          errorHandler(
             new CutoutError(CutoutErrorCode.DATA_UNKNOWN, { context: request }),
           ),
       ),
