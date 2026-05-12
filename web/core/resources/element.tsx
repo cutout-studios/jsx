@@ -4,7 +4,7 @@ import type { CutoutElementFunction } from "@cutout/jsx";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 import { dom } from "../../format/dom/module.ts";
-import { getParentCallerLocation, parseRawValue } from "../common.ts";
+import { parseRawValue } from "../common.ts";
 import { CutoutErrorCode } from "../errors/module.tsx";
 import { CutoutError } from "../errors/module.tsx";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";

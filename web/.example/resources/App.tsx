@@ -2,7 +2,7 @@
 
 import { createElement } from "@cutout/web";
 
-export const AppHome = createElement("home", {
+export default createElement("home", {
   attributes: {
     username: String,
   },

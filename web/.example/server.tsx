@@ -1,41 +1,10 @@
 /** @jsxImportSourceTypes @cutout/web/format/html */
 
-import { createRoute, createServer } from "@cutout/web";
-import { html } from "@cutout/web/format";
-import { AppHome } from "./elements/App.tsx";
+import { createServer } from "@cutout/web";
 
-const home = createRoute("/", {
-  render() {
-    return html(
-      <html>
-        <head>
-          <title>Home Page</title>
-        </head>
-        <body>
-          <AppHome username="Daniel" />
-        </body>
-      </html>,
-    );
-  },
-});
+import AppElement from "./resources/App.tsx";
+import HomeRoute from "./resources/Home.tsx";
 
-const server = createServer({
-  routes: [
-    home
-  ],
-  systemRoot: "./elements",
-  errorHandler(error) {
-    return html(
-      <html>
-        <head>
-          <title>{error.message}</title>
-        </head>
-        <body>
-          {error.toJSX()}
-        </body>
-      </html>
-    );
-  },
-});
+const server = createServer(HomeRoute, AppElement);
 
 server();
