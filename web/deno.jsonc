@@ -19,6 +19,7 @@
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
+    "@std/http/file-server": "jsr:@std/http/file-server",
     "@std/path": "jsr:@std/path",
     "@std/testing": "jsr:@std/testing",
 
