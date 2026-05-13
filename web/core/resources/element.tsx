@@ -32,7 +32,7 @@ export function createElement<D extends ShapeDefinition>(
     ...definition
   }: ElementDefinition<D>,
 ) {
-  const callerLocation = getParentCallerLocation();
+  const callerLocation = CutoutError.getParentFrame()?.file;
 
   const templateRender = (attributes: ShapeFromDefinition<D>) => (
     <template shadowRootMode="open" data-xo-location={callerLocation}>

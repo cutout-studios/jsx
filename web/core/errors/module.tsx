@@ -7,12 +7,24 @@ import {
   GUIDANCE_MISSING_MESSAGE,
 } from "./constants.ts";
 import {
-  type CutoutErrorCode,
-  type CutoutErrorOptions,
+  CutoutErrorCode,
+  type CutoutStackFrame,
+  CutoutSupportedHTTPCode,
+  type V8_CallSite,
+  type V8_PrepareStackTrace,
+} from "./types.ts";
+
+export {
+  CutoutErrorCode,
+  type CutoutStackFrame,
   CutoutSupportedHTTPCode,
 } from "./types.ts";
 
-export { CutoutErrorCode, CutoutSupportedHTTPCode } from "./types.ts";
+type CutoutErrorOptions = {
+  render?: (error: CutoutError) => CutoutGeneratorToken;
+  context?: unknown;
+  guidance?: string;
+} & ErrorOptions;
 
 /**
  * A wrapper class for the native Error, that
@@ -20,9 +32,44 @@ export { CutoutErrorCode, CutoutSupportedHTTPCode } from "./types.ts";
  * utilities.
  */
 export class CutoutError extends Error {
+  // TODO: explain this
+  static {
+    const _V8_Error = Error as typeof Error & {
+      prepareStackTrace?: V8_PrepareStackTrace;
+    };
+    const _v8_prepareStackTrace = _V8_Error.prepareStackTrace;
+
+    if (_v8_prepareStackTrace) {
+      _V8_Error.prepareStackTrace = (error: Error, trace: V8_CallSite[]) => {
+        if (error instanceof CutoutError) {
+          for (const index in trace) {
+            const frame = trace[index];
+
+            error.#frames[index] = {
+              type: frame.getTypeName(),
+              symbol: frame.getMethodName() || frame.getFunctionName(),
+              file: {
+                name: frame.getFileName(),
+                line: frame.getLineNumber(),
+                column: frame.getColumnNumber(),
+              },
+            };
+          }
+        } else {
+          _v8_prepareStackTrace(error, trace);
+        }
+      };
+    }
+  }
+
+  static getParentFrame() {
+    return new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {}).parentFrame;
+  }
+
   /** The canonical Cutout Error code. */
   code: CutoutErrorCode;
-  httpCode?: CutoutSupportedHTTPCode;
+  render: (error: CutoutError) => CutoutGeneratorToken;
+  #frames: CutoutStackFrame[] = [];
   #context?: unknown;
   #guidance?: string;
 
@@ -42,40 +89,61 @@ export class CutoutError extends Error {
     {
       guidance,
       context,
-      httpCode = CutoutSupportedHTTPCode.SERVER_ERROR,
+      render = ({ code, message, parentFrame, context, guidance }) => {
+        return (
+          <div data-xo-error={code}>
+            <h2>{message}</h2>
+            <dl>
+              <dt>Call Location</dt>
+              <dd>{parentFrame?.file}</dd>
+              <dt>Context</dt>
+              <dd>{context}</dd>
+              <dt>Guidance</dt>
+              <dd>{guidance}</dd>
+            </dl>
+          </div>
+        );
+      },
       ...options
     }: CutoutErrorOptions,
   ) {
     super(`[${code}]: ${ERROR_CODE_MESSAGES[code]}`, options);
 
     this.code = code;
-    this.httpCode = httpCode;
+    this.render = render;
     this.#context = context;
     this.#guidance = guidance;
+
+    Error.captureStackTrace(this, CutoutError);
+    void this.stack;
+  }
+
+  get currentFrame(): CutoutStackFrame | undefined {
+    if (!this.#frames) {
+      return undefined;
+    }
+
+    return this.#frames[0];
+  }
+
+  get parentFrame(): CutoutStackFrame | undefined {
+    if (!this.#frames) {
+      return undefined;
+    }
+
+    return this.#frames[1];
   }
 
   /**
-   * The location from which the error occurred, relative
-   * to the project root.
-   *
-   * @example
-   * ```
-   * "errors/test.ts:7:17"
-   * ```
-   */
-  get callLocation(): string | undefined {
-    // TODO: implement stack parser
-    return "";
-  }
-
-  /**
-   * Additional context specified by the caller that
+   * Additional data specified by the caller that
    * might be relevant in debugging.
    */
   get context(): string {
     if (!this.#context) return CONTEXT_MISSING_MESSAGE;
 
-    const result = String(this.#context);
+    const result = typeof this.#context === "object"
+      ? JSON.stringify(this.#context)
+      : String(this.#context);
 
     if (result.length > CONTEXT_MAX_SIZE) {
       return result.slice(
@@ -90,48 +158,24 @@ export class CutoutError extends Error {
   /**
    * Guidance provided to the developer to help them troubleshoot.
    */
-  get guidance(): string | undefined {
-    if (!this.#guidance) return GUIDANCE_MISSING_MESSAGE;
-
-    return this.#guidance.trim();
-  }
-
-  /**
-   * Useful for reperesenting the entire error object in string form,
-   * complete with call location, context, and additional guidance.
-   * Provided in Markdown format.
-   *
-   * @returns The serialized error.
-   * @example
-   * ```
-   * [DATA_UNKNOWN]: \`@cutout/jsx\` has encountered unknown data.
-   *   - **Call Location:** errors/test.ts:7:17
-   *   - **Context:** None.
-   *   - **Guidance:** Not provided.
-   * ```
-   */
-  override toString(): string {
-    return [
-      this.message,
-      `  - **Call Location:** ${this.callLocation}`,
-      `  - **Context:** ${JSON.stringify(this.context)}`,
-      `  - **Guidance:** ${this.guidance}`,
-    ].join("\n");
+  get guidance(): string {
+    return this.#guidance?.trim() || GUIDANCE_MISSING_MESSAGE;
   }
 
   toJSX(): CutoutGeneratorToken {
-    return (
-      <div data-xo-error={this.code}>
-        <h2>{this.message}</h2>
-        <dl>
-          <dt>Call Location</dt>
-          <dd>{this.callLocation}</dd>
-          <dt>Context</dt>
-          <dd>{this.context}</dd>
-          <dt>Guidance</dt>
-          <dd>{this.guidance}</dd>
-        </dl>
-      </div>
-    )
+    return this.render(this);
+  }
+}
+
+export class CutoutHTTPError extends CutoutError {
+  httpCode: CutoutSupportedHTTPCode;
+
+  constructor(code: CutoutErrorCode, {
+    httpCode = CutoutSupportedHTTPCode.SERVER_ERROR,
+    ...options
+  }) {
+    super(code, options);
+
+    this.httpCode = httpCode;
   }
 }

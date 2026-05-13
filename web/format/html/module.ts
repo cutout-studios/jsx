@@ -14,6 +14,8 @@ const METADATA_PROPERTY_LOCATION = "data-xo-location";
 
 const VOID_SET: Set<string> = new Set(VOID);
 
+
+// TODO: need to separate response and string.
 /**
  * A generic HTML formatter, for SSR.
  *

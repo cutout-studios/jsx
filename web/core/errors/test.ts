@@ -9,5 +9,5 @@ Deno.test("CutoutError", async (test) => {
     guidance: "This is a test! No guidance needed!",
   });
 
-  await assertSnapshot(test, String(error));
+  await assertSnapshot(test, [...error.toJSX()[1]]);
 });

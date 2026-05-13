@@ -26,8 +26,31 @@ export enum CutoutSupportedHTTPCode {
   NOT_IMPLEMENTED = 501,
 }
 
-export type CutoutErrorOptions = {
-  context?: unknown;
-  guidance?: string;
-  httpCode?: CutoutSupportedHTTPCode;
-} & ErrorOptions;
+export type CutoutStackFrame = {
+  type: string | null;
+  symbol: string | null;
+  file: {
+    name: string | null;
+    line: number | null;
+    column: number | null;
+  };
+};
+
+export interface V8_CallSite {
+  getMethodName(): string | null;
+  getFileName(): string | null;
+  getLineNumber(): number | null;
+  getColumnNumber(): number | null;
+  getFunctionName(): string | null;
+  getTypeName(): string | null;
+  isNative(): boolean;
+  isEval(): boolean;
+  getEvalOrigin(): string | undefined;
+  isToplevel(): boolean;
+  getEvalLineOffset(): number;
+}
+
+export type V8_PrepareStackTrace = (
+  error: Error,
+  frames: V8_CallSite[],
+) => unknown;

@@ -1,8 +1,10 @@
 import type { AnyShape } from "@cutout/common";
+import { CutoutError } from "@cutout/web";
+import { html } from "@cutout/web/format"; 
 import type { Route } from "@std/http/route";
 
 import { parseRawShapeFromDefinition } from "../common.ts";
-import { CutoutError, CutoutSupportedHTTPCode } from "../errors/module.tsx";
+import { CutoutHTTPError, CutoutSupportedHTTPCode } from "../errors/module.tsx";
 import type { ShapeDefinition, ShapeFromDefinition } from "../types.ts";
 
 const DEFAULT_RESPONSE = new Response("Not Implemented.", {
@@ -53,10 +55,17 @@ export function createRoute<D extends ShapeDefinition>(
           request,
         );
       } catch (error) { // TODO: dev vs. prod level of error
+        if (error instanceof CutoutHTTPError) {
+          const response = html(error.toJSX());
+
+          // TODO: fix
+          Object.defineProperty(response, "status", error.httpCode);
+
+          return response;
+        }
+
         if (error instanceof CutoutError) {
-          return new Response(error.toString(), {
-            status: error.httpCode,
-          });
+          return html(error.toJSX());
         }
 
         if (error instanceof Error) {
