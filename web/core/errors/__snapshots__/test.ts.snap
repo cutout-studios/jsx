@@ -1,8 +1,5 @@
 export const snapshot = {};
 
-snapshot[`CutoutError 1`] = `
-"[DATA_UNKNOWN]: \`@cutout/jsx\` has encountered unknown data.
-  - **Call Location:** web/core/errors/test.ts:7:17
-  - **Context:** function testFunction() {}
-  - **Guidance:** This is a test! No guidance needed!"
-`;
+snapshot[`@cutout/web/errors - CutoutError constructor 1`] = `"Error: [OPERATION_UNKNOWN] \`@cutout/web\` was requested to perform an unknown operation."`;
+
+snapshot[`@cutout/web/errors - CutoutError.getParentCallSite 1`] = `"r"`;

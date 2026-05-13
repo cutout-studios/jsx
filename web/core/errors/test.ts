@@ -1,13 +1,29 @@
 import { assertSnapshot } from "@std/testing/snapshot";
+import { CutoutError } from "./error.ts";
+import { toHTML } from "./jsx.tsx";
 
-import { CutoutError } from "./module.ts";
-import { CutoutErrorCode } from "./types.ts";
+const TEST_GROUP = "@cutout/web/errors";
 
-Deno.test("CutoutError", async (test) => {
-  const error = new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {
-    context: function testFunction() {},
-    guidance: "This is a test! No guidance needed!",
-  });
+Deno.test(`${TEST_GROUP} - CutoutError constructor`, async (test) => {
+  await assertSnapshot(test, String(new CutoutError()));
+});
 
-  await assertSnapshot(test, String(error));
+Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, (test) => {
+  function test1() {
+    function test2 () {
+     async function test3 () {
+        await assertSnapshot(test, CutoutError.getParentCallSite());
+      }
+
+      test3();
+    }
+
+    test2();
+  }
+
+  test1();
+});
+
+Deno.test(`${TEST_GROUP} - toHTML`, async (test) => {
+  await assertSnapshot(test, toHTML(new CutoutError()));
 });
