@@ -15,7 +15,7 @@ function _defaultRender({ code, message, context, guidance }: CutoutError) {
         <dd>{guidance}</dd>
       </dl>
     </div>
-  );  
+  );
 }
 
 export function toJSX(

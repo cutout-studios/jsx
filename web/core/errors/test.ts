@@ -10,8 +10,8 @@ Deno.test(`${TEST_GROUP} - CutoutError constructor`, async (test) => {
 
 Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, (test) => {
   function test1() {
-    function test2 () {
-     async function test3 () {
+    function test2() {
+      async function test3() {
         await assertSnapshot(test, CutoutError.getParentCallSite());
       }
 

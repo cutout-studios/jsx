@@ -1,11 +1,11 @@
 import {
+  CutoutErrorCode,
+  ERROR_CODE_MESSAGES,
   ERROR_CONTEXT_MAX_SIZE,
   ERROR_CONTEXT_MISSING_MESSAGE,
   ERROR_CONTEXT_TRUNCATION_CHARACTER,
-  CutoutErrorCode,
-  ERROR_CODE_MESSAGES,
-  ERROR_STACK_FRAME_PARENT_INDEX,
   ERROR_GUIDANCE_MISSING_MESSAGE,
+  ERROR_STACK_FRAME_PARENT_INDEX,
 } from "./constants.ts";
 import type * as V8 from "./v8.ts";
 
@@ -40,7 +40,7 @@ export class CutoutError extends Error {
   static getParentCallSite(): V8.CallSite | undefined {
     const { stack } = new CutoutError();
 
-    if (!stack) return; 
+    if (!stack) return;
 
     return stack[ERROR_STACK_FRAME_PARENT_INDEX] as unknown as V8.CallSite;
   }

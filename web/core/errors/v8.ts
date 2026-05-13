@@ -10,7 +10,7 @@ export interface CallSite {
   getEvalOrigin(): string | undefined;
   isToplevel(): boolean;
   getEvalLineOffset(): number;
-};
+}
 
 export type PrepareStackTrace = (
   error: Error,
