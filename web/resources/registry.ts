@@ -1,9 +1,9 @@
 import { type AnyResource, ResourceType } from "./types.ts";
 
-export class ResourceRegistry {
+export class ResourceElementRegistry {
   #internalRegistry = new Map<string, AnyResource>();
   #reverseRegistry = new WeakMap<AnyResource, string>();
-  #elementRegistry = globalThis.customElements;
+  #baseRegistry = globalThis.customElements;
 
   // TODO: make immutable
   define(
@@ -14,7 +14,7 @@ export class ResourceRegistry {
     this.#reverseRegistry.set(resource, name);
 
     if (resource.type === ResourceType.BROWSER_ELEMENT) {
-      this.#elementRegistry.define(name, resource);
+      this.#baseRegistry.define(name, resource);
     }
 
     return resource;
@@ -29,4 +29,4 @@ export class ResourceRegistry {
   }
 }
 
-export const SYSTEM_RESOURCE_REGISTRY = new ResourceRegistry();
+export const SYSTEM_RESOURCE_REGISTRY = new ResourceElementRegistry();
