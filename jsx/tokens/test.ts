@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { isValidCutoutToken, tokenizeValue } from "./module.ts";
 import { CutoutTokenType } from "./types.ts";
 
-const TEST_GROUP = "jsx/tokens"
+const TEST_GROUP = "jsx/tokens";
 
 Deno.test(`${TEST_GROUP} - isValidCutoutToken`, () => {
   assertEquals(

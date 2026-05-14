@@ -116,4 +116,4 @@ function _resolveCallSite(index: number, error?: CutoutError) {
   if (!stack || typeof stack === "string") return;
 
   return stack[index] as unknown as V8.CallSite;
-};
+}
