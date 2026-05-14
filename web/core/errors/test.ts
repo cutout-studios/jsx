@@ -1,5 +1,6 @@
 import { assertEquals, assert } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
+import { ERROR_STACK_OVERWRITTEN_MESSAGE } from "./constants.ts";
 import { CutoutError } from "./error.ts";
 import { toHTML } from "./jsx.tsx";
 
@@ -10,13 +11,13 @@ Deno.test(`${TEST_GROUP} - CutoutError constructor`, async (test) => {
 });
 
 Deno.test(`${TEST_GROUP} - CutoutError stack formatting is overwritten`, () => {
-  assert(new CutoutError().stack?.includes("`Error.prepareStackTrace` overwritten by `@cutout/web`"));
+  assert(new CutoutError().stack?.includes(ERROR_STACK_OVERWRITTEN_MESSAGE));
 });
 
 Deno.test(`${TEST_GROUP} - non-CutoutError stack formatting is preserved`, () => {
   void new CutoutError();
 
-  assert(!new Error().stack?.includes("`Error.prepareStackTrace` overwritten by `@cutout/web`"));
+  assert(!new Error().stack?.includes(ERROR_STACK_OVERWRITTEN_MESSAGE));
 });
 
 Deno.test(`${TEST_GROUP} - toHTML`, async (test) => {

@@ -7,6 +7,7 @@ import {
   ERROR_GUIDANCE_MISSING_MESSAGE,
   ERROR_STACK_FRAME_INDEX,
   ERROR_STACK_FRAME_PARENT_INDEX,
+  ERROR_STACK_OVERWRITTEN_MESSAGE
 } from "./constants.ts";
 import type * as V8 from "./v8.ts";
 
@@ -83,8 +84,7 @@ export class CutoutError extends Error {
         return v8_prepareStackTrace(error, trace);
       }
 
-      return error.name +
-        "\n\t`Error.prepareStackTrace` overwritten by `@cutout/web`.";
+      return error.name + "\n\t" + ERROR_STACK_OVERWRITTEN_MESSAGE;
     };
 
     void this.stack;
