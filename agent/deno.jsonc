@@ -1,0 +1,6 @@
+{
+  "name": "@cutout/agent",
+  "tasks": {
+    "start": "./start"
+  }
+}

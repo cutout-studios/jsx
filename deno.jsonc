@@ -12,13 +12,15 @@
     ]
   },
   "tasks": {
-    "docs:lint": "deno doc --lint jsx/tokens/module.ts jsx/module.ts",
-    "chat": "./chat/run"
+    "docs:lint": "deno doc --lint jsx/tokens/module.ts jsx/module.ts"
   },
   "workspace": [
+    "common",
     "jsx",
+    "polyfill",
     "web",
     "elements",
-    "tauri"
+    "tauri",
+    "agent"
   ]
 }

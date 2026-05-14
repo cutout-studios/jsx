@@ -9,12 +9,11 @@
     ]
   },
   "exports": {
-    ".": "./core/module.ts",
-    // TODO: these are to be repurposed for the framework, explicitly.
-    "./format/dom/jsx-runtime": "./core/format/dom/runtime.d.ts",
-    "./format/html/jsx-runtime": "./core/format/html/runtime.d.ts",
-    "./errors": "./core/errors/module.ts",
-    "./worker": "./worker/module.ts"
+    "./format": "./format/module.ts",
+    "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
+    "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
+    "./errors": "./errors/module.ts",
+    "./resources": "./resources/module.ts"
   },
   "imports": {
     ".bench": "./.bench/module.ts",
@@ -30,6 +29,9 @@
     "happy-dom": "npm:happy-dom",
     "react": "npm:react",
     "react-dom": "npm:react-dom"
+  },
+  "tasks": {
+    "docs:lint": "deno docs --lint ./errors/module.ts ./resources/module.ts ./format/module.ts"
   },
   "license": "MIT",
   "name": "@cutout/web",

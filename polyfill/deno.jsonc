@@ -1,0 +1,4 @@
+{
+  "name": "@cutout/polyfill",
+  "exports": "./module.js"
+}

@@ -1,7 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { assertSnapshot } from "@std/testing/snapshot";
-import type { CutoutGeneratorToken } from "./tokens/types.ts";
+import type { GeneratorToken } from "./tokens/types.ts";
 
 const TEST_GROUP = "jsx";
 
@@ -102,7 +102,7 @@ Deno.test(
   },
 );
 
-function assertCutoutJsxSnapshot([, generator]: CutoutGeneratorToken) {
+function assertCutoutJsxSnapshot([, generator]: GeneratorToken) {
   return async (test: Deno.TestContext) =>
     await assertSnapshot(test, [...generator]);
 }

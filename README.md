@@ -10,13 +10,15 @@ possible to their respective targets.
 
 ## Contents
 
-| Module                            | Description                                                      | Status                                                                  |
+| Module                            | Planned Description                                              | Status                                                                  |
 | --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [`@cutout/chat`](./chat/)         | QDT-compliant local LLM service.                                 | **SHIM IMPLEMENTATION**                                                 |
+| [`@cutout/common`](./common/)     | Shared utilities across the Toolbox.                             | _Private_                                                               |
 | [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
+| [`@cutout/polyfill`](./polyfill/) | Server-side polyfill for DOM apis.                               | **STUB**                                                                |
 | [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
-| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
 | [`@cutout/elements`](./elements/) | Accessible and mobile-friendly Web UI primitives.                | **PLACEHOLDER**                                                         |
+| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
+| [`@cutout/agent`](./agent/)       | QDT-compliant local LLM service.                                 | **SHIM**                                                                |
 
 ### Who we are
 

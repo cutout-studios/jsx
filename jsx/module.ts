@@ -8,20 +8,24 @@
 
 import {
   CHILDREN_LABEL,
-  type CutoutAttributeToken,
-  type CutoutElementCloseToken,
-  type CutoutElementOpenToken,
-  type CutoutGeneratorToken,
-  CutoutTokenType,
   FRAGMENT_LABEL,
-  isCutoutGeneratorToken,
-  isOutputCutoutToken,
-  isValidCutoutToken,
   TOKEN_TYPE_INDEX,
   TOKEN_VALUE_INDEX,
-  tokenizeValue,
+  TokenType,
   UNSERIALIZABLE_LABEL,
-} from "./tokens/module.ts";
+} from "./tokens/constants.ts";
+import {
+  isGeneratorToken,
+  isOutputToken,
+  isValidToken,
+} from "./tokens/guards.ts";
+import { tokenizeValue } from "./tokens/tokenizeValue.ts";
+import type {
+  AttributeToken,
+  ElementCloseToken,
+  ElementOpenToken,
+  GeneratorToken,
+} from "./tokens/types.ts";
 
 /**
  * The default @cutout/jsx typings.
@@ -56,7 +60,7 @@ export namespace JSX {
  */
 export type CutoutElementFunction<A = Record<string, unknown>> = (
   attributes: A,
-) => CutoutGeneratorToken;
+) => GeneratorToken;
 
 /**
  * The core transformation function for `@cutout/jsx`.
@@ -77,7 +81,7 @@ export const jsx = (
   element: CutoutElementFunction | string,
   _elementAttributes: { [key: string]: unknown },
   ..._elementChildren: unknown[]
-): CutoutGeneratorToken => {
+): GeneratorToken => {
   const _generator = function* () {
     // 1. Normalize children across "react" and "react-jsx" pragma types.
     //    We separate children from the rest of the attributes to handle them separately.
@@ -86,7 +90,7 @@ export const jsx = (
 
     // These are both "single values" and need to be wrapped in an array
     // for consistent processing later.
-    if (isValidCutoutToken(children) || !Array.isArray(children)) {
+    if (isValidToken(children) || !Array.isArray(children)) {
       children = [children];
     }
 
@@ -99,29 +103,29 @@ export const jsx = (
 
     // 3. Otherwise, we've hit an intrinsic element.
     // => 3.1. Yield the opening tag.
-    yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementOpenToken;
+    yield [TokenType.ELEMENT_OPEN, element] as ElementOpenToken;
 
     // => 3.2. Yield all non-child attributes.
     for (const key in attributes) {
-      yield [CutoutTokenType.ATTRIBUTE, key] as CutoutAttributeToken;
+      yield [TokenType.ATTRIBUTE, key] as AttributeToken;
       yield* _forwardTokens(attributes[key]);
     }
 
     // => 3.3. Yield children.
     if (Array.isArray(children) && children.length) {
-      yield [CutoutTokenType.ATTRIBUTE, CHILDREN_LABEL] as CutoutAttributeToken;
+      yield [TokenType.ATTRIBUTE, CHILDREN_LABEL] as AttributeToken;
 
       for (const child of children as unknown[]) yield* _forwardTokens(child);
     }
 
     // => 3.4. Yield the closing tag.
     yield [
-      CutoutTokenType.ELEMENT_CLOSE,
+      TokenType.ELEMENT_CLOSE,
       element,
-    ] as CutoutElementCloseToken;
+    ] as ElementCloseToken;
   };
 
-  return [CutoutTokenType.GENERATOR, _generator()];
+  return [TokenType.GENERATOR, _generator()];
 };
 
 /**
@@ -139,24 +143,24 @@ export const jsxs: typeof jsx = jsx;
 export const Fragment: string = FRAGMENT_LABEL;
 
 function* _forwardTokens(value: unknown, debug = false) {
-  if (isCutoutGeneratorToken(value)) {
+  if (isGeneratorToken(value)) {
     yield* value[TOKEN_VALUE_INDEX];
     return;
   }
 
-  if (isOutputCutoutToken(value)) {
+  if (isOutputToken(value)) {
     yield value;
     return;
   }
 
   const token = tokenizeValue(value);
 
-  if (token[TOKEN_TYPE_INDEX] !== CutoutTokenType.UNKNOWN) {
+  if (token[TOKEN_TYPE_INDEX] !== TokenType.UNKNOWN) {
     yield token;
   }
 
   // TODO(#47): implement jsxDEV to exercise the `debug` option.
-  if (token[TOKEN_TYPE_INDEX] === CutoutTokenType.UNKNOWN && debug) {
+  if (token[TOKEN_TYPE_INDEX] === TokenType.UNKNOWN && debug) {
     let unknownValue;
 
     try {

@@ -1,12 +1,14 @@
 {
   "exports": {
-    ".": "./module.ts",
     "./jsx-runtime": "./module.ts",
     "./tokens": "./tokens/module.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
+  },
+  "tasks": {
+    "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts"
   },
   "name": "@cutout/jsx",
   "version": "0.0.2"
