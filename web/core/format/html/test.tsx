@@ -4,7 +4,7 @@ import { assertThrows } from "@std/assert/throws";
 import { assertSnapshot } from "@std/testing/snapshot";
 import { html } from "./main.ts";
 
-const TEST_GROUP = "html";
+const TEST_GROUP = "web/format/html";
 
 Deno.test(`${TEST_GROUP} - simple case`, (test) =>
   assertSnapshot(test, html(<div></div>)));

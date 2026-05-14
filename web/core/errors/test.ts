@@ -3,18 +3,22 @@ import { assertSnapshot } from "@std/testing/snapshot";
 import { CutoutError } from "./error.ts";
 import { toHTML } from "./jsx.tsx";
 
-const TEST_GROUP = "@cutout/web/errors";
+const TEST_GROUP = "web/errors";
 
 Deno.test(`${TEST_GROUP} - CutoutError constructor`, async (test) => {
   await assertSnapshot(test, String(new CutoutError()));
 });
 
-Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, () => {
+Deno.test(`${TEST_GROUP} - toHTML`, async (test) => {
+  await assertSnapshot(test, toHTML(new CutoutError()));
+});
+
+Deno.test(`${TEST_GROUP} - CutoutError.getV8CallSiteParent`, () => {
   function test1() {
     function test2() {
       function test3() {
         assertEquals(
-          CutoutError.getParentCallSite()?.getFunctionName(),
+          CutoutError.getV8CallSiteParent()?.getFunctionName(),
           "test2",
         );
       }
@@ -26,8 +30,4 @@ Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, () => {
   }
 
   test1();
-});
-
-Deno.test(`${TEST_GROUP} - toHTML`, async (test) => {
-  await assertSnapshot(test, toHTML(new CutoutError()));
 });

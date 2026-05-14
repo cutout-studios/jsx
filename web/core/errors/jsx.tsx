@@ -4,11 +4,12 @@ import { html } from "../format/html/main.ts";
 import { CutoutError } from "./error.ts";
 
 /**
- * TODO: document
+ * Convert the provided CutoutError into a `@cutout/jsx` IR stream.
  *
- * @param error
- * @param render
- * @returns
+ * @param {CutoutError} error The error to render.
+ * @param {[(CutoutError): CutoutGeneratorToken]} render
+ *  Custom renderer function. Defaults to a system-defined function.
+ * @returns The rendered JSX IR.
  */
 export function toJSX(
   error: CutoutError,
@@ -18,11 +19,12 @@ export function toJSX(
 }
 
 /**
- * TODO: document
+ * Convert the provided CutoutError into an HTML string.
  *
- * @param error
- * @param render
- * @returns
+ * @param {CutoutError} error
+ * @param {[(CutoutError): CutoutGeneratorToken]} render
+ *  Custom renderer function. Defaults to a system-defined function.
+ * @returns The rendered HTML string.
  */
 export function toHTML(
   error: CutoutError,
@@ -31,23 +33,23 @@ export function toHTML(
   return html(toJSX(error, render));
 }
 
-function _defaultRender({ code, message, context, guidance }: CutoutError) {
-  let callLocation = CutoutError.getParentCallSite()?.getFileName();
+function _defaultRender(error: CutoutError) {
+  let callLocation = CutoutError.getV8CallSite(error)?.getFileName();
 
   if (callLocation) {
     callLocation = relative(Deno.cwd(), callLocation);
   }
 
   return (
-    <div data-xo-error={code}>
-      <h2>{message}</h2>
+    <div data-xo-error={error.code}>
+      <h2>{error.message}</h2>
       <dl>
         <dt>Call Location</dt>
         <dd>{callLocation ?? "Unknown."}</dd>
         <dt>Context</dt>
-        <dd>{context}</dd>
+        <dd>{error.context}</dd>
         <dt>Guidance</dt>
-        <dd>{guidance}</dd>
+        <dd>{error.guidance}</dd>
       </dl>
     </div>
   );

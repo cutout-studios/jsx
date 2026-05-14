@@ -5,6 +5,7 @@ import {
   ERROR_CONTEXT_MISSING_MESSAGE,
   ERROR_CONTEXT_TRUNCATION_CHARACTER,
   ERROR_GUIDANCE_MISSING_MESSAGE,
+  ERROR_STACK_FRAME_INDEX,
   ERROR_STACK_FRAME_PARENT_INDEX,
 } from "./constants.ts";
 import type * as V8 from "./v8.ts";
@@ -20,7 +21,10 @@ export type CutoutErrorOptions = {
  * utilities.
  */
 export class CutoutError extends Error {
-  // TODO: explain
+  // In order to safely extract callsite information in V8 (deno),
+  // we must overrride V8's internal `Error.prepareStackTrace`.
+  //
+  // This procedure is safely a no-op in non-V8 environments.
   static {
     const V8_Error = Error as typeof Error & {
       prepareStackTrace?: V8.PrepareStackTrace;
@@ -32,16 +36,17 @@ export class CutoutError extends Error {
         return trace;
       }
 
+      // TODO: it seems we don't have access to the default behavior in deno...
       return v8_prepareStackTrace?.(error, trace);
     };
   }
 
-  static getParentCallSite(): V8.CallSite | undefined {
-    const { stack } = new CutoutError();
+  static getV8CallSite(error?: CutoutError): V8.CallSite | undefined {
+    return _resolveCallSite(ERROR_STACK_FRAME_INDEX, error);
+  }
 
-    if (!stack) return;
-
-    return stack[ERROR_STACK_FRAME_PARENT_INDEX] as unknown as V8.CallSite;
+  static getV8CallSiteParent(error?: CutoutError): V8.CallSite | undefined {
+    return _resolveCallSite(ERROR_STACK_FRAME_PARENT_INDEX, error);
   }
 
   /** The canonical Cutout Error code. */
@@ -99,3 +104,16 @@ export class CutoutError extends Error {
     return this.#guidance?.trim() || ERROR_GUIDANCE_MISSING_MESSAGE;
   }
 }
+
+function _resolveCallSite(index: number, error?: CutoutError) {
+  if (!error) {
+    error = new CutoutError();
+    index += 1 + 1; // this frame, plus the static CutoutError's frame
+  }
+
+  const { stack } = error;
+
+  if (!stack || typeof stack === "string") return;
+
+  return stack[index] as unknown as V8.CallSite;
+};

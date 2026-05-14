@@ -2,5 +2,5 @@ export { CutoutErrorCode } from "./constants.ts";
 
 export * from "./error.ts";
 
-// TODO: moves to the core
+// TODO: will be moved out of "errors" - errors don't know about JSX by default
 export * from "./jsx.tsx";
