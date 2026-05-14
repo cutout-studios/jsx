@@ -1,7 +1,7 @@
 import {
   CUTOUT_CHILDREN_LABEL,
-  CutoutTokenType,
   CUTOUT_FRAGMENT_LABEL,
+  CutoutTokenType,
 } from "@cutout/jsx/tokens";
 import type { Formatter } from "../types.ts";
 
