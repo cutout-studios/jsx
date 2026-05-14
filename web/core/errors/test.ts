@@ -1,4 +1,4 @@
-import { assertEquals, assert } from "@std/assert";
+import { assert, assertEquals } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
 import { ERROR_STACK_OVERWRITTEN_MESSAGE } from "./constants.ts";
 import { CutoutError } from "./error.ts";

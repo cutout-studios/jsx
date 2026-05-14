@@ -15,7 +15,8 @@ export enum CutoutErrorCode {
 
 export const ERROR_STACK_FRAME_INDEX = 0;
 export const ERROR_STACK_FRAME_PARENT_INDEX = 1;
-export const ERROR_STACK_OVERWRITTEN_MESSAGE = "`Error.prepareStackTrace` overwritten by `@cutout/web`.";
+export const ERROR_STACK_OVERWRITTEN_MESSAGE =
+  "`Error.prepareStackTrace` overwritten by `@cutout/web`.";
 
 export const ERROR_CONTEXT_MAX_SIZE = 100;
 export const ERROR_CONTEXT_TRUNCATION_CHARACTER = "…";
