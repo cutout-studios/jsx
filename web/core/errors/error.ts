@@ -20,6 +20,7 @@ export type CutoutErrorOptions = {
  * utilities.
  */
 export class CutoutError extends Error {
+  // TODO: explain
   static {
     const V8_Error = Error as typeof Error & {
       prepareStackTrace?: V8.PrepareStackTrace;

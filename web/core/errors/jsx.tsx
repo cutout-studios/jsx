@@ -3,6 +3,34 @@ import { relative } from "@std/path";
 import { html } from "../format/html/main.ts";
 import { CutoutError } from "./error.ts";
 
+/**
+ * TODO: document
+ * 
+ * @param error 
+ * @param render 
+ * @returns 
+ */
+export function toJSX(
+  error: CutoutError,
+  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
+) {
+  return render(error);
+}
+
+/**
+ * TODO: document
+ * 
+ * @param error 
+ * @param render 
+ * @returns 
+ */
+export function toHTML(
+  error: CutoutError,
+  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
+) {
+  return html(toJSX(error, render));
+}
+
 function _defaultRender({ code, message, context, guidance }: CutoutError) {
   let callLocation = CutoutError.getParentCallSite()?.getFileName();
 
@@ -23,18 +51,4 @@ function _defaultRender({ code, message, context, guidance }: CutoutError) {
       </dl>
     </div>
   );
-}
-
-export function toJSX(
-  error: CutoutError,
-  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
-) {
-  return render(error);
-}
-
-export function toHTML(
-  error: CutoutError,
-  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
-) {
-  return html(toJSX(error, render));
 }
