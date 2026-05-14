@@ -25,7 +25,8 @@ export const ERROR_GUIDANCE_MISSING_MESSAGE = "Not provided.";
 const MODULE_NAME = "`@cutout/web`";
 
 export const ERROR_CODE_MESSAGES = {
-  [CutoutErrorCode.DATA_UNKNOWN]: `${MODULE_NAME} has encountered unknown data.`,
+  [CutoutErrorCode.DATA_UNKNOWN]:
+    `${MODULE_NAME} has encountered unknown data.`,
   [CutoutErrorCode.DATA_CORRUPTED]:
     `${MODULE_NAME} failed to unpack data due to corruption.`,
   [CutoutErrorCode.OPERATION_UNKNOWN]:

@@ -5,10 +5,10 @@ import { CutoutError } from "./error.ts";
 
 /**
  * TODO: document
- * 
- * @param error 
- * @param render 
- * @returns 
+ *
+ * @param error
+ * @param render
+ * @returns
  */
 export function toJSX(
   error: CutoutError,
@@ -19,10 +19,10 @@ export function toJSX(
 
 /**
  * TODO: document
- * 
- * @param error 
- * @param render 
- * @returns 
+ *
+ * @param error
+ * @param render
+ * @returns
  */
 export function toHTML(
   error: CutoutError,
