@@ -13,7 +13,7 @@ import { CutoutError } from "./error.ts";
 export function toJSX(
   error: CutoutError,
   render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
-) {
+): CutoutGeneratorToken {
   return render(error);
 }
 
@@ -27,7 +27,7 @@ export function toJSX(
 export function toHTML(
   error: CutoutError,
   render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
-) {
+): string {
   return html(toJSX(error, render));
 }
 
