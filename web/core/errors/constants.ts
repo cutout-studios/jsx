@@ -1,13 +1,48 @@
-import { CutoutErrorCode } from "./types.ts";
+/**
+ * Canonical CutoutError error codes.
+ */
+export enum CutoutErrorCode {
+  DATA_UNKNOWN = "DATA_UNKNOWN",
+  DATA_CORRUPTED = "DATA_CORRUPTED",
+  OPERATION_UNKNOWN = "OPERATION_UNKNOWN",
+  OPERATION_INSECURE = "OPERATION_INSECURE",
+  OPERATION_FAILURE = "OPERATION_FAILURE",
+  OPERATION_READONLY = "OPERATION_READONLY",
+  OPERATION_REDUNDANT = "OPERATION_REDUNDANT",
+  HTTP_SERVER_ERROR = 500,
+  HTTP_NOT_IMPLEMENTED = 501,
+}
+
+export const ERROR_STACK_FRAME_INDEX = 0;
+export const ERROR_STACK_FRAME_PARENT_INDEX = 1;
+export const ERROR_STACK_OVERWRITTEN_MESSAGE =
+  "`Error.prepareStackTrace` overwritten by `@cutout/web`.";
+
+export const ERROR_CONTEXT_MAX_SIZE = 100;
+export const ERROR_CONTEXT_TRUNCATION_CHARACTER = "…";
+export const ERROR_CONTEXT_MISSING_MESSAGE = "None.";
+
+export const ERROR_GUIDANCE_MISSING_MESSAGE = "Not provided.";
+
+const MODULE_NAME = "`@cutout/web`";
 
 export const ERROR_CODE_MESSAGES = {
-  [CutoutErrorCode.DATA_UNKNOWN]: "`@cutout/jsx` has encountered unknown data.",
-  [CutoutErrorCode.DATA_INSECURE_OP]:
-    "`@cutout/jsx` was requested to perform an insecure operation.",
+  [CutoutErrorCode.DATA_UNKNOWN]:
+    `${MODULE_NAME} has encountered unknown data.`,
+  [CutoutErrorCode.DATA_CORRUPTED]:
+    `${MODULE_NAME} failed to unpack data due to corruption.`,
+  [CutoutErrorCode.OPERATION_UNKNOWN]:
+    `${MODULE_NAME} was requested to perform an unknown operation.`,
+  [CutoutErrorCode.OPERATION_INSECURE]:
+    `${MODULE_NAME} was requested to perform an insecure operation.`,
+  [CutoutErrorCode.OPERATION_READONLY]:
+    `${MODULE_NAME} was requested to perform a write operation on a readonly value.`,
+  [CutoutErrorCode.OPERATION_REDUNDANT]:
+    `${MODULE_NAME} was requested to re-perform an operation unnecessarily.`,
+  [CutoutErrorCode.OPERATION_FAILURE]:
+    `${MODULE_NAME} failed to perform the requested operation.`,
+  [CutoutErrorCode.HTTP_SERVER_ERROR]:
+    `${MODULE_NAME} encountered a server error while attempting to serve an HTTP resource.`,
+  [CutoutErrorCode.HTTP_NOT_IMPLEMENTED]:
+    `${MODULE_NAME} the requested HTTP resource is not implemented.`,
 };
-
-export const CONTEXT_MAX_SIZE = 100;
-export const CONTEXT_TRUNCATION_CHARACTER = "…";
-export const CONTEXT_MISSING_MESSAGE = "None.";
-
-export const GUIDANCE_MISSING_MESSAGE = "Not provided.";

@@ -1,11 +1,11 @@
 export const snapshot = {};
 
-snapshot[`format/dom - simple element 1`] = `"<div></div>"`;
+snapshot[`web/format/dom - simple element 1`] = `"<div></div>"`;
 
-snapshot[`format/dom - nested elements 1`] = `"<div><span>Test</span></div>"`;
+snapshot[`web/format/dom - nested elements 1`] = `"<div><span>Test</span></div>"`;
 
-snapshot[`format/dom - attributes 1`] = `'<div id="test" style="color: red;" class="my-cool-class" data-value="123">Test</div>'`;
+snapshot[`web/format/dom - attributes 1`] = `'<div id="test" style="color: red;" class="my-cool-class" data-value="123">Test</div>'`;
 
-snapshot[`format/dom - boolean attributes 1`] = `'<input type="checkbox" checked="" disabled="">'`;
+snapshot[`web/format/dom - boolean attributes 1`] = `'<input type="checkbox" checked="" disabled="">'`;
 
-snapshot[`format/dom - fragment 1`] = `"<div>First</div><div>Second</div>"`;
+snapshot[`web/format/dom - fragment 1`] = `"<div>First</div><div>Second</div>"`;

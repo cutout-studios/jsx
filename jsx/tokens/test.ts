@@ -2,7 +2,9 @@ import { assertEquals } from "@std/assert";
 import { isValidCutoutToken, tokenizeValue } from "./module.ts";
 import { CutoutTokenType } from "./types.ts";
 
-Deno.test("isValidCutoutToken - spot check", () => {
+const TEST_GROUP = "jsx/tokens";
+
+Deno.test(`${TEST_GROUP} - isValidCutoutToken`, () => {
   assertEquals(
     isValidCutoutToken([CutoutTokenType.NUMBER, 0]),
     true,
@@ -34,7 +36,7 @@ Deno.test("isValidCutoutToken - spot check", () => {
   );
 });
 
-Deno.test("tokenizeValue - spot check", () => {
+Deno.test(`${TEST_GROUP} - tokenizeValue`, () => {
   assertEquals(tokenizeValue(0), [CutoutTokenType.NUMBER, 0]);
   assertEquals(tokenizeValue("value"), [CutoutTokenType.STRING, "value"]);
   assertEquals(tokenizeValue(null), [CutoutTokenType.NULL, null]);

@@ -1,11 +1,10 @@
-/** @jsxImportSource @cutout/jsx */
 /** @jsxImportSourceTypes @cutout/web/format/dom */
 
 import { assertSnapshot } from "@std/testing/snapshot";
 import { Window } from "happy-dom";
 import { dom } from "./main.ts";
 
-const TEST_GROUP = "format/dom";
+const TEST_GROUP = "web/format/dom";
 
 domTest(`${TEST_GROUP} - simple element`, async (test) => {
   await assertSnapshot(test, dom(<div></div>)[0].outerHTML);
