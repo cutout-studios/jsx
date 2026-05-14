@@ -1,4 +1,3 @@
-/** @jsxImportSource @cutout/jsx */
 /** @jsxImportSourceTypes @cutout/web/format/dom */
 
 import { assertSnapshot } from "@std/testing/snapshot";

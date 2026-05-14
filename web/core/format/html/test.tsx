@@ -1,4 +1,3 @@
-/** @jsxImportSource @cutout/jsx */
 /** @jsxImportSourceTypes @cutout/web/format/html */
 
 import { assertThrows } from "@std/assert/throws";
