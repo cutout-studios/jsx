@@ -1,3 +1,4 @@
+import { traceDeprecation } from "node:process";
 import {
   CutoutErrorCode,
   ERROR_CODE_MESSAGES,
@@ -21,38 +22,28 @@ export type CutoutErrorOptions = {
  * utilities.
  */
 export class CutoutError extends Error {
-  // In order to safely extract callsite information in V8 (deno),
-  // we must overrride V8's internal `Error.prepareStackTrace`.
-  //
-  // This procedure is safely a no-op in non-V8 environments.
-  static {
-    const V8_Error = Error as typeof Error & {
-      prepareStackTrace?: V8.PrepareStackTrace;
-    };
-    const v8_prepareStackTrace = V8_Error.prepareStackTrace;
-
-    V8_Error.prepareStackTrace = (error: Error, trace: V8.CallSite[]) => {
-      if (error instanceof CutoutError) {
-        return trace;
-      }
-
-      // TODO: it seems we don't have access to the default behavior in deno...
-      return v8_prepareStackTrace?.(error, trace);
-    };
-  }
-
   static getV8CallSite(error?: CutoutError): V8.CallSite | undefined {
-    return _resolveCallSite(ERROR_STACK_FRAME_INDEX, error);
+    return this.#resolveCallSite(ERROR_STACK_FRAME_INDEX, error);
   }
 
   static getV8CallSiteParent(error?: CutoutError): V8.CallSite | undefined {
-    return _resolveCallSite(ERROR_STACK_FRAME_PARENT_INDEX, error);
+    return this.#resolveCallSite(ERROR_STACK_FRAME_PARENT_INDEX, error);
+  }
+
+  static #resolveCallSite(index: number, error?: CutoutError) {
+    if (!error) {
+      error = new CutoutError();
+      index += 1 + 1; // #resolveCallSite (+1) -> getCallSite (+1) -> <target callsite>
+    }
+
+    return error.#v8trace?.[index];
   }
 
   /** The canonical Cutout Error code. */
   code: CutoutErrorCode;
   #context?: unknown;
   #guidance?: string;
+  #v8trace?: V8.CallSite[];
 
   /**
    * Construct a new CutoutError instance.
@@ -74,6 +65,32 @@ export class CutoutError extends Error {
     this.code = code;
     this.#context = context;
     this.#guidance = guidance;
+
+    // In order to safely populate the internal #v8trace property,
+    // we must temporarily overrride V8's internal `Error.prepareStackTrace`.
+    //
+    // This procedure is safely a no-op in non-V8 environments.
+    const V8_Error = Error as typeof Error & {
+      prepareStackTrace?: V8.PrepareStackTrace;
+    };
+    const v8_prepareStackTrace = V8_Error.prepareStackTrace;
+
+    V8_Error.prepareStackTrace = (error: Error, trace: V8.CallSite[]) => {
+      if (error instanceof CutoutError) {
+        this.#v8trace = trace;
+      }
+
+      if (v8_prepareStackTrace) {
+        return v8_prepareStackTrace(error, trace);
+      }
+
+      return error.name +
+        "\n\t`Error.prepareStackTrace` overwritten by `@cutout/web`.";
+    };
+
+    void this.stack;
+
+    V8_Error.prepareStackTrace = v8_prepareStackTrace;
   }
 
   /**
@@ -103,17 +120,4 @@ export class CutoutError extends Error {
   get guidance(): string {
     return this.#guidance?.trim() || ERROR_GUIDANCE_MISSING_MESSAGE;
   }
-}
-
-function _resolveCallSite(index: number, error?: CutoutError) {
-  if (!error) {
-    error = new CutoutError();
-    index += 1 + 1; // this frame, plus the static CutoutError's frame
-  }
-
-  const { stack } = error;
-
-  if (!stack || typeof stack === "string") return;
-
-  return stack[index] as unknown as V8.CallSite;
 }

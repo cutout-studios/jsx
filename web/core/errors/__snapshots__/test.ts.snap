@@ -2,4 +2,17 @@ export const snapshot = {};
 
 snapshot[`web/errors - CutoutError constructor 1`] = `"Error: [OPERATION_UNKNOWN] \`@cutout/web\` was requested to perform an unknown operation."`;
 
+snapshot[`web/errors - CutoutError stack formatting is overwritten 1`] = `
+"Error
+	\`Error.prepareStackTrace\` overwritten by \`@cutout/web\`."
+`;
+
+snapshot[`web/errors - non-CutoutError stack formatting is preserved 1`] = `
+"Error
+    at file:///Users/cutoutstudios/Documents/Code/toolbox/web/core/errors/test.ts:19:30
+    at innerWrapped (ext:cli/40_test.js:230:11)
+    at exitSanitizer (ext:cli/40_test.js:146:33)
+    at outerWrapped (ext:cli/40_test.js:173:20)"
+`;
+
 snapshot[`web/errors - toHTML 1`] = `'<div data-xo-error="OPERATION_UNKNOWN"><h2>[OPERATION_UNKNOWN] \`@cutout/web\` was requested to perform an unknown operation.</h2><dl><dt>Call Location</dt><dd>web/core/errors/test.ts</dd><dt>Context</dt><dd>None.</dd><dt>Guidance</dt><dd>Not provided.</dd></dl></div>'`;
