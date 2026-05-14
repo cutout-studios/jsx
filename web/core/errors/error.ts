@@ -1,4 +1,3 @@
-import { traceDeprecation } from "node:process";
 import {
   CutoutErrorCode,
   ERROR_CODE_MESSAGES,
