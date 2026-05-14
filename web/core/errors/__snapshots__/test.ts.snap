@@ -2,4 +2,4 @@ export const snapshot = {};
 
 snapshot[`@cutout/web/errors - CutoutError constructor 1`] = `"Error: [OPERATION_UNKNOWN] \`@cutout/web\` was requested to perform an unknown operation."`;
 
-snapshot[`@cutout/web/errors - CutoutError.getParentCallSite 1`] = `"r"`;
+snapshot[`@cutout/web/errors - toHTML 1`] = `'<div data-xo-error="OPERATION_UNKNOWN"><h2>[OPERATION_UNKNOWN] \`@cutout/web\` was requested to perform an unknown operation.</h2><dl><dt>Call Location</dt><dd>web/core/errors/jsx.tsx</dd><dt>Context</dt><dd>None.</dd><dt>Guidance</dt><dd>Not provided.</dd></dl></div>'`;

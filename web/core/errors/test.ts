@@ -1,3 +1,4 @@
+import { assertEquals } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
 import { CutoutError } from "./error.ts";
 import { toHTML } from "./jsx.tsx";
@@ -8,11 +9,11 @@ Deno.test(`${TEST_GROUP} - CutoutError constructor`, async (test) => {
   await assertSnapshot(test, String(new CutoutError()));
 });
 
-Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, (test) => {
+Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, () => {
   function test1() {
     function test2() {
-      async function test3() {
-        await assertSnapshot(test, CutoutError.getParentCallSite());
+      function test3() {
+        assertEquals(CutoutError.getParentCallSite()?.getFunctionName(), "test2")
       }
 
       test3();

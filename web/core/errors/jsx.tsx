@@ -1,14 +1,21 @@
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
+import { relative } from "@std/path";
 import { html } from "../format/html/main.ts";
 import { CutoutError } from "./error.ts";
 
 function _defaultRender({ code, message, context, guidance }: CutoutError) {
+  let callLocation = CutoutError.getParentCallSite()?.getFileName();
+
+  if (callLocation) {
+    callLocation = relative(Deno.cwd(), callLocation);
+  }
+
   return (
     <div data-xo-error={code}>
       <h2>{message}</h2>
       <dl>
         <dt>Call Location</dt>
-        <dd>{CutoutError.getParentCallSite()?.getFileName() ?? "unknown"}</dd>
+        <dd>{callLocation ?? "Unknown."}</dd>
         <dt>Context</dt>
         <dd>{context}</dd>
         <dt>Guidance</dt>

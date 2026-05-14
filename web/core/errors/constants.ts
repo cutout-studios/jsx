@@ -47,8 +47,8 @@ export const ERROR_CODE_MESSAGES = {
     "`@cutout/web` HTTP resource not implemented.",
 };
 
-export const ERROR_STACK_FRAME_INDEX = 0;
-export const ERROR_STACK_FRAME_PARENT_INDEX = 1;
+export const ERROR_STACK_FRAME_INDEX = 1;
+export const ERROR_STACK_FRAME_PARENT_INDEX = 2;
 
 export const ERROR_CONTEXT_MAX_SIZE = 100;
 export const ERROR_CONTEXT_TRUNCATION_CHARACTER = "…";

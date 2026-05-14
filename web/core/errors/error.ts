@@ -26,14 +26,12 @@ export class CutoutError extends Error {
     };
     const v8_prepareStackTrace = V8_Error.prepareStackTrace;
 
-    if (v8_prepareStackTrace) {
-      V8_Error.prepareStackTrace = (error: Error, trace: V8.CallSite[]) => {
-        if (error instanceof CutoutError) {
-          return trace;
-        }
+    V8_Error.prepareStackTrace = (error: Error, trace: V8.CallSite[]) => {
+      if (error instanceof CutoutError) {
+        return trace;
+      }
 
-        return v8_prepareStackTrace(error, trace);
-      };
+      return v8_prepareStackTrace?.(error, trace);
     }
   }
 
