@@ -13,7 +13,10 @@ Deno.test(`${TEST_GROUP} - CutoutError.getParentCallSite`, () => {
   function test1() {
     function test2() {
       function test3() {
-        assertEquals(CutoutError.getParentCallSite()?.getFunctionName(), "test2")
+        assertEquals(
+          CutoutError.getParentCallSite()?.getFunctionName(),
+          "test2",
+        );
       }
 
       test3();

@@ -32,7 +32,7 @@ export class CutoutError extends Error {
       }
 
       return v8_prepareStackTrace?.(error, trace);
-    }
+    };
   }
 
   static getParentCallSite(): V8.CallSite | undefined {
