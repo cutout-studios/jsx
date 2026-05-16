@@ -1,3 +1,3 @@
 export type { Formatter as CutoutFormatter } from "./types.ts";
-export * from "./html/main.ts";
-export * from "./dom/main.ts";
+export * from "./html/base.ts";
+export * from "./dom/base.ts";

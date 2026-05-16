@@ -2,7 +2,7 @@
 
 import { assertSnapshot } from "@std/testing/snapshot";
 import { Window } from "happy-dom";
-import { dom } from "./main.ts";
+import { dom } from "./base.ts";
 
 const TEST_GROUP = "web/format/dom";
 

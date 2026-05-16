@@ -1,6 +1,6 @@
 /** @jsxImportSource @cutout/jsx */
 
-import { html } from "./main.ts";
+import { html } from "./base.ts";
 import { BenchGroups, cutout } from ".bench";
 
 const LIBRARY = "@cutout/jsx/format/html";

@@ -2,7 +2,7 @@
 
 import { assertThrows } from "@std/assert/throws";
 import { assertSnapshot } from "@std/testing/snapshot";
-import { html } from "./main.ts";
+import { html } from "./base.ts";
 
 const TEST_GROUP = "web/format/html";
 
