@@ -1,7 +1,4 @@
-import type {
-  ElementEntryConstructor,
-  EntryDefinition,
-} from "./types.ts";
+import type { ElementEntryConstructor, EntryDefinition } from "./types.ts";
 
 export function isElementEntryConstructor(
   value: unknown,
@@ -31,6 +28,6 @@ export function isHTMLElement(value: unknown) {
     "dataset",
     "id",
     "innerHTML",
-    "tagName"
-  ].every(key => Object.hasOwn(value, key));
+    "tagName",
+  ].every((key) => Object.hasOwn(value, key));
 }

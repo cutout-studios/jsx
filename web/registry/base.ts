@@ -14,7 +14,8 @@ export class Registry {
     if (this.#internalRegistry.has(name)) {
       throw new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
         context: { registry: this, name },
-        guidance: "Check if this registry has the present name, before defining an entry."
+        guidance:
+          "Check if this registry has the present name, before defining an entry.",
       });
     }
 

@@ -1,13 +1,19 @@
 import type { AnyArray, AnyFunction, AnyShape } from "@cutout/common";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
-export type Entry<D extends EntryDefinition> = StyleEntry | RouteEntry<D> | ElementEntry<D>;
+export type Entry<D extends EntryDefinition> =
+  | StyleEntry
+  | RouteEntry<D>
+  | ElementEntry<D>;
 
 export type EntryDefinition = Record<string, DefinitionConstructor>;
 
 export type EntryConstructor<
-  D extends EntryDefinition = EmptyShape
-> = StyleEntryConstructor | ElementEntryConstructor<D> | RouteEntryConstructor<D>
+  D extends EntryDefinition = EmptyShape,
+> =
+  | StyleEntryConstructor
+  | ElementEntryConstructor<D>
+  | RouteEntryConstructor<D>;
 
 export interface StyleEntry extends CSSRule {
   name: string;
@@ -17,7 +23,7 @@ export interface StyleEntry extends CSSRule {
 
 export type StyleEntryConstructor = {
   new (...args: unknown[]): StyleEntry;
-}
+};
 
 export interface RouteEntry<D extends EntryDefinition> {
   name: string;
@@ -28,7 +34,7 @@ export interface RouteEntry<D extends EntryDefinition> {
 
 export type RouteEntryConstructor<D extends EntryDefinition> = {
   new (...args: unknown[]): RouteEntry<D>;
-}
+};
 
 export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
   name: string;
@@ -39,7 +45,7 @@ export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
 
 export type ElementEntryConstructor<D extends EntryDefinition> = {
   new (...args: unknown[]): ElementEntry<D>;
-}
+};
 
 // ...
 
