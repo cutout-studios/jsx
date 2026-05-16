@@ -9,6 +9,7 @@ export function registerStyle(
   cssText: string,
   { registry = SYSTEM_REGISTRY } = {},
 ) {
+  // TODO: alphabetize the keys
   const sanitizedCSSText =
     (cssText.match(STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX) ?? [cssText])
       .join("");
