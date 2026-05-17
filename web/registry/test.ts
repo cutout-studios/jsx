@@ -24,7 +24,7 @@ Deno.test(`${TEST_GROUP} - registerStyle`, () => {
   assert(testRegistry.get(sanitizedStyleRule));
 });
 
-Deno.test(`${TEST_GROUP} - registerStyle given messy CSS`, () => {
+Deno.test(`${TEST_GROUP} - registerStyle, given messy CSS`, () => {
   const testRegistry = new Registry();
 
   registerStyle(`

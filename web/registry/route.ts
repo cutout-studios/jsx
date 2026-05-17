@@ -1,8 +1,19 @@
+import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import type { Route } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
 import { type Registry, SYSTEM_REGISTRY } from "./base.ts";
-import type { EntryDefinition, ShapeFor } from "./types.ts";
+import type {
+  DefinitionConstructor,
+  EntryDefinition,
+  ShapeFor,
+} from "./types.ts";
+
+enum SupportedHTTPHeaders {
+  CONTENT_TYPE = "Content-Type",
+  CSP = "Content-Security-Policy",
+  CORS = "Access-Control-Allow-Origin",
+}
 
 export function registerRoute<D extends EntryDefinition>(
   routeText: string,
@@ -20,30 +31,34 @@ export function registerRoute<D extends EntryDefinition>(
       name = sanitizedRouteText;
       path = sanitizedRouteText;
       pattern = new URLPattern({ pathname: sanitizedRouteText });
-      #extension = ".txt"; // TODO: parse from path
+      #extension = sanitizedRouteText.match(/\..+$/)?.[0] ?? ".txt";
       #contentType = contentType(this.#extension) ?? "text/plain";
-      #headers = {
-        "content-type": `charset=${getCharset(this.#contentType)}; ${this.#contentType}`,
-        // TODO: CORS, CSP
+      #defaultHeaders = {
+        [SupportedHTTPHeaders.CONTENT_TYPE]: `charset=${
+          getCharset(this.#contentType)
+        }; ${this.#contentType}`,
+        [SupportedHTTPHeaders.CSP]: "default-src 'self'",
       };
-      // TODO: Session Token?
-      // TODO: priority stack for each url pattern location
-      handler = (request: Request, { pathname }: URLPatternResult) => {
+      handler = (
+        request: Request,
+        { pathname, search, hash }: URLPatternResult,
+      ) => {
         const params: ShapeFor<D> = {};
 
         for (const key in definition) {
-          if (!(key in pathname.groups)) {
-            continue;
-          }
+          const extractedValue = pathname.groups[key] ?? search.groups[key] ??
+            hash.groups[key];
 
-          // TODO: I think i solved this in the exploration branch
-          params[key] = definition[key](pathname.groups[key]);
+          if (typeof extractedValue === "undefined") continue;
+
+          params[key] = parseRawValue(extractedValue, definition[key]);
         }
 
         const responseBody = render(params, request);
 
         return new Response(responseBody, {
-          "headers": this.#headers,
+          // TODO(#): Construct request-specific headers: CORS, CSP & Session Token
+          "headers": this.#defaultHeaders,
         });
       };
     },
@@ -59,4 +74,35 @@ function sanitizeRouteText(rawRouteText: string): string {
   }
 
   return `/${pathSegments.join("/")}`;
+}
+
+function parseRawValue(value: string, ctor: DefinitionConstructor) {
+  switch (ctor) {
+    case Number:
+      return Number(value);
+    case String:
+      return value;
+    case Boolean:
+      return value === "";
+    case Symbol:
+      return Symbol(value);
+    case Array:
+    case Object:
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
+          context: value,
+          cause: error,
+        });
+      }
+    case Function:
+      throw new CutoutError(CutoutErrorCode.OPERATION_INSECURE, {
+        context: value,
+      });
+    default:
+      throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN, {
+        context: value,
+      });
+  }
 }

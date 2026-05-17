@@ -52,7 +52,7 @@ export type ElementEntryConstructor<D extends EntryDefinition> = {
 type EmptyShape = Record<PropertyKey, never>;
 
 // TODO(#51): nested attribute definitions
-type DefinitionConstructor =
+export type DefinitionConstructor =
   | typeof Number
   | typeof String
   | typeof Boolean
