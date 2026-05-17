@@ -12,9 +12,30 @@ Deno.test(`${TEST_GROUP} - registerStyle`, () => {
   registerStyle(
     /* css */ `
     :host {
+      font-family: system-ui;
       all: unset;
+    }
+  `,
+    { registry: testRegistry },
+  );
+
+  const sanitizedStyleRule = ":host{all:unset;font-family:system-ui;}";
+
+  assert(testRegistry.get(sanitizedStyleRule));
+});
+
+Deno.test(`${TEST_GROUP} - registerStyle given messy CSS`, () => {
+  const testRegistry = new Registry();
+
+  registerStyle(`
+    :host {
+      all: initial;
+      font-family: system;
+      all: unset;
+      font-family:
       font-family: system-ui;
     }
+    typo
   `,
     { registry: testRegistry },
   );
