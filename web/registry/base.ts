@@ -2,7 +2,6 @@ import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { isElementEntryConstructor } from "./guards.ts";
 import type { EntryConstructor } from "./types.ts";
 
-// TODO: parse "path specificity" and make a path trie
 export class Registry {
   #internalRegistry = new Map<string, EntryConstructor>();
   #reverseRegistry = new WeakMap<EntryConstructor, string>();
@@ -19,6 +18,8 @@ export class Registry {
           "Check if this registry has the present name, before defining an entry.",
       });
     }
+
+    // TODO(?): place route in priority trie based on path specificity
 
     this.#internalRegistry.set(name, constructor);
     this.#reverseRegistry.set(constructor, name);

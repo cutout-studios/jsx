@@ -18,8 +18,6 @@ export type EntryConstructor<
 
 export interface StyleEntry extends CSSRule {
   name: string;
-  path?: string;
-  render: () => string;
 }
 
 export type StyleEntryConstructor = {
@@ -28,7 +26,6 @@ export type StyleEntryConstructor = {
 
 export interface RouteEntry<D extends EntryDefinition> extends Route {
   name: string;
-  path?: string;
   definition?: D;
 }
 
@@ -38,7 +35,6 @@ export type RouteEntryConstructor<D extends EntryDefinition> = {
 
 export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
   name: string;
-  path?: string;
   definition?: D;
   render: (attributes: ShapeFor<D>) => CutoutGeneratorToken;
 }
@@ -47,7 +43,7 @@ export type ElementEntryConstructor<D extends EntryDefinition> = {
   new (...args: unknown[]): ElementEntry<D>;
 };
 
-// ...
+// TODO: organize these utility types
 
 type EmptyShape = Record<PropertyKey, never>;
 

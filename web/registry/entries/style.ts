@@ -1,27 +1,30 @@
 import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import { SYSTEM_REGISTRY } from "./base.ts";
-import type { StyleEntry } from "./types.ts";
+import { SYSTEM_REGISTRY } from "../base.ts";
+import type { StyleEntry } from "../types.ts";
+import { registerRoute } from "./route.ts";
 
 export function registerStyle(
-  cssText: string,
+  rawCSS: string,
   { registry = SYSTEM_REGISTRY, root = Deno.cwd() } = {},
 ) {
-  const sanitizedCSSText = sanitizeCSSRuleText(cssText);
+  const cleanCSS = cleanRawCSSRule(rawCSS);
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  return registry.define(
-    sanitizedCSSText,
-    class extends CSSRule implements StyleEntry {
-      name = sanitizedCSSText;
-      path = path;
-      render = () => sanitizedCSSText;
+  if (path) {
+    // TODO: replace ts/tsx with css?
+    registerRoute(path, { render: () => cleanCSS });
+  }
 
+  registry.define(
+    cleanCSS,
+    class extends CSSRule implements StyleEntry {
+      name = cleanCSS;
       constructor() {
         super();
-        this.cssText = this.render();
+        this.cssText = cleanCSS;
       }
     },
   );
@@ -30,9 +33,9 @@ export function registerStyle(
 const STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX =
   /[^\s"']+|\"([^\"]*)\"|'([^']*)'/g;
 
-function sanitizeCSSRuleText(cssRuleText: string): string {
+function cleanRawCSSRule(rawCSSRule: string): string {
   const tokens =
-    cssRuleText.match(STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX) ??
+    rawCSSRule.match(STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX) ??
       [];
   const styleProperties = new Map<string, string>();
 

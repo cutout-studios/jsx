@@ -1,3 +1,5 @@
 export { Registry as CutoutRegistry } from "./base.ts";
 
-export { registerStyle } from "./style.ts";
+export { registerRoute } from "./entries/route.ts";
+export { registerStyle } from "./entries/style.ts";
+export { registerElement } from "./entries/element.tsx";
