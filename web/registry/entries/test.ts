@@ -27,7 +27,8 @@ Deno.test(`${TEST_GROUP} - registerStyle`, () => {
 Deno.test(`${TEST_GROUP} - registerStyle, given messy CSS`, () => {
   const testRegistry = new Registry();
 
-  registerStyle(`
+  registerStyle(
+    `
     :host {
       all: initial;
       font-family: system;
