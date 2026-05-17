@@ -2,6 +2,7 @@ import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { isElementEntryConstructor } from "./guards.ts";
 import type { EntryConstructor } from "./types.ts";
 
+// TODO: parse "path specificity" and make a path trie
 export class Registry {
   #internalRegistry = new Map<string, EntryConstructor>();
   #reverseRegistry = new WeakMap<EntryConstructor, string>();

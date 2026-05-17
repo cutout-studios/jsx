@@ -20,6 +20,7 @@
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
+    "@std/media-types": "jsr:@std/media-types",
     "@std/path": "jsr:@std/path",
     "@std/testing": "jsr:@std/testing",
     // Deno's recommended headless browser "@b-fuze/deno-dom"

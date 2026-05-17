@@ -1,25 +1,22 @@
 import { CutoutError } from "@cutout/web/errors";
+import { relative } from "@std/path";
 import { SYSTEM_REGISTRY } from "./base.ts";
 import type { StyleEntry } from "./types.ts";
 
 export function registerStyle(
   cssText: string,
-  { registry = SYSTEM_REGISTRY } = {},
+  { registry = SYSTEM_REGISTRY, root = Deno.cwd() } = {},
 ) {
   const sanitizedCSSText = sanitizeCSSRuleText(cssText);
-  const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName();
-
-  let fileLocation: URL;
-
-  if (callSiteFilePath) {
-    fileLocation = new URL(`file://${callSiteFilePath}`);
-  }
+  const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
+    undefined;
+  const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
   return registry.define(
     sanitizedCSSText,
     class extends CSSRule implements StyleEntry {
       name = sanitizedCSSText;
-      fileLocation = fileLocation;
+      path = path;
       render = () => sanitizedCSSText;
 
       constructor() {

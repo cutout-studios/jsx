@@ -1,5 +1,6 @@
 import type { AnyArray, AnyFunction, AnyShape } from "@cutout/common";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
+import type { Route } from "@std/http/route";
 
 export type Entry<D extends EntryDefinition> =
   | StyleEntry
@@ -17,7 +18,7 @@ export type EntryConstructor<
 
 export interface StyleEntry extends CSSRule {
   name: string;
-  fileLocation?: URL;
+  path?: string;
   render: () => string;
 }
 
@@ -25,11 +26,10 @@ export type StyleEntryConstructor = {
   new (...args: unknown[]): StyleEntry;
 };
 
-export interface RouteEntry<D extends EntryDefinition> {
+export interface RouteEntry<D extends EntryDefinition> extends Route {
   name: string;
+  path?: string;
   definition?: D;
-  fileLocation?: URL;
-  render: (parameters: ShapeFor<D>) => Response;
 }
 
 export type RouteEntryConstructor<D extends EntryDefinition> = {
@@ -38,8 +38,8 @@ export type RouteEntryConstructor<D extends EntryDefinition> = {
 
 export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
   name: string;
+  path?: string;
   definition?: D;
-  fileLocation?: URL;
   render: (attributes: ShapeFor<D>) => CutoutGeneratorToken;
 }
 
@@ -72,6 +72,6 @@ type ShapeValueFor<C extends DefinitionConstructor> = C extends typeof Number
   : C extends typeof Object ? AnyShape
   : never;
 
-type ShapeFor<T extends EntryDefinition> = {
+export type ShapeFor<T extends EntryDefinition> = {
   [K in keyof T]?: ShapeValueFor<T[K]>;
 };
