@@ -1,8 +1,8 @@
 import "@cutout/polyfill";
 
 import { assert } from "@std/assert";
-import { BaseRegistry } from "../base.ts";
-import { registerStyle } from "./style.ts";
+import { BaseRegistry } from "./base.ts";
+import { registerStyle } from "./entries/style.ts";
 
 const TEST_GROUP = "web/registry";
 
