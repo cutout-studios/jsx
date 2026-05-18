@@ -19,8 +19,6 @@ export class Registry {
       });
     }
 
-    // TODO(?): place route in priority trie based on path specificity
-
     this.#internalRegistry.set(name, constructor);
     this.#reverseRegistry.set(constructor, name);
 
@@ -36,6 +34,9 @@ export class Registry {
   getName(entry: EntryConstructor): string | null {
     return this.#reverseRegistry.get(entry) ?? null;
   }
+
+  // TODO(#): bucket by specificity. sort alphabetically in each bucket.
+  // getRoutes(): Route[] {}
 }
 
 export const SYSTEM_REGISTRY = new Registry();

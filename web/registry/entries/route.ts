@@ -54,7 +54,7 @@ export function registerRoute<D extends EntryDefinition>(
           responseBody = renderResult;
         } else {
           switch (this.#contentType) {
-            case "text/html":
+            case "text/html": // TODO(#): Inject importmaps, etc.
             default:
               responseBody = html(renderResult);
           }
