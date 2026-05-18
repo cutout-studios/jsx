@@ -1,40 +1,36 @@
+import type { EmptyShape } from "@cutout/common";
 import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { SYSTEM_REGISTRY } from "../base.ts";
-import type { StyleEntry } from "../types.ts";
+import type { RouteEntry } from "../types.ts";
+import { registerBrowserStyle } from "./browser/style.ts";
 import { registerRoute } from "./route.ts";
 
 export function registerStyle(
   rawCSS: string,
   { registry = SYSTEM_REGISTRY, root = Deno.cwd() } = {},
 ) {
-  const cleanCSS = cleanRawCSSRule(rawCSS);
+  const cleanCSS = _cleanRawCSSRule(rawCSS);
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
+  let route: RouteEntry<EmptyShape> | undefined;
   if (path) {
-    registerRoute(path.replace(/\.tsx?$/, ".css"), {
+    route = registerRoute(path.replace(/\.tsx?$/, ".css"), {
       render: () => Promise.resolve(cleanCSS),
     });
   }
 
-  registry.define(
-    cleanCSS,
-    class extends CSSRule implements StyleEntry {
-      name = cleanCSS;
-      constructor() {
-        super();
-        this.cssText = cleanCSS;
-      }
-    },
-  );
+  const result = registerBrowserStyle(cleanCSS, { route, registry });
+
+  return Reflect.construct(result, []);
 }
 
 const STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX =
   /[^\s"']+|\"([^\"]*)\"|'([^']*)'/g;
 
-function cleanRawCSSRule(rawCSSRule: string): string {
+function _cleanRawCSSRule(rawCSSRule: string): string {
   const tokens =
     rawCSSRule.match(STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX) ??
       [];

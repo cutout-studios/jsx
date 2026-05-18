@@ -1,9 +1,10 @@
-/// <reference lib="dom" />
+/** @jsxImportSourceTypes @cutout/web/format/dom */
 
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { dom } from "@cutout/web/formats";
 
+import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../../constants.ts";
 import { parseRawValue } from "../../../parse.ts";
 import type {
   DefinitionConstructor,
@@ -12,7 +13,6 @@ import type {
   ShapeValueFor,
   StyleEntry,
 } from "../../../types.ts";
-import { QUERY_SPECIFICITY_GUIDANCE } from "./constants.ts";
 
 export class BaseElement<D extends EntryDefinition> extends HTMLElement {
   static readonly observedAttributes: string[];
@@ -199,7 +199,7 @@ function _applyDOMSelectorStates(
     if (!element) {
       console.warn(new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
         context: { selector, method: "querySelector" },
-        guidance: QUERY_SPECIFICITY_GUIDANCE,
+        guidance: DOCUMENT_QUERY_SPECIFICITY_GUIDANCE,
       }).toString());
       continue;
     }

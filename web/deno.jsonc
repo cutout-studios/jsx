@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "jsr:@cutout/jsx"
+    "jsxImportSource": "@cutout/jsx"
   },
   "exports": {
-    "./element": "./registry/entries/element/browser/module.ts",
+    "./browser": "./registry/entries/browser/module.ts",
     "./errors": "./errors/module.ts",
     "./format/dom/jsx-runtime": "./formats/dom/runtime.d.ts",
     "./format/html/jsx-runtime": "./formats/html/runtime.d.ts",

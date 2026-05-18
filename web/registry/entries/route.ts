@@ -3,20 +3,20 @@ import { html } from "@cutout/web/formats";
 import type { Route } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
-import { type Registry, SYSTEM_REGISTRY } from "../base.ts";
+import { type BaseRegistry, SYSTEM_REGISTRY } from "../base.ts";
+import {
+  ROUTE_CONTENT_TYPE_DEFAULT,
+  ROUTE_CSP_HEADER_DEFAULT,
+  ROUTE_FILE_EXTENSION_DEFAULT,
+  SupportedHTTPHeaders,
+} from "../constants.ts";
 import { parseRawValue } from "../parse.ts";
 import type { EntryDefinition, ShapeFor } from "../types.ts";
-
-enum SupportedHTTPHeaders {
-  CONTENT_TYPE = "Content-Type",
-  CSP = "Content-Security-Policy",
-  CORS = "Access-Control-Allow-Origin",
-}
 
 export function registerRoute<D extends EntryDefinition>(
   path: string,
   { registry = SYSTEM_REGISTRY, definition, render }: {
-    registry?: Registry;
+    registry?: BaseRegistry;
     definition?: D;
     // TODO(#): param-based caching option via @std/cache
     render: (
@@ -25,60 +25,62 @@ export function registerRoute<D extends EntryDefinition>(
     ) => Promise<CutoutGeneratorToken | string>;
   },
 ) {
-  const sanitizedPath = sanitizePath(path);
+  const sanitizedPath = _sanitizePath(path);
 
-  registry.define(
-    path,
-    class implements Route {
-      name = sanitizedPath;
-      pattern = new URLPattern({ pathname: sanitizedPath });
-      handler = async (
-        request: Request,
-        { pathname, search, hash }: URLPatternResult,
-      ) => {
-        const params: ShapeFor<D> = {};
+  const result = class implements Route {
+    name = sanitizedPath;
+    pattern = new URLPattern({ pathname: sanitizedPath });
+    handler = async (
+      request: Request,
+      { pathname, search, hash }: URLPatternResult,
+    ) => {
+      const params: ShapeFor<D> = {};
 
-        for (const key in definition) {
-          const extractedValue = pathname.groups[key] ?? search.groups[key] ??
-            hash.groups[key];
+      for (const key in definition) {
+        const extractedValue = pathname.groups[key] ?? search.groups[key] ??
+          hash.groups[key];
 
-          if (typeof extractedValue === "undefined") continue;
+        if (typeof extractedValue === "undefined") continue;
 
-          params[key] = parseRawValue(extractedValue, definition[key]);
+        params[key] = parseRawValue(extractedValue, definition[key]);
+      }
+
+      const renderResult = await render(params, request);
+
+      let responseBody;
+      if (typeof renderResult === "string") {
+        responseBody = renderResult;
+      } else {
+        switch (this.#contentType) {
+          case "text/html": // TODO(#): Inject importmaps, etc.
+          default:
+            responseBody = html(renderResult);
         }
+      }
 
-        const renderResult = await render(params, request);
+      return new Response(responseBody, {
+        // TODO(#): Construct request-specific headers: CORS, CSP & Session Token
+        "headers": this.#defaultHeaders,
+      });
+    };
 
-        let responseBody;
-        if (typeof renderResult === "string") {
-          responseBody = renderResult;
-        } else {
-          switch (this.#contentType) {
-            case "text/html": // TODO(#): Inject importmaps, etc.
-            default:
-              responseBody = html(renderResult);
-          }
-        }
+    #extension = sanitizedPath.match(/\..+$/)?.[0] ??
+      ROUTE_FILE_EXTENSION_DEFAULT;
+    #contentType = contentType(this.#extension) ?? ROUTE_CONTENT_TYPE_DEFAULT;
+    #defaultHeaders = {
+      [SupportedHTTPHeaders.CONTENT_TYPE]: `charset=${
+        getCharset(this.#contentType)
+      }; ${this.#contentType}`,
+      [SupportedHTTPHeaders.CSP]: ROUTE_CSP_HEADER_DEFAULT,
+    };
+  };
 
-        return new Response(responseBody, {
-          // TODO(#): Construct request-specific headers: CORS, CSP & Session Token
-          "headers": this.#defaultHeaders,
-        });
-      };
+  registry.define(path, result);
 
-      #extension = sanitizedPath.match(/\..+$/)?.[0] ?? ".txt";
-      #contentType = contentType(this.#extension) ?? "text/plain";
-      #defaultHeaders = {
-        [SupportedHTTPHeaders.CONTENT_TYPE]: `charset=${
-          getCharset(this.#contentType)
-        }; ${this.#contentType}`,
-        [SupportedHTTPHeaders.CSP]: "default-src 'self'",
-      };
-    },
-  );
+  return Reflect.construct(result, []);
 }
 
-function sanitizePath(rawRouteText: string): string {
+function _sanitizePath(rawRouteText: string): string {
   const pathSegments: string[] = [];
 
   for (let segment of rawRouteText.split(/\/+/)) {

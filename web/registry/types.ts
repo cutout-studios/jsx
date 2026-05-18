@@ -7,6 +7,20 @@ import type {
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Route } from "@std/http/route";
 
+export interface Registry {
+  define(name: string, constructor: StyleEntryConstructor): void;
+  define<D extends EntryDefinition>(
+    name: string,
+    constructor: ElementEntryConstructor<D>,
+  ): void;
+  define<D extends EntryDefinition>(
+    name: string,
+    constructor: RouteEntryConstructor<D>,
+  ): void;
+  get(name: string): EntryConstructor | undefined;
+  getName(entry: EntryConstructor): string | null;
+}
+
 export type Entry<D extends EntryDefinition> =
   | StyleEntry
   | RouteEntry<D>
@@ -33,10 +47,16 @@ export type EntryConstructor<
 
 export interface StyleEntry extends CSSRule {
   readonly name: string;
+  readonly route?: RouteEntry<EmptyShape>;
 }
 
 export type StyleEntryConstructor = {
   new (...args: unknown[]): StyleEntry;
+};
+
+export type StyleEntryOptions = {
+  route?: RouteEntry<EmptyShape>;
+  registry?: Registry;
 };
 
 export interface RouteEntry<D extends EntryDefinition> extends Route {
@@ -67,8 +87,34 @@ export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
   readonly name: string;
   readonly render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken;
   readonly definition?: D;
+  readonly route?: RouteEntry<EmptyShape>;
 }
 
 export type ElementEntryConstructor<D extends EntryDefinition> = {
   new (...args: unknown[]): ElementEntry<D>;
 };
+
+export type ElementEntryOptions<D extends EntryDefinition> = {
+  definition?: D;
+  registry?: Registry;
+  render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken;
+  connectedCallback?: () => void;
+  attributeChangedCallback?: <K extends keyof D>(
+    name: K,
+    newValue: ShapeValueFor<D[K]>,
+    oldValue: ShapeValueFor<D[K]>,
+  ) => void;
+  disconnectedCallback?: () => void;
+  root?: string;
+  route?: RouteEntry<EmptyShape>;
+  stylesheet?: StyleEntry[];
+};
+
+type ElementJSXFunctionRenderOptions = {
+  shallow: boolean;
+};
+
+export type ElementJSXFunction<D extends EntryDefinition> = (
+  attributes?: ShapeFor<D>,
+  options?: ElementJSXFunctionRenderOptions,
+) => CutoutGeneratorToken;

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-lms chat qwen/qwen3.6-35b-a3b -s "$(cat ./SYSTEM.md)"
+lms chat qwen/qwen3.6-35b-a3b --system-prompt "$(cat ./SYSTEM.md)"

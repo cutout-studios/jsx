@@ -1,12 +1,29 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
+import { DUPLICATE_ENTRY_GUIDANCE } from "./constants.ts";
 import { isElementEntryConstructor } from "./guards.ts";
-import type { EntryConstructor } from "./types.ts";
+import type {
+  ElementEntryConstructor,
+  EntryConstructor,
+  EntryDefinition,
+  Registry as RegistryInterface,
+  RouteEntryConstructor,
+  StyleEntryConstructor,
+} from "./types.ts";
 
-export class Registry {
+export class BaseRegistry implements RegistryInterface {
   #internalRegistry = new Map<string, EntryConstructor>();
   #reverseRegistry = new WeakMap<EntryConstructor, string>();
   #baseRegistry = globalThis.customElements;
 
+  define(name: string, constructor: StyleEntryConstructor): void;
+  define<D extends EntryDefinition>(
+    name: string,
+    constructor: ElementEntryConstructor<D>,
+  ): void;
+  define<D extends EntryDefinition>(
+    name: string,
+    constructor: RouteEntryConstructor<D>,
+  ): void;
   define(
     name: string,
     constructor: EntryConstructor,
@@ -14,8 +31,7 @@ export class Registry {
     if (this.#internalRegistry.has(name)) {
       throw new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
         context: { registry: this, name },
-        guidance:
-          "Check if this registry has the present name, before defining an entry.",
+        guidance: DUPLICATE_ENTRY_GUIDANCE,
       });
     }
 
@@ -39,4 +55,4 @@ export class Registry {
   // getRoutes(): Route[] {}
 }
 
-export const SYSTEM_REGISTRY = new Registry();
+export const SYSTEM_REGISTRY = new BaseRegistry();
