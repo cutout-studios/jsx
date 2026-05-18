@@ -1,18 +1,13 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "jsr:@cutout/jsx",
-    "lib": [
-      "dom",
-      "deno.ns",
-      "deno.unstable"
-    ]
+    "jsxImportSource": "jsr:@cutout/jsx"
   },
   "exports": {
-    "./element": "./registry/entries/element/module.ts",
+    "./element": "./registry/entries/element/browser/module.ts",
     "./errors": "./errors/module.ts",
-    "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
-    "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
+    "./format/dom/jsx-runtime": "./formats/dom/runtime.d.ts",
+    "./format/html/jsx-runtime": "./formats/html/runtime.d.ts",
     "./formats": "./formats/module.ts",
     "./registry": "./registry/module.ts"
   },

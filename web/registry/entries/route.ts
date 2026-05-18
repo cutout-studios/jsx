@@ -1,3 +1,5 @@
+import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
+import { html } from "@cutout/web/formats";
 import type { Route } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
@@ -17,7 +19,10 @@ export function registerRoute<D extends EntryDefinition>(
     registry?: Registry;
     definition?: D;
     // TODO(#): param-based caching option via @std/cache
-    render: (params?: ShapeFor<D>, request?: Request) => Promise<string>;
+    render: (
+      params?: ShapeFor<D>,
+      request?: Request,
+    ) => Promise<CutoutGeneratorToken | string>;
   },
 ) {
   const sanitizedPath = sanitizePath(path);
@@ -42,8 +47,18 @@ export function registerRoute<D extends EntryDefinition>(
           params[key] = parseRawValue(extractedValue, definition[key]);
         }
 
-        // TODO: Infer JSX format based on file extension, e.g html => html, tsx => dom. String is valid response, too.
-        const responseBody = await render(params, request);
+        const renderResult = await render(params, request);
+
+        let responseBody;
+        if (typeof renderResult === "string") {
+          responseBody = renderResult;
+        } else {
+          switch (this.#contentType) {
+            case "text/html":
+            default:
+              responseBody = html(renderResult);
+          }
+        }
 
         return new Response(responseBody, {
           // TODO(#): Construct request-specific headers: CORS, CSP & Session Token
@@ -66,9 +81,24 @@ export function registerRoute<D extends EntryDefinition>(
 function sanitizePath(rawRouteText: string): string {
   const pathSegments: string[] = [];
 
-  for (const segment of rawRouteText.split(/\/+/)) {
-    // TODO: handle special chars, like ":"
-    pathSegments.push(encodeURIComponent(segment));
+  for (let segment of rawRouteText.split(/\/+/)) {
+    let isVariable = false, isOptional = false;
+
+    if (segment.startsWith(":")) {
+      isVariable = true;
+      segment = segment.slice(1);
+    }
+
+    if (segment.endsWith("?")) {
+      isOptional = true;
+      segment = segment.slice(0, segment.length - 1);
+    }
+
+    segment = encodeURIComponent(segment);
+
+    pathSegments.push(
+      `${isVariable ? ":" : ""}${segment}${isOptional ? "?" : ""}`,
+    );
   }
 
   return `/${pathSegments.join("/")}`;

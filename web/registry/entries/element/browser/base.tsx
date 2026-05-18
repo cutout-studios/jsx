@@ -1,22 +1,33 @@
-import type { AnyShape } from "@cutout/common";
+/// <reference lib="dom" />
+
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { dom } from "@cutout/web/formats";
 
-import { parseRawValue } from "../../parse.ts";
-import type { DefinitionConstructor } from "../../types.ts";
+import { parseRawValue } from "../../../parse.ts";
+import type {
+  DefinitionConstructor,
+  EntryDefinition,
+  ShapeFor,
+  ShapeValueFor,
+  StyleEntry,
+} from "../../../types.ts";
+import { QUERY_SPECIFICITY_GUIDANCE } from "./constants.ts";
 
-export class BaseElement extends HTMLElement {
+export class BaseElement<D extends EntryDefinition> extends HTMLElement {
   static readonly observedAttributes: string[];
-  static readonly render: (attributes: AnyShape) => CutoutGeneratorToken;
-  static readonly stylesheet: CSSRule[];
-  static readonly attributes: AnyShape;
+
+  readonly observedAttributesMirror: string[] = BaseElement.observedAttributes;
+  readonly definition?: D;
+  readonly stylesheet?: StyleEntry[] = [];
+  readonly render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken = () => (
+    <slot></slot>
+  );
 
   get stylesheets() {
     const stylesheet = new CSSStyleSheet();
 
-    // TODO: does this... work? It might just be empty/undefined
-    for (const rule of BaseElement.stylesheet) {
+    for (const rule of this?.stylesheet ?? []) {
       stylesheet.insertRule(rule.cssText);
     }
 
@@ -24,29 +35,27 @@ export class BaseElement extends HTMLElement {
   }
 
   get observedAttributes() {
-    return BaseElement.observedAttributes.reduce((result, attributeName) => ({
+    return this.observedAttributesMirror.reduce((result, attributeName) => ({
       ...result,
       [attributeName]: parseRawValue(
         this.getAttribute(attributeName)!,
-        BaseElement.attributes![attributeName] as DefinitionConstructor,
+        this.definition![attributeName] as DefinitionConstructor,
       ),
     }), {});
   }
 
   connectedCallback() {
-    // TODO: can I not do this?
-    super.connectedCallback();
     this.#doRender();
   }
 
-  attributeChangedCallback(
-    name: string,
-    oldValue: unknown,
-    newValue: unknown,
+  attributeChangedCallback<K extends keyof D>(
+    _name: K,
+    _newValue: ShapeValueFor<D[K]>,
+    _oldValue: ShapeValueFor<D[K]>,
   ) {
-    clearInterval(this.#pendingAttributeChange);
-
-    super.attributeChangedCallback(name, oldValue, newValue);
+    if (this.#pendingAttributeChange) {
+      cancelAnimationFrame(this.#pendingAttributeChange);
+    }
 
     // Defer render until the current render is completed.
     const tick = () => {
@@ -66,7 +75,6 @@ export class BaseElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.#eventController.abort();
   }
 
@@ -76,10 +84,9 @@ export class BaseElement extends HTMLElement {
 
   get #render() {
     return Array.from(
-      // TODO: update formatters to take options
       dom(
         <template shadowrootmode="open">
-          {BaseElement.render(this.observedAttributes)}
+          {this.render?.(this.observedAttributes)}
         </template>,
         {
           event: { signal: this.#eventController.signal },
@@ -191,9 +198,8 @@ function _applyDOMSelectorStates(
 
     if (!element) {
       console.warn(new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
-        context: { name, selector, method: "querySelector" },
-        guidance: // TODO: move to constants
-          "Consider explicitly setting an `id` or `key` on this element to preserve its browser state between renders.",
+        context: { selector, method: "querySelector" },
+        guidance: QUERY_SPECIFICITY_GUIDANCE,
       }).toString());
       continue;
     }

@@ -1,24 +1,19 @@
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import { type Registry, SYSTEM_REGISTRY } from "../../base.ts";
-import type { ElementEntry, EntryDefinition, ShapeFor } from "../../types.ts";
+import { SYSTEM_REGISTRY } from "../../base.ts";
+import type { EntryDefinition } from "../../types.ts";
 import { registerRoute } from "../route.ts";
-import { BaseElement } from "./base.tsx";
+import { registerBrowserElement } from "./browser/register.ts";
+import type { Options } from "./types.ts";
 
 export function registerElement<D extends EntryDefinition>(
   tag: string,
   {
     registry = SYSTEM_REGISTRY,
     root = Deno.cwd(),
-    render = () => <slot></slot>,
-  }: {
-    registry?: Registry;
-    root?: string;
-    render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken;
-  } = {},
+    ...options
+  }: Options<D> = {},
 ) {
-  const systemTag = `xo-${tag}`;
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
@@ -53,17 +48,5 @@ export function registerElement<D extends EntryDefinition>(
     });
   }
 
-  registry.define(
-    systemTag,
-    // TODO: slightly confused here - what goes static vs. constructor again?
-    class extends BaseElement implements ElementEntry<D> {
-      static override observedAttributes: string[];
-      static override stylesheet: CSSRule[];
-      static override attributes: D;
-      static override render = render;
-
-      render = render;
-      name = systemTag;
-    },
-  );
+  registerBrowserElement(tag, { ...options, registry });
 }

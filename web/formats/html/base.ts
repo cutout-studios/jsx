@@ -79,7 +79,7 @@ type _FormatState = {
   };
 };
 
-// Cognitive conveience methods
+// Cognitive convenience methods
 function _openElement(
   state: _FormatState,
   value: string,

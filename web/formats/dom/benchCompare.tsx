@@ -1,5 +1,3 @@
-/** @jsxImportSource @cutout/jsx */
-
 import { Window } from "happy-dom";
 import { dom } from "./base.ts";
 import { BenchGroups, cutout } from ".bench";
