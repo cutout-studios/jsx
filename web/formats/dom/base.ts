@@ -14,7 +14,7 @@ import type { Formatter } from "../types.ts";
  */
 export const dom: Formatter<HTMLCollection> = (
   [, generator],
-): HTMLCollection => {
+) => {
   const state: _FormatState = {
     root: globalThis.document.createDocumentFragment(),
     stack: [],

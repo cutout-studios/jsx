@@ -6,6 +6,8 @@ import { registerStyle } from "./style.ts";
 
 const TEST_GROUP = "web/registry";
 
+// TODO: test registerRoute
+
 Deno.test(`${TEST_GROUP} - registerStyle`, () => {
   const testRegistry = new Registry();
 
@@ -45,3 +47,5 @@ Deno.test(`${TEST_GROUP} - registerStyle, given messy CSS`, () => {
 
   assert(testRegistry.get(sanitizedStyleRule));
 });
+
+// TODO: test registerElement

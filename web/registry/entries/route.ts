@@ -16,7 +16,8 @@ export function registerRoute<D extends EntryDefinition>(
   { registry = SYSTEM_REGISTRY, definition, render }: {
     registry?: Registry;
     definition?: D;
-    render: (params: ShapeFor<D>, request: Request) => string;
+    // TODO(#): param-based caching option via @std/cache
+    render: (params?: ShapeFor<D>, request?: Request) => Promise<string>;
   },
 ) {
   const sanitizedPath = sanitizePath(path);
@@ -26,7 +27,7 @@ export function registerRoute<D extends EntryDefinition>(
     class implements Route {
       name = sanitizedPath;
       pattern = new URLPattern({ pathname: sanitizedPath });
-      handler = (
+      handler = async (
         request: Request,
         { pathname, search, hash }: URLPatternResult,
       ) => {
@@ -41,7 +42,8 @@ export function registerRoute<D extends EntryDefinition>(
           params[key] = parseRawValue(extractedValue, definition[key]);
         }
 
-        const responseBody = render(params, request);
+        // TODO: Infer format based on file extension, e.g html => html, tsx => dom. String is valid response, too.
+        const responseBody = await render(params, request);
 
         return new Response(responseBody, {
           // TODO(#): Construct request-specific headers: CORS, CSP & Session Token

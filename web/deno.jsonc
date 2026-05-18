@@ -9,7 +9,7 @@
     ]
   },
   "exports": {
-    "./format": "./format/module.ts",
+    "./formats": "./formats/module.ts",
     "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
     "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
     "./errors": "./errors/module.ts",

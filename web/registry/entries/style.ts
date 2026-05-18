@@ -14,8 +14,8 @@ export function registerStyle(
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
   if (path) {
-    // TODO: replace ts/tsx with css?
-    registerRoute(path, { render: () => cleanCSS });
+    // TODO(?): replace ts/tsx with css
+    registerRoute(path, { render: () => Promise.resolve(cleanCSS) });
   }
 
   registry.define(
