@@ -42,7 +42,7 @@ export function registerRoute<D extends EntryDefinition>(
           params[key] = parseRawValue(extractedValue, definition[key]);
         }
 
-        // TODO: Infer format based on file extension, e.g html => html, tsx => dom. String is valid response, too.
+        // TODO: Infer JSX format based on file extension, e.g html => html, tsx => dom. String is valid response, too.
         const responseBody = await render(params, request);
 
         return new Response(responseBody, {

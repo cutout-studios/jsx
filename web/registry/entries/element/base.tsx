@@ -15,6 +15,7 @@ export class BaseElement extends HTMLElement {
   get stylesheets() {
     const stylesheet = new CSSStyleSheet();
 
+    // TODO: does this... work? It might just be empty/undefined
     for (const rule of BaseElement.stylesheet) {
       stylesheet.insertRule(rule.cssText);
     }
@@ -76,9 +77,14 @@ export class BaseElement extends HTMLElement {
   get #render() {
     return Array.from(
       // TODO: update formatters to take options
-      dom(BaseElement.render(this.observedAttributes), {
-        event: { signal: this.#eventController.signal },
-      }),
+      dom(
+        <template shadowrootmode="open">
+          {BaseElement.render(this.observedAttributes)}
+        </template>,
+        {
+          event: { signal: this.#eventController.signal },
+        },
+      ),
     );
   }
 

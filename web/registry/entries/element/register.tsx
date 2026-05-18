@@ -4,7 +4,7 @@ import { relative } from "@std/path";
 import { type Registry, SYSTEM_REGISTRY } from "../../base.ts";
 import type { ElementEntry, EntryDefinition, ShapeFor } from "../../types.ts";
 import { registerRoute } from "../route.ts";
-import { BaseElement } from "./base.ts";
+import { BaseElement } from "./base.tsx";
 
 export function registerElement<D extends EntryDefinition>(
   tag: string,
