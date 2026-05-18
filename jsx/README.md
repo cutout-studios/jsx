@@ -1,5 +1,7 @@
 # `@cutout/jsx`
 
+<!-- TODO(#): fix relative links for JSR -->
+
 [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx)
 [![bundlejs](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
