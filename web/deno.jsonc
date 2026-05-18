@@ -9,11 +9,12 @@
     ]
   },
   "exports": {
-    "./formats": "./formats/module.ts",
+    "./element": "./registry/entries/element/module.ts",
+    "./errors": "./errors/module.ts",
     "./format/dom/jsx-runtime": "./format/dom/runtime.d.ts",
     "./format/html/jsx-runtime": "./format/html/runtime.d.ts",
-    "./errors": "./errors/module.ts",
-    "./resources": "./resources/module.ts"
+    "./formats": "./formats/module.ts",
+    "./registry": "./registry/module.ts"
   },
   "imports": {
     ".bench": "./.bench/module.ts",
@@ -31,10 +32,10 @@
     "react": "npm:react",
     "react-dom": "npm:react-dom"
   },
+  "license": "MIT",
+  "name": "@cutout/web",
   "tasks": {
     "docs:lint": "deno docs --lint ./errors/module.ts ./resources/module.ts ./format/module.ts"
   },
-  "license": "MIT",
-  "name": "@cutout/web",
   "version": "0.0.0-alpha.0"
 }
