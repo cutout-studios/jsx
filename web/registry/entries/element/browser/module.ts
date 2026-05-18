@@ -1,6 +1,6 @@
 /**
  * @packageDocumentation
- * 
+ *
  * This sub-module is browser only (or server-side with `@cutout/polyfill`)
  */
 

@@ -1,7 +1,11 @@
 /// <reference lib="dom" />
 
 import type { Registry } from "../../../base.ts";
-import type { ElementEntry, EntryDefinition, ShapeValueFor } from "../../../types.ts";
+import type {
+  ElementEntry,
+  EntryDefinition,
+  ShapeValueFor,
+} from "../../../types.ts";
 import type { Options } from "../types.ts";
 import { BaseElement } from "./base.tsx";
 

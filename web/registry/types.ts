@@ -48,8 +48,8 @@ export type RouteEntryConstructor<D extends EntryDefinition> = {
   new (...args: unknown[]): RouteEntry<D>;
 };
 
-export type ShapeValueFor<C extends DefinitionConstructor> = C extends typeof Number
-  ? number
+export type ShapeValueFor<C extends DefinitionConstructor> = C extends
+  typeof Number ? number
   : C extends typeof BigInt ? bigint
   : C extends typeof String ? string
   : C extends typeof Boolean ? boolean
