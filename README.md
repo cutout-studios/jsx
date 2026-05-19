@@ -10,15 +10,14 @@ possible to their respective targets.
 
 ## Contents
 
-| Module                            | Planned Description                                              | Status                                                                  |
-| --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [`@cutout/common`](./common/)     | Shared utilities across the Toolbox.                             | _Private_                                                               |
-| [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
-| [`@cutout/polyfill`](./polyfill/) | Server-side polyfill for DOM apis.                               | **STUB**                                                                |
-| [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Designing API..._                                                      |
-| [`@cutout/elements`](./elements/) | Accessible and mobile-friendly Web UI primitives.                | **PLACEHOLDER**                                                         |
-| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching Viability... (Looking good so far)_                        |
-| [`@cutout/agent`](./agent/)       | QDT-compliant local LLM service.                                 | **SHIM**                                                                |
+| Module                            | Planned Description                                              | Status                                                                  | Notes                                                                               |
+| --------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [`@cutout/common`](./common/)     | Shared utilities across the Toolbox.                             | _Private_                                                               |                                                                                     |
+| [`@cutout/jsx`](./jsx/)           | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) | **Stub**: Good enough for basic functionality.                                      |
+| [`@cutout/polyfill`](./polyfill/) | Custom server-side polyfill for Browser apis.                    | _Partial Implementation_                                                |                                                                                     |
+| [`@cutout/web`](./web/)           | Core library for authoring Cutout Webapps.                       | _Partial Implementation_                                                | 2 of 3 core components drafted.                                                     |
+| [`@cutout/tauri`](./tauri/)       | Embed your Cutout Webapp in a cross-platform Tauri shell!        | _Researching_                                                           | Seems viable thusfar...                                                             |
+| [`@cutout/agent`](./agent/)       | QDT-compliant local LLM service.                                 | _Partial Implementation_                                                | **Shim**: run with `deno task --cwd=agent start`, but it doesn't do much currently. |
 
 ### Who we are
 

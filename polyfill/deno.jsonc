@@ -1,4 +1,4 @@
 {
   "name": "@cutout/polyfill",
-  "exports": "./module.js"
+  "exports": "./module.ts"
 }
