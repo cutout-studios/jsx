@@ -1,7 +1,5 @@
 # `@cutout/jsx`
 
-<!-- TODO(#): fix relative links for JSR -->
-
 [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx)
 [![bundlejs](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
@@ -12,7 +10,8 @@ ecosystem. It's inspired in part by the long-abandoned
 [OpenJSX](https://github.com/OpenJSX). **_Write JSX once, use it anywhere._**
 
 Our generator-based approach is proving suprisingly competitive, going
-[toe-to-toe with React on our latest benchmarks](../web/BENCHMARKS.md).
+[toe-to-toe with React on our latest
+benchmarks](https://github.com/cutout-studios/toolbox/blob/main/web/BENCHMARKS.md).
 
 > [!WARNING]
 > `@cutout/jsx` is pending in-production testing. Use at your own discretion.
@@ -20,7 +19,8 @@ Our generator-based approach is proving suprisingly competitive, going
 ## How it works
 
 In a new TSX file, point your `@jsxImportSource` to _this_ runtime
-([`@cutout/jsx`](./module.ts)) instead of the default one (React).
+([`@cutout/jsx`](https://github.com/cutout-studios/toolbox/blob/main/jsx/module.ts))
+instead of the default one (React).
 
 ```tsx
 /** @jsxImportSource jsr:@cutout/jsx */
@@ -53,8 +53,8 @@ console.log(
 ```
 
 > [!WARNING]
-> [`@cutout/web`](../web/) is not yet published, and is referenced here only for
-> demonstration purposes.
+> [`@cutout/web`](https://github.com/cutout-studios/toolbox/blob/main/web/) is
+> not yet published, and is referenced here only for demonstration purposes.
 
 For server-side rendering, you'd simply choose a different format:
 
@@ -95,8 +95,8 @@ const incorrect = <MyElement hello={123} />; // Type Error.
 
 If you're interested in seeing how to most effectively leverage the
 `@cutout/jsx` rendering approach, consider reviewing the proposed
-[`@cutout/web`](../web/).
+[`@cutout/web`](https://github.com/cutout-studios/toolbox/blob/main/web/).
 
 ---
 
-[Copyright 2026, Cutout Studios](../LICENSE)
+[Copyright 2026, Cutout Studios](https://github.com/cutout-studios/toolbox/blob/main/LICENSE)

@@ -17,7 +17,7 @@ export type {
   ObjectToken as CutoutObjectToken,
   OutputToken as CutoutOutputToken,
   StringToken as CutoutStringToken,
-  SymbolToken  as CutoutSymbolToken ,
+  SymbolToken as CutoutSymbolToken,
   UndefinedToken as CutoutUndefinedToken,
 } from "./types.ts";
 export type { AnyFunction } from "@cutout/common";
