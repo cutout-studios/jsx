@@ -7,26 +7,79 @@ import type {
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Route } from "@std/http/route";
 
+// Registry
 export interface Registry {
-  define(name: string, constructor: StyleEntryConstructor): void;
   define<D extends EntryDefinition>(
     name: string,
-    constructor: ElementEntryConstructor<D>,
+    constructor: RouteProxyContructor<D>,
   ): void;
+  define(name: string, constructor: StyleProxyConstructor): void;
   define<D extends EntryDefinition>(
     name: string,
-    constructor: RouteEntryConstructor<D>,
+    constructor: ElementConstructor<D>,
   ): void;
-  get(name: string): EntryConstructor | undefined;
-  getName(entry: EntryConstructor): string | null;
+  get<D extends EntryDefinition>(
+    name: string,
+  ): EntryProxyConstructor<D> | undefined;
+  getName(entry: EntryProxyConstructor): string | null;
 }
 
-export type Entry<D extends EntryDefinition> =
-  | StyleEntry
-  | RouteEntry<D>
-  | ElementEntry<D>;
+// Registry entries
+export type EntryProxyConstructor<
+  D extends EntryDefinition = EmptyShape,
+> =
+  | RouteProxyContructor<D>
+  | StyleProxyConstructor
+  | ElementConstructor<D>;
 
-export type DefinitionConstructor =
+// TODO(#51): nested definitions
+export type EntryDefinition = Readonly<
+  Record<PropertyKey, ValidDefinitionConstructor>
+>;
+
+// Registry entry type - Routes
+export type RouteProxyContructor<D extends EntryDefinition> = {
+  new (): RouteEntry<D>;
+};
+
+export interface RouteEntry<D extends EntryDefinition> extends Route {
+  readonly name: string;
+  readonly definition?: D;
+  readonly render?: RouteRenderer<D>;
+}
+
+export type RouteRenderer<D extends EntryDefinition> = (
+  parameters: ShapeFor<D>,
+  request?: Request,
+) => Promise<CutoutGeneratorToken | string>;
+
+// Registry entry type - Styles
+export type StyleProxyConstructor = {
+  new (): StyleEntry;
+};
+
+export interface StyleEntry extends CSSRule {
+  readonly name: string;
+  readonly route?: RouteEntry<EmptyShape>;
+}
+
+// Registry entry type - Elements
+export type ElementConstructor<D extends EntryDefinition> = {
+  new (...args: unknown[]): ElementEntry<D>;
+};
+
+export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
+  readonly name: string;
+  readonly definition?: D;
+  readonly render?: ElementRenderer<D>;
+}
+
+export type ElementRenderer<D extends EntryDefinition> = (
+  attributes: ShapeFor<D>,
+) => CutoutGeneratorToken;
+
+// Helper Types
+export type ValidDefinitionConstructor =
   | typeof Number
   | typeof String
   | typeof Boolean
@@ -35,40 +88,7 @@ export type DefinitionConstructor =
   | typeof Array
   | typeof Object;
 
-// TODO(#51): nested definitions
-export type EntryDefinition = Readonly<Record<string, DefinitionConstructor>>;
-
-export type EntryConstructor<
-  D extends EntryDefinition = EmptyShape,
-> =
-  | StyleEntryConstructor
-  | ElementEntryConstructor<D>
-  | RouteEntryConstructor<D>;
-
-export interface StyleEntry extends CSSRule {
-  readonly name: string;
-  readonly route?: RouteEntry<EmptyShape>;
-}
-
-export type StyleEntryConstructor = {
-  new (...args: unknown[]): StyleEntry;
-};
-
-export type StyleEntryOptions = {
-  route?: RouteEntry<EmptyShape>;
-  registry?: Registry;
-};
-
-export interface RouteEntry<D extends EntryDefinition> extends Route {
-  readonly name: string;
-  readonly definition?: D;
-}
-
-export type RouteEntryConstructor<D extends EntryDefinition> = {
-  new (...args: unknown[]): RouteEntry<D>;
-};
-
-export type ShapeValueFor<C extends DefinitionConstructor> = C extends
+export type ShapeValueFor<C extends ValidDefinitionConstructor> = C extends
   typeof Number ? number
   : C extends typeof BigInt ? bigint
   : C extends typeof String ? string
@@ -82,39 +102,3 @@ export type ShapeValueFor<C extends DefinitionConstructor> = C extends
 export type ShapeFor<T extends EntryDefinition> = {
   [K in keyof T]?: ShapeValueFor<T[K]>;
 };
-
-export interface ElementEntry<D extends EntryDefinition> extends HTMLElement {
-  readonly name: string;
-  readonly render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken;
-  readonly definition?: D;
-  readonly route?: RouteEntry<EmptyShape>;
-}
-
-export type ElementEntryConstructor<D extends EntryDefinition> = {
-  new (...args: unknown[]): ElementEntry<D>;
-};
-
-export type ElementEntryOptions<D extends EntryDefinition> = {
-  definition?: D;
-  registry?: Registry;
-  render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken;
-  connectedCallback?: () => void;
-  attributeChangedCallback?: <K extends keyof D>(
-    name: K,
-    newValue: ShapeValueFor<D[K]>,
-    oldValue: ShapeValueFor<D[K]>,
-  ) => void;
-  disconnectedCallback?: () => void;
-  root?: string;
-  route?: RouteEntry<EmptyShape>;
-  stylesheet?: StyleEntry[];
-};
-
-type ElementJSXFunctionRenderOptions = {
-  shallow: boolean;
-};
-
-export type ElementJSXFunction<D extends EntryDefinition> = (
-  attributes?: ShapeFor<D>,
-  options?: ElementJSXFunctionRenderOptions,
-) => CutoutGeneratorToken;

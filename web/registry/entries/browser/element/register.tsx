@@ -1,18 +1,23 @@
 /** @jsxImportSourceTypes @cutout/web/format/dom */
 
 import type { BaseRegistry } from "../../../base.ts";
+import { ELEMENT_TAG_PREFIX } from "../../../constants.ts";
 import type {
   ElementEntry,
-  ElementJSXFunction,
   EntryDefinition,
-  ShapeFor,
   ShapeValueFor,
 } from "../../../types.ts";
-import type { ElementEntryOptions } from "../../../types.ts";
+import type {
+  ElementJSXFunction,
+  ElementJSXFunctionFactoryOptions,
+} from "../../types.ts";
 import { BaseElement } from "./base.tsx";
 
-export function registerBrowserElement<D extends EntryDefinition>(tag: string, {
+export function registerBrowserElement<
+  D extends EntryDefinition,
+>(tag: string, {
   definition,
+  tagPrefix = ELEMENT_TAG_PREFIX,
   registry = customElements as unknown as BaseRegistry, // Close enough
   render,
   route,
@@ -20,8 +25,8 @@ export function registerBrowserElement<D extends EntryDefinition>(tag: string, {
   attributeChangedCallback,
   disconnectedCallback,
   stylesheet = [],
-}: ElementEntryOptions<D> = {}): ElementJSXFunction<D> {
-  const systemTag = `xo-${tag}`;
+}: ElementJSXFunctionFactoryOptions<D>): ElementJSXFunction<D> {
+  const systemTag = `${tagPrefix}-${tag}`;
   const observedAttributes = Object.keys(definition ?? []);
 
   registry.define(
@@ -58,7 +63,7 @@ export function registerBrowserElement<D extends EntryDefinition>(tag: string, {
   );
 
   const _ = { systemTag };
-  return (attributes?: ShapeFor<D>, options?) => {
+  return (attributes, options) => {
     if (options?.shallow) {
       return <_.systemTag {...attributes}></_.systemTag>;
     }

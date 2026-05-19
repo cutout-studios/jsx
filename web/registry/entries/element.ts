@@ -1,20 +1,19 @@
 import type { EmptyShape } from "@cutout/common";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import { SYSTEM_REGISTRY } from "../base.ts";
-import type { EntryDefinition, RouteEntry } from "../types.ts";
-import type { ElementEntryOptions } from "../types.ts";
+import type { RouteEntry } from "../types.ts";
 import { registerBrowserElement } from "./browser/element/register.tsx";
 import { registerRoute } from "./route.ts";
+import type { ElementJSXFunctionFactory } from "./types.ts";
 
-export function registerElement<D extends EntryDefinition>(
+export const registerElement: ElementJSXFunctionFactory = (
   tag: string,
   {
-    registry = SYSTEM_REGISTRY,
+    registry,
     root = Deno.cwd(),
     ...options
-  }: ElementEntryOptions<D> = {},
-) {
+  },
+) => {
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
@@ -22,6 +21,7 @@ export function registerElement<D extends EntryDefinition>(
   let route: RouteEntry<EmptyShape> | undefined;
   if (path) {
     route = registerRoute(path, {
+      registry,
       render: async () => {
         // TODO(#): Dev vs. Prod environment
         const { outputFiles, errors } = await Deno.bundle({
@@ -57,4 +57,4 @@ export function registerElement<D extends EntryDefinition>(
   }
 
   return registerBrowserElement(tag, { ...options, registry, route });
-}
+};

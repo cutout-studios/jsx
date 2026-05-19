@@ -7,11 +7,11 @@ import { dom } from "@cutout/web/formats";
 import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../../constants.ts";
 import { parseRawValue } from "../../../parse.ts";
 import type {
-  DefinitionConstructor,
   EntryDefinition,
   ShapeFor,
   ShapeValueFor,
   StyleEntry,
+  ValidDefinitionConstructor,
 } from "../../../types.ts";
 
 export class BaseElement<D extends EntryDefinition> extends HTMLElement {
@@ -20,7 +20,7 @@ export class BaseElement<D extends EntryDefinition> extends HTMLElement {
   readonly observedAttributesMirror: string[] = BaseElement.observedAttributes;
   readonly definition?: D;
   readonly stylesheet?: StyleEntry[] = [];
-  readonly render?: (attributes?: ShapeFor<D>) => CutoutGeneratorToken = () => (
+  readonly render?: (attributes: ShapeFor<D>) => CutoutGeneratorToken = () => (
     <slot></slot>
   );
 
@@ -39,7 +39,7 @@ export class BaseElement<D extends EntryDefinition> extends HTMLElement {
       ...result,
       [attributeName]: parseRawValue(
         this.getAttribute(attributeName)!,
-        this.definition![attributeName] as DefinitionConstructor,
+        this.definition![attributeName] as ValidDefinitionConstructor,
       ),
     }), {});
   }

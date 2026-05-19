@@ -2,31 +2,31 @@ import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { DUPLICATE_ENTRY_GUIDANCE } from "./constants.ts";
 import { isElementEntryConstructor } from "./guards.ts";
 import type {
-  ElementEntryConstructor,
-  EntryConstructor,
+  ElementConstructor,
   EntryDefinition,
+  EntryProxyConstructor,
   Registry as RegistryInterface,
-  RouteEntryConstructor,
-  StyleEntryConstructor,
+  RouteProxyContructor,
+  StyleProxyConstructor,
 } from "./types.ts";
 
 export class BaseRegistry implements RegistryInterface {
-  #internalRegistry = new Map<string, EntryConstructor>();
-  #reverseRegistry = new WeakMap<EntryConstructor, string>();
+  #internalRegistry = new Map<string, EntryProxyConstructor>();
+  #reverseRegistry = new WeakMap<EntryProxyConstructor, string>();
   #baseRegistry = globalThis.customElements;
 
-  define(name: string, constructor: StyleEntryConstructor): void;
+  define(name: string, constructor: StyleProxyConstructor): void;
   define<D extends EntryDefinition>(
     name: string,
-    constructor: ElementEntryConstructor<D>,
+    constructor: ElementConstructor<D>,
   ): void;
   define<D extends EntryDefinition>(
     name: string,
-    constructor: RouteEntryConstructor<D>,
+    constructor: RouteProxyContructor<D>,
   ): void;
   define(
     name: string,
-    constructor: EntryConstructor,
+    constructor: EntryProxyConstructor,
   ) {
     if (this.#internalRegistry.has(name)) {
       throw new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
@@ -43,16 +43,16 @@ export class BaseRegistry implements RegistryInterface {
     }
   }
 
-  get(name: string): EntryConstructor | undefined {
-    return this.#internalRegistry.get(name) as EntryConstructor;
+  get<D extends EntryDefinition>(
+    name: string,
+  ): EntryProxyConstructor<D> | undefined {
+    return this.#internalRegistry.get(name) as EntryProxyConstructor<D>;
   }
 
-  getName(entry: EntryConstructor): string | null {
+  getName(entry: EntryProxyConstructor): string | null {
     return this.#reverseRegistry.get(entry) ?? null;
   }
 
   // TODO(#): bucket by specificity. sort alphabetically in each bucket.
   // getRoutes(): Route[] {}
 }
-
-export const SYSTEM_REGISTRY = new BaseRegistry();

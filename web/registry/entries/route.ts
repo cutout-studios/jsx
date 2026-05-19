@@ -1,9 +1,8 @@
-import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { html } from "@cutout/web/formats";
 import type { Route } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
-import { type BaseRegistry, SYSTEM_REGISTRY } from "../base.ts";
+import { CutoutError } from "../../errors/error.ts";
 import {
   ROUTE_CONTENT_TYPE_DEFAULT,
   ROUTE_CSP_HEADER_DEFAULT,
@@ -11,20 +10,14 @@ import {
   SupportedHTTPHeaders,
 } from "../constants.ts";
 import { parseRawValue } from "../parse.ts";
-import type { EntryDefinition, ShapeFor } from "../types.ts";
+import type { ShapeFor } from "../types.ts";
+import type { EntryDefinition, RouteEntry } from "../types.ts";
+import type { RouteEntryFactoryOptions } from "./types.ts";
 
-export function registerRoute<D extends EntryDefinition>(
+export function registerRoute<const D extends EntryDefinition>(
   path: string,
-  { registry = SYSTEM_REGISTRY, definition, render }: {
-    registry?: BaseRegistry;
-    definition?: D;
-    // TODO(#): param-based caching option via @std/cache
-    render: (
-      params?: ShapeFor<D>,
-      request?: Request,
-    ) => Promise<CutoutGeneratorToken | string>;
-  },
-) {
+  { registry, definition, render }: RouteEntryFactoryOptions<D>,
+): RouteEntry<D> {
   const sanitizedPath = _sanitizePath(path);
 
   const result = class implements Route {
@@ -45,7 +38,11 @@ export function registerRoute<D extends EntryDefinition>(
         params[key] = parseRawValue(extractedValue, definition[key]);
       }
 
-      const renderResult = await render(params, request);
+      const renderResult = await render?.(params, request);
+
+      if (!renderResult) {
+        throw new CutoutError();
+      }
 
       let responseBody;
       if (typeof renderResult === "string") {
@@ -75,7 +72,7 @@ export function registerRoute<D extends EntryDefinition>(
     };
   };
 
-  registry.define(path, result);
+  registry.define(sanitizedPath, result);
 
   return Reflect.construct(result, []);
 }
@@ -85,6 +82,10 @@ function _sanitizePath(rawRouteText: string): string {
 
   for (let segment of rawRouteText.split(/\/+/)) {
     let isVariable = false, isOptional = false;
+
+    if (!segment) {
+      continue;
+    }
 
     if (segment.startsWith(":")) {
       isVariable = true;

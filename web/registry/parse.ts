@@ -1,21 +1,24 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 
-import type { DefinitionConstructor } from "./types.ts";
+import type { ShapeValueFor, ValidDefinitionConstructor } from "./types.ts";
 
-export function parseRawValue(value: string, ctor: DefinitionConstructor) {
-  switch (ctor) {
+export function parseRawValue<C extends ValidDefinitionConstructor>(
+  value: string,
+  constructor: C,
+): ShapeValueFor<C> {
+  switch (constructor) {
     case Number:
-      return Number(value);
+      return Number(value) as ShapeValueFor<C>;
     case String:
-      return value;
+      return value as ShapeValueFor<C>;
     case Boolean:
-      return value === "";
+      return (value !== "false") as ShapeValueFor<C>;
     case Symbol:
-      return Symbol(value);
+      return Symbol(value) as ShapeValueFor<C>;
     case Array:
     case Object:
       try {
-        return JSON.parse(value);
+        return JSON.parse(value) as ShapeValueFor<C>;
       } catch (error) {
         throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
           context: value,

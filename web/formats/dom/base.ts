@@ -51,7 +51,7 @@ export const dom: Formatter<HTMLCollection, DOMFormatOptions> = (
       case CutoutTokenType.FUNCTION:
         _addEventListener(
           state,
-          (event: Event) => value(event),
+          (event: Event) => (value as EventListener)(event),
           options?.event,
         );
         break;

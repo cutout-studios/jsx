@@ -1,4 +1,4 @@
-export type AnyFunction = (...args: unknown[]) => unknown;
-export type AnyArray = Array<unknown>;
-export type AnyShape = Record<string, unknown>;
-export type EmptyShape = Record<PropertyKey, never>;
+export type AnyFunction = (...args: never[]) => unknown;
+export type AnyArray = Readonly<Array<unknown>>;
+export type AnyShape = Readonly<Record<PropertyKey, unknown>>;
+export type EmptyShape = Readonly<Record<PropertyKey, never>>;

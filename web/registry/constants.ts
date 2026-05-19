@@ -4,6 +4,8 @@ export enum SupportedHTTPHeaders {
   CORS = "Access-Control-Allow-Origin",
 }
 
+export const ELEMENT_TAG_PREFIX = "xo";
+
 export const ROUTE_FILE_EXTENSION_DEFAULT = ".txt";
 export const ROUTE_CONTENT_TYPE_DEFAULT = "text/plain";
 export const ROUTE_CSP_HEADER_DEFAULT = "default-src 'self'";

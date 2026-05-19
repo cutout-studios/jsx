@@ -1,9 +1,10 @@
-import type { StyleEntry, StyleEntryOptions } from "../../types.ts";
+import type { StyleEntry } from "../../types.ts";
+import type { StyleEntryFactory } from "../types.ts";
 
-export function registerBrowserStyle(
-  cssText: string,
-  { route, registry }: StyleEntryOptions,
-) {
+export const registerBrowserStyle: StyleEntryFactory = (
+  cssText,
+  { route, registry },
+) => {
   const result = class extends CSSRule implements StyleEntry {
     name = cssText;
     route = route;
@@ -15,5 +16,5 @@ export function registerBrowserStyle(
 
   registry?.define(cssText, result);
 
-  return result;
-}
+  return Reflect.construct(result, []);
+};
