@@ -1,7 +1,8 @@
 # `@cutout/web`
 
 A thin library for meant for authoring Webapps that take full advantage of
-[`@cutout/jsx`](https://github.com/cutout-studios/toolbox/blob/main/jsx/)'s streaming architecture.
+[`@cutout/jsx`](https://github.com/cutout-studios/toolbox/blob/main/jsx/)'s
+streaming architecture.
 
 ### Likely Requirements
 
@@ -11,13 +12,15 @@ A thin library for meant for authoring Webapps that take full advantage of
   support.
 
 > [!CAUTION]
-> `@cutout/web` is currently being implemented. Feel free to weigh in, but don't use anything here yet.
+> `@cutout/web` is currently being implemented. Feel free to weigh in, but don't
+> use anything here yet.
 
 ## Target API
 
 > [!WARNING]
 > `@cutout/web`'s API will almost assuredly change during implementation and as
-> [`@cutout/tauri`](https://github.com/cutout-studios/toolbox/blob/main/tauri/)'s research progresses.
+> [`@cutout/tauri`](https://github.com/cutout-studios/toolbox/blob/main/tauri/)'s
+> research progresses.
 
 ### WebComponents
 

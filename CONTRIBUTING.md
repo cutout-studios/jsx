@@ -29,5 +29,6 @@ it!
 
 ### **VSCode Setup**
 
-Look at the included [`.vscode/extensions.json`](https://github.com/cutout-studios/toolbox/blob/main/.vscode/extensions.json) to
-review the recommended extensions needed for this project.
+Look at the included
+[`.vscode/extensions.json`](https://github.com/cutout-studios/toolbox/blob/main/.vscode/extensions.json)
+to review the recommended extensions needed for this project.
