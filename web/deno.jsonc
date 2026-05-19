@@ -31,7 +31,7 @@
   "license": "MIT",
   "name": "@cutout/web",
   "tasks": {
-    "docs:lint": "deno docs --lint ./errors/module.ts ./formats/module.ts ./registry/module.ts ./registry/entries/browser/module.ts"
+    "docs:lint": "deno doc --lint ./errors/module.ts ./formats/module.ts ./registry/module.ts ./registry/entries/browser/module.ts"
   },
   "version": "0.0.0-alpha.0"
 }
