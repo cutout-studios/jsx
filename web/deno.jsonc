@@ -13,6 +13,7 @@
   },
   "imports": {
     ".bench": "./.bench/module.ts",
+    "@cutout/web/polyfill": "./polyfill/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",

@@ -1,4 +1,4 @@
-import "@cutout/polyfill";
+import "@cutout/web/polyfill";
 
 import { assert } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";

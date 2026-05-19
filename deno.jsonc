@@ -14,7 +14,6 @@
   "workspace": [
     "common",
     "jsx",
-    "polyfill",
     "web",
     "tauri",
     "agent"
