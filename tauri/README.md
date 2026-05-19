@@ -14,7 +14,7 @@ While all other major platforms seem to be accounted for, iOS forbids JIT-ful
 processes like V8, making it the biggest hurdle for this approach.
 
 So far we've been able to create
-[a repeatable iOS simulator build](./scripts/buildApple/main.sh) for
+[a repeatable iOS simulator build](https://github.com/cutout-studios/toolbox/blob/main/tauri/scripts/buildApple/main.sh) for
 `deno_core`. The next steps are to:
 
 - [ ] Link this `rlib` into a Tauri app and exercise it in the iOS Simulator.
@@ -29,11 +29,11 @@ So far we've been able to create
 Likely we'll build these into `@cutout/web` directly:
 
 - The local server is a blatant attack surface: bind `@cutout/web` to
-  `127.0.0.1` with an ephemeral port.
+  `[::1]` with an ephemeral port.
 - Lock down the host and origin on every request. Use a per-session header-based
   token.
 - Strictly configure CORS and CSP.
 
 ---
 
-[Copyright 2026, Cutout Studios](../LICENSE)
+[Copyright 2026, Cutout Studios](https://github.com/cutout-studios/toolbox/blob/main/LICENSE)
