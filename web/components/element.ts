@@ -1,7 +1,8 @@
-import type { EmptyShape } from "@cutout/common";
+import type { EmptyShape } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserElement } from "./browser/element/register.tsx";
+import { V8CallSite } from "./callsite.ts";
 import { registerRoute } from "./route.ts";
 import type {
   Definition,
@@ -13,6 +14,8 @@ import type {
 /**
  * Registers an Element in the given component registry,
  * returning a function that can be used to invoke that Element via JSX.
+ *
+ * Also registers a route to the element's file in V8 environments.
  *
  * @param {string} tag The desired element tag for use in HTML. Must be unique.
  * @param {ElementOptions} options Options for configuring the Element generation.
@@ -26,7 +29,7 @@ export function registerElement<D extends Definition>(
     ...options
   }: ElementOptions<D>,
 ): ElementJSX<D> {
-  const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
+  const callSiteFilePath = V8CallSite.getParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 

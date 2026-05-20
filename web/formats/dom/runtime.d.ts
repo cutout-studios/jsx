@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import type { AnyFunction } from "@cutout/common";
+import type { AnyFunction } from "@cutout/internal";
 import type { JSX as _JSX } from "@cutout/jsx/jsx-runtime";
 
 import type {
@@ -9,7 +9,7 @@ import type {
   FunctionAttributes,
   NumberAttributes,
   PickElementAttributes,
-} from "../constants/types.ts";
+} from "../constants/module.ts";
 
 declare namespace JSX {
   type IntrinsicElements =

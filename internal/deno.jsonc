@@ -1,4 +1,4 @@
 {
-  "name": "@cutout/common",
+  "name": "@cutout/internal",
   "exports": "./module.ts"
 }

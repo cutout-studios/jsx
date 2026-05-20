@@ -1,4 +1,4 @@
-import type { AnyShape, EmptyShape } from "@cutout/common";
+import type { AnyShape, EmptyShape } from "@cutout/internal";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 
 /**

@@ -5,8 +5,7 @@ import {
 } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 
-import { VOID } from "../constants/elements.ts";
-import { FUNCTION_SERIALIZATION } from "../constants/errorGuidance.ts";
+import { FUNCTION_SERIALIZATION, VOID } from "../constants/module.ts";
 import type { Formatter } from "../types.ts";
 import { escape } from "./escape.ts";
 
