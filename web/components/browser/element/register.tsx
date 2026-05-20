@@ -73,17 +73,17 @@ export function registerBrowserElement<
       return <_.systemTag {...attributes}></_.systemTag>;
     }
 
-    if (!stylesheet.length) {
-      return <_.systemTag {...attributes}>{render?.(attributes)}</_.systemTag>;
-    }
-
     // TODO(#53): merge/manage DSD style rules
     return (
       <_.systemTag {...attributes}>
-        <style>
-          {stylesheet.map((style) => style.cssText).join("\n")}
-        </style>
-        {render?.(attributes)}
+        <template shadowrootmode="open">
+          {stylesheet.length && (
+            <style>
+              {stylesheet.map((style) => style.cssText).join("\n")}
+            </style>
+          )}
+          {render?.(attributes)}
+        </template>
       </_.systemTag>
     );
   };

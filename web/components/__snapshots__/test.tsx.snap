@@ -1,3 +1,3 @@
 export const snapshot = {};
 
-snapshot[`web/registry - compose style, element, and route 1`] = `'<html><head><title>Hello, Test!</title></head><body><test-greeting name="Test"><style>:host{color:red;}</style><h2>Hello, Test!</h2></test-greeting></body></html>'`;
+snapshot[`web/registry - compose style, element, and route 1`] = `'<html><head><title>Hello, Test!</title></head><body><test-greeting name="Test"><template shadowrootmode="open"><style>:host{color:red;}</style><h2>Hello, Test!</h2></template></test-greeting></body></html>'`;

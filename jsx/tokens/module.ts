@@ -18,5 +18,5 @@ export type {
   OutputToken as CutoutOutputToken,
   StringToken as CutoutStringToken,
   SymbolToken as CutoutSymbolToken,
-  UndefinedToken as CutoutUndefinedToken,
+  UndefinedToken as UndefinedCutoutToken,
 } from "./types.ts";

@@ -21,4 +21,4 @@ deno task --cwd=agent start
 
 ---
 
-[Copyright 2026, Cutout Studios](../LICENSE)
+[Copyright 2026, Cutout Studios](https://github.com/cutout-studios/toolbox/blob/main/LICENSE)
