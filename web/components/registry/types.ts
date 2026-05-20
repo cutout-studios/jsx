@@ -1,4 +1,4 @@
-import type { EmptyShape } from "@cutout/common";
+import type { EmptyShape } from "@cutout/internal";
 import type { Definition, Element, Route, Style } from "../types.ts";
 
 /**

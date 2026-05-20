@@ -1,4 +1,4 @@
-import type { EmptyShape } from "@cutout/common";
+import type { EmptyShape } from "@cutout/internal";
 import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserStyle } from "./browser/style.ts";

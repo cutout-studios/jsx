@@ -3,7 +3,7 @@ import type {
   AnyFunction,
   AnyShape,
   EmptyShape,
-} from "@cutout/common";
+} from "@cutout/internal";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Route as _Route } from "@std/http/route";
 import type { Registry } from "./registry/types.ts";
