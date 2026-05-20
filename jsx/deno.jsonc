@@ -6,6 +6,8 @@
   "imports": {
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing",
+
+    // To ensure "common" stays private, we alias it here.
     "@cutout/common": "../common/module.ts"
   },
   "tasks": {
