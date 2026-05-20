@@ -1,34 +1,35 @@
 import { assertEquals } from "@std/assert";
-import { isValidCutoutToken, tokenizeValue } from "./module.ts";
-import { CutoutTokenType } from "./types.ts";
+import { TokenType } from "./constants.ts";
+import { isValidToken } from "./guards.ts";
+import { tokenizeValue } from "./tokenizeValue.ts";
 
 const TEST_GROUP = "jsx/tokens";
 
-Deno.test(`${TEST_GROUP} - isValidCutoutToken`, () => {
+Deno.test(`${TEST_GROUP} - isValidToken`, () => {
   assertEquals(
-    isValidCutoutToken([CutoutTokenType.NUMBER, 0]),
+    isValidToken([TokenType.NUMBER, 0]),
     true,
   );
   assertEquals(
-    isValidCutoutToken([CutoutTokenType.STRING, "string"]),
+    isValidToken([TokenType.STRING, "string"]),
     true,
   );
   assertEquals(
-    isValidCutoutToken([CutoutTokenType.BOOLEAN, false]),
+    isValidToken([TokenType.BOOLEAN, false]),
     true,
   );
-  assertEquals(isValidCutoutToken([CutoutTokenType.ARRAY, []]), true);
-  assertEquals(isValidCutoutToken([CutoutTokenType.OBJECT, {}]), true);
+  assertEquals(isValidToken([TokenType.ARRAY, []]), true);
+  assertEquals(isValidToken([TokenType.OBJECT, {}]), true);
   assertEquals(
-    isValidCutoutToken([CutoutTokenType.UNKNOWN, Symbol("anything")]),
+    isValidToken([TokenType.UNKNOWN, Symbol("anything")]),
     true,
   );
 
-  assertEquals(isValidCutoutToken(null), false);
-  assertEquals(isValidCutoutToken([CutoutTokenType.ARRAY, {}]), false);
+  assertEquals(isValidToken(null), false);
+  assertEquals(isValidToken([TokenType.ARRAY, {}]), false);
   assertEquals(
-    isValidCutoutToken([
-      CutoutTokenType.STRING,
+    isValidToken([
+      TokenType.STRING,
       "string",
       "something extra",
     ]),
@@ -37,20 +38,20 @@ Deno.test(`${TEST_GROUP} - isValidCutoutToken`, () => {
 });
 
 Deno.test(`${TEST_GROUP} - tokenizeValue`, () => {
-  assertEquals(tokenizeValue(0), [CutoutTokenType.NUMBER, 0]);
-  assertEquals(tokenizeValue("value"), [CutoutTokenType.STRING, "value"]);
-  assertEquals(tokenizeValue(null), [CutoutTokenType.NULL, null]);
+  assertEquals(tokenizeValue(0), [TokenType.NUMBER, 0]);
+  assertEquals(tokenizeValue("value"), [TokenType.STRING, "value"]);
+  assertEquals(tokenizeValue(null), [TokenType.NULL, null]);
   assertEquals(tokenizeValue(undefined), [
-    CutoutTokenType.UNDEFINED,
+    TokenType.UNDEFINED,
     undefined,
   ]);
 
   const array: unknown[] = [];
-  assertEquals(tokenizeValue(array), [CutoutTokenType.ARRAY, array]);
+  assertEquals(tokenizeValue(array), [TokenType.ARRAY, array]);
 
   const object = {};
-  assertEquals(tokenizeValue(object), [CutoutTokenType.OBJECT, object]);
+  assertEquals(tokenizeValue(object), [TokenType.OBJECT, object]);
 
   const func = () => {};
-  assertEquals(tokenizeValue(func), [CutoutTokenType.FUNCTION, func]);
+  assertEquals(tokenizeValue(func), [TokenType.FUNCTION, func]);
 });

@@ -4,23 +4,17 @@
  * These type guards allows `@cutout/jsx` to guarantee robust runtime data type consistency.
  */
 
-import { TOKEN_LENGTH } from "./constants.ts";
-import type { CutoutGeneratorToken } from "./types.ts";
-import {
-  type CutoutOutputToken,
-  CutoutTokenType,
-  type ValidCutoutToken,
-} from "./types.ts";
+import { TOKEN_LENGTH, TokenType } from "./constants.ts";
+import type { GeneratorToken, OutputToken, ValidToken } from "./types.ts";
 
 /**
  * A TypeScript guard for vaild (not unknown) Cutout Tokens.
  *
  * @param {unknown} value
  */
-export const isValidCutoutToken = (
+export const isValidToken = (
   value: unknown,
-): value is ValidCutoutToken =>
-  isOutputCutoutToken(value) || isCutoutGeneratorToken(value);
+): value is ValidToken => isOutputToken(value) || isGeneratorToken(value);
 
 /**
  * A TypeScript guard for Cutout Tokens that can be returned
@@ -28,35 +22,35 @@ export const isValidCutoutToken = (
  *
  * @param {unknown} value
  */
-export const isOutputCutoutToken = (
+export const isOutputToken = (
   value: unknown,
-): value is CutoutOutputToken => {
+): value is OutputToken => {
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 
   switch (value[0]) {
-    case CutoutTokenType.NUMBER:
+    case TokenType.NUMBER:
       return typeof value[1] === "number" || typeof value[1] === "bigint";
-    case CutoutTokenType.ARRAY:
+    case TokenType.ARRAY:
       return Array.isArray(value[1]);
-    case CutoutTokenType.BOOLEAN:
+    case TokenType.BOOLEAN:
       return typeof value[1] === "boolean";
-    case CutoutTokenType.NULL:
+    case TokenType.NULL:
       return value[1] === null;
-    case CutoutTokenType.OBJECT:
+    case TokenType.OBJECT:
       return typeof value[1] === "object";
-    case CutoutTokenType.FUNCTION:
+    case TokenType.FUNCTION:
       return typeof value[1] === "function";
-    case CutoutTokenType.ATTRIBUTE:
-    case CutoutTokenType.ELEMENT_OPEN:
-    case CutoutTokenType.ELEMENT_CLOSE:
-    case CutoutTokenType.STRING:
+    case TokenType.ATTRIBUTE:
+    case TokenType.ELEMENT_OPEN:
+    case TokenType.ELEMENT_CLOSE:
+    case TokenType.STRING:
       return typeof value[1] === "string";
-    case CutoutTokenType.SYMBOL:
+    case TokenType.SYMBOL:
       return typeof value[1] === "symbol";
-    case CutoutTokenType.UNDEFINED:
+    case TokenType.UNDEFINED:
       return value[1] === undefined;
-    case CutoutTokenType.UNKNOWN:
+    case TokenType.UNKNOWN:
       return true;
   }
 
@@ -68,13 +62,13 @@ export const isOutputCutoutToken = (
  *
  * @param {unknown} value
  */
-export const isCutoutGeneratorToken = (
+export const isGeneratorToken = (
   value: unknown,
-): value is CutoutGeneratorToken => {
+): value is GeneratorToken => {
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 
-  return value[0] === CutoutTokenType.GENERATOR && isGenerator(value[1]);
+  return value[0] === TokenType.GENERATOR && isGenerator(value[1]);
 };
 
 const isGenerator = (value: unknown): value is Generator => {

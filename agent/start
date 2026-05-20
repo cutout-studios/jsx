@@ -1,0 +1,4 @@
+#!/bin/bash
+
+lms load qwen/qwen3.6-35b-a3b --context-length 65536
+lms chat --system-prompt "$(cat ./SYSTEM.md)"

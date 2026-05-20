@@ -6,6 +6,49 @@
  * special JSX cases.
  */
 
+/**
+ * The different "flavors" of tokens we track when processing JSX.
+ *
+ * @enum {number}
+ */
+export enum TokenType {
+  // -- System --
+  /** Something we haven't recognized yet. */
+  UNKNOWN = 0x00,
+  /** A token generator, used to stream JSX content progressively. */
+  GENERATOR = 0x01,
+
+  // --- JavaScript Primitives ---
+  /** The literal undefined value. */
+  UNDEFINED = 0x02,
+  /** The literal null value. */
+  NULL = 0x03,
+  /** A simple true/false boolean. */
+  BOOLEAN = 0x04,
+  /** A string value (text content). */
+  STRING = 0x05,
+  /** A number value (integer/float, bigint). */
+  NUMBER = 0x06,
+  /** A JavaScript symbol. */
+  SYMBOL = 0x07,
+
+  // --- Complex Types ---
+  /** An array of children or mixed content. */
+  ARRAY = 0x08,
+  /** A generic object (usually an attribute container). */
+  OBJECT = 0x09,
+  /** An element function, class, event listener, etc. */
+  FUNCTION = 0x0A,
+
+  // --- JSX Structure ---
+  /** Marks the start of a JSX tag (e.g., `<div`). */
+  ELEMENT_OPEN = 0x0B,
+  /** Marks the end of a JSX tag (e.g., `</div>`). */
+  ELEMENT_CLOSE = 0x0C,
+  /** A JSX element attribute (e.g. `class=`). */
+  ATTRIBUTE = 0x0D,
+}
+
 // ------------------------------------------------------------
 // Token Structure
 // ------------------------------------------------------------

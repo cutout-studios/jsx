@@ -4,18 +4,15 @@
  * "tokenizeValue" is an important utilty: it transforms arbitrary JavaScript data into tokens.
  */
 
-import {
-  type AnyFunction,
-  type CutoutOutputToken,
-  CutoutTokenType,
-  type UnknownCutoutToken,
-} from "./types.ts";
+import type { AnyFunction } from "@cutout/common";
+import { TokenType } from "./constants.ts";
+import type { OutputToken, UnknownToken } from "./types.ts";
 
 /**
  * Attempts to convert an arbitrary value into a `CutoutToken`.
  *
  * @param {unknown} value The unknown value to convert.
- * @returns {CutoutOutputToken | UnknownCutoutToken}
+ * @returns {OutputToken | UnknownToken}
  *
  * @example
  * ```ts
@@ -26,30 +23,30 @@ import {
  */
 export const tokenizeValue = (
   value: unknown,
-): CutoutOutputToken | UnknownCutoutToken => {
+): OutputToken | UnknownToken => {
   switch (typeof value) {
     case "bigint":
     case "number":
-      return [CutoutTokenType.NUMBER, value as number];
+      return [TokenType.NUMBER, value as number];
     case "string":
-      return [CutoutTokenType.STRING, value as string];
+      return [TokenType.STRING, value as string];
     case "boolean":
-      return [CutoutTokenType.BOOLEAN, value as boolean];
+      return [TokenType.BOOLEAN, value as boolean];
     case "symbol":
-      return [CutoutTokenType.SYMBOL, value as symbol];
+      return [TokenType.SYMBOL, value as symbol];
     case "undefined":
-      return [CutoutTokenType.UNDEFINED, undefined];
+      return [TokenType.UNDEFINED, undefined];
     case "function":
-      return [CutoutTokenType.FUNCTION, value as AnyFunction];
+      return [TokenType.FUNCTION, value as AnyFunction];
     case "object":
       if (value === null) {
-        return [CutoutTokenType.NULL, null];
+        return [TokenType.NULL, null];
       } else if (Array.isArray(value)) {
-        return [CutoutTokenType.ARRAY, value];
+        return [TokenType.ARRAY, value];
       }
 
-      return [CutoutTokenType.OBJECT, value];
+      return [TokenType.OBJECT, value];
     default:
-      return [CutoutTokenType.UNKNOWN, value];
+      return [TokenType.UNKNOWN, value];
   }
 };

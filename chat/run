@@ -1,3 +1,0 @@
-#!/bin/bash
-
-lms chat -s "$(cat ./chat/SYSTEM.md)"

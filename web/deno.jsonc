@@ -1,26 +1,24 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "jsr:@cutout/jsx",
-    "lib": [
-      "dom",
-      "deno.ns",
-      "deno.unstable"
-    ]
+    "jsxImportSource": "@cutout/jsx",
+    "lib": ["deno.ns", "deno.unstable"]
   },
   "exports": {
-    ".": "./core/module.ts",
-    // TODO: these are to be repurposed for the framework, explicitly.
-    "./format/dom/jsx-runtime": "./core/format/dom/runtime.d.ts",
-    "./format/html/jsx-runtime": "./core/format/html/runtime.d.ts",
-    "./errors": "./core/errors/module.ts",
-    "./worker": "./worker/module.ts"
+    "./browser": "./components/browser/module.ts",
+    "./components": "./components/module.ts",
+    "./errors": "./errors/module.ts",
+    "./format/dom/jsx-runtime": "./formats/dom/runtime.d.ts",
+    "./format/html/jsx-runtime": "./formats/html/runtime.d.ts",
+    "./formats": "./formats/module.ts"
   },
   "imports": {
     ".bench": "./.bench/module.ts",
+    "@cutout/web/polyfill": "./polyfill/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
+    "@std/media-types": "jsr:@std/media-types",
     "@std/path": "jsr:@std/path",
     "@std/testing": "jsr:@std/testing",
     // Deno's recommended headless browser "@b-fuze/deno-dom"
@@ -33,5 +31,8 @@
   },
   "license": "MIT",
   "name": "@cutout/web",
+  "tasks": {
+    "docs:lint": "deno doc --lint ./errors/module.ts ./formats/module.ts ./components/module.ts ./components/browser/module.ts"
+  },
   "version": "0.0.0-alpha.0"
 }
