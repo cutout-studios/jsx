@@ -3,9 +3,21 @@
 import { ELEMENT_TAG_PREFIX } from "../../constants.ts";
 import type { BaseRegistry } from "../../registry/base.ts";
 import type { Definition, ShapeValueFor } from "../../types.ts";
-import type { Element, ElementJSX, ElementJSXOptions } from "../../types.ts";
+import type { Element, ElementJSX, ElementOptions } from "../../types.ts";
 import { BaseElement } from "./base.tsx";
 
+/**
+ * Registers a WebComponent in the given browsers' component registry,
+ * returning a function that can be used to invoke that Element via JSX.
+ *
+ * Note that this is the browser-specific implementation of the Element factory,
+ * but it's also called in {@link ../../element.ts}
+ * in the serner by way of `@cutout/polyfill`.
+ *
+ * @param {string} tag The desired element tag for use in HTML. Must be unique.
+ * @param {ElementOptions} options Options for configuring the Element generation.
+ * @returns {ElementJSX} The generated Elements' JSX function.
+ */
 export function registerBrowserElement<
   D extends Definition,
 >(tag: string, {
@@ -18,7 +30,7 @@ export function registerBrowserElement<
   attributeChangedCallback,
   disconnectedCallback,
   stylesheet = [],
-}: ElementJSXOptions<D>): ElementJSX<D> {
+}: ElementOptions<D>): ElementJSX<D> {
   const systemTag = `${tagPrefix}-${tag}`;
   const observedAttributes = Object.keys(definition ?? []);
 

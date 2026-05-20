@@ -2,7 +2,7 @@ export type {
   Definition as CutoutDefinition,
   Element as CutoutElement,
   ElementJSX as CutoutElementJSX,
-  ElementJSXOptions as CutoutElementJSXOptions,
+  ElementOptions as CutoutElementJSXOptions,
   ElementRenderFunction as CutoutElementRenderFunction,
   Route as CutoutRoute,
   RouteOptions as CutoutRouteOptions,

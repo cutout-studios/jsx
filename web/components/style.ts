@@ -5,6 +5,13 @@ import { registerBrowserStyle } from "./browser/style.ts";
 import { registerRoute } from "./route.ts";
 import type { Route, Style, StyleOptions } from "./types.ts";
 
+/**
+ * Registers a Style in the given component registry.
+ *
+ * @param {string} rawCSS The text of the raw CSS rule to be registered. Must be unique after sanitization.
+ * @param {StyleOptions} options Options for configuring the Style generation.
+ * @returns {Style} A generated Style instance.
+ */
 export function registerStyle(
   rawCSS: string,
   { registry, root = Deno.cwd() }: StyleOptions,

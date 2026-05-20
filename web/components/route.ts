@@ -12,6 +12,13 @@ import {
 import { parseRawValue } from "./parse.ts";
 import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
 
+/**
+ * Registers a Route in the given component registry.
+ *
+ * @param {string} path The URLPattern string that will be matched with this route. Must be unique.
+ * @param {RouteOptions} options Options for configuring the specific route.
+ * @returns {Route} The registered Route object.
+ */
 export function registerRoute<const D extends Definition>(
   path: string,
   { registry, definition, render }: RouteOptions<D>,

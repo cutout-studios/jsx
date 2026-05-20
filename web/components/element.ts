@@ -6,17 +6,25 @@ import { registerRoute } from "./route.ts";
 import type {
   Definition,
   ElementJSX,
-  ElementJSXOptions,
+  ElementOptions as ElementOptions,
   Route,
 } from "./types.ts";
 
+/**
+ * Registers an Element in the given component registry,
+ * returning a function that can be used to invoke that Element via JSX.
+ *
+ * @param {string} tag The desired element tag for use in HTML. Must be unique.
+ * @param {ElementOptions} options Options for configuring the Element generation.
+ * @returns {ElementJSX} The generated Elements' JSX function.
+ */
 export function registerElement<D extends Definition>(
   tag: string,
   {
     registry,
     root = Deno.cwd(),
     ...options
-  }: ElementJSXOptions<D>,
+  }: ElementOptions<D>,
 ): ElementJSX<D> {
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;

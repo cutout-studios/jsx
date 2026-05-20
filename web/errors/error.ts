@@ -14,15 +14,17 @@ import type { _ErrorOptions as ErrorOptions } from "./types.ts";
 import type * as V8 from "./v8.ts";
 
 /**
- * A wrapper class for the native Error, that
- * enforces a proper error code and exposes some helpful
- * utilities.
+ * A wrapper class for the native Error that
+ * enforces a standard error code.
  */
 export class CutoutError extends Error {
+  // TODO(?): this should probably be a separate utility, semantically.
+  /** Expose the current call site information. V8 Only. */
   static getV8CallSite(error?: CutoutError): V8.CallSite | undefined {
     return this.#resolveCallSite(ERROR_STACK_FRAME_INDEX, error);
   }
 
+  /** Expose the call site information of the parent. V8 Only. */
   static getV8CallSiteParent(error?: CutoutError): V8.CallSite | undefined {
     return this.#resolveCallSite(ERROR_STACK_FRAME_PARENT_INDEX, error);
   }

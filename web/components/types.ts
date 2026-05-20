@@ -121,6 +121,25 @@ export type ElementRenderFunction<D extends Definition> = (
 ) => GeneratorToken;
 
 /**
+ * Options for registering an `Element` function by way of the `registerElement` factory function.
+ */
+export type ElementOptions<D extends Definition> =
+  & FactoryBaseOptions
+  & FactoryFileBasedRoutingOptions
+  & FactoryRenderableOptions<D, ElementRenderFunction<D>>
+  & {
+    tagPrefix?: string;
+    stylesheet?: Style[];
+    connectedCallback?: () => void;
+    attributeChangedCallback?: <K extends keyof D>(
+      name: K,
+      newValue: ShapeValueFor<D[K]>,
+      oldValue: ShapeValueFor<D[K]>,
+    ) => void;
+    disconnectedCallback?: () => void;
+  };
+
+/**
  * Separate from the `Element` class, the `ElementJSX` is a function representation
  * of a given class, usable in JSX form.
  *
@@ -140,25 +159,6 @@ export type ElementJSX<D extends Definition> = (
     shallow: boolean;
   },
 ) => GeneratorToken;
-
-/**
- * Options for generating an `ElementJSX` function by way of the `registerElement` factory function.
- */
-export type ElementJSXOptions<D extends Definition> =
-  & FactoryBaseOptions
-  & FactoryFileBasedRoutingOptions
-  & FactoryRenderableOptions<D, ElementRenderFunction<D>>
-  & {
-    tagPrefix?: string;
-    stylesheet?: Style[];
-    connectedCallback?: () => void;
-    attributeChangedCallback?: <K extends keyof D>(
-      name: K,
-      newValue: ShapeValueFor<D[K]>,
-      oldValue: ShapeValueFor<D[K]>,
-    ) => void;
-    disconnectedCallback?: () => void;
-  };
 
 /** @internal */
 type FactoryBaseOptions = {

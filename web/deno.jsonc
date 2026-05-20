@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@cutout/jsx"
+    "jsxImportSource": "@cutout/jsx",
+    "lib": ["deno.ns", "deno.unstable"]
   },
   "exports": {
     "./browser": "./components/browser/module.ts",

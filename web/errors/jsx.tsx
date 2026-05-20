@@ -4,12 +4,6 @@ import { relative } from "@std/path";
 import { CutoutError } from "./error.ts";
 
 /**
- * @internal
- * This is published! We don't need to re-export it!
- */
-type GeneratorToken = CutoutGeneratorToken;
-
-/**
  * Convert the provided CutoutError into a `@cutout/jsx` IR stream.
  *
  * @param {CutoutError} error The error to render.
@@ -60,3 +54,9 @@ function _defaultRender(error: CutoutError) {
     </div>
   );
 }
+
+/**
+ * @internal
+ * This is published! We don't need to re-export it!
+ */
+type GeneratorToken = CutoutGeneratorToken;
