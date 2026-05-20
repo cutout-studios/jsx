@@ -5,7 +5,10 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert",
-    "@std/testing": "jsr:@std/testing"
+    "@std/testing": "jsr:@std/testing",
+
+    // To ensure "common" stays private, we alias it here.
+    "@cutout/common": "../common/module.ts"
   },
   "tasks": {
     "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts"

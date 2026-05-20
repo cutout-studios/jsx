@@ -14,6 +14,10 @@
   },
   "imports": {
     ".bench": "./.bench/module.ts",
+
+    // To ensure "common" stays private, we alias it here.
+    "@cutout/common": "../common/module.ts",
+
     "@cutout/web/polyfill": "./polyfill/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
