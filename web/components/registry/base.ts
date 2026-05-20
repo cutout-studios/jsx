@@ -63,6 +63,6 @@ export class BaseRegistry implements Registry {
     return this.#reverseRegistry.get(entry) ?? null;
   }
 
-  // TODO(#): bucket by specificity. sort alphabetically in each bucket.
+  // TODO(@cutout/web/server): bucket by specificity. sort alphabetically in each bucket.
   // getRoutes(): Route[] {}
 }

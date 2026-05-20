@@ -9,7 +9,7 @@ import { registerStyle } from "./style.ts";
 
 const TEST_GROUP = "web/registry";
 
-// TODO(#): Server instance will generate its own registry, if one is not provided
+// TODO(@cutout/web/server): Server instance will generate its own registry, if one is not provided
 Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
   const testRegistry = new Registry();
   const redText = registerStyle(/* css */ `:host { color: red; }`, {

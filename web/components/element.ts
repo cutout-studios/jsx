@@ -35,7 +35,7 @@ export function registerElement<D extends Definition>(
     route = registerRoute(path, {
       registry,
       render: async () => {
-        // TODO(#): Dev vs. Prod environment
+        // TODO(#62): Dev vs. Prod environment
         const { outputFiles, errors } = await Deno.bundle({
           entrypoints: [path],
           format: "esm",
@@ -62,7 +62,6 @@ export function registerElement<D extends Definition>(
           throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN);
         }
 
-        // TODO(#): Javascript obfuscation
         return result;
       },
     });

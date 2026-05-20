@@ -18,7 +18,7 @@ import type * as V8 from "./v8.ts";
  * enforces a standard error code.
  */
 export class CutoutError extends Error {
-  // TODO(?): this should probably be a separate utility, semantically.
+  // TODO(#60): This implementation should be migrated to `@cutout/web/components`.
   /** Expose the current call site information. V8 Only. */
   static getV8CallSite(error?: CutoutError): V8.CallSite | undefined {
     return this.#resolveCallSite(ERROR_STACK_FRAME_INDEX, error);

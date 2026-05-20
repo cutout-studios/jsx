@@ -55,7 +55,7 @@ export type RouteRenderFunction<D extends Definition> = (
 /**
  * Options for generating a `Route` by way of the `registerRoute` factory function.
  *
- * TODO(#): parameter-based caching option via @std/cache (e.g. `sideEffects: false`)
+ * TODO(@cutout/web/server): Parameter-based caching option via @std/cache (e.g. `sideEffects: false`)
  */
 export type RouteOptions<D extends Definition> =
   & FactoryBaseOptions
