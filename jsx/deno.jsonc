@@ -6,7 +6,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing",
-    "@cutout/common": "../common"
+    "@cutout/common": "../common/module.ts"
   },
   "tasks": {
     "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts"
