@@ -2,13 +2,13 @@ import type {
   BOOLEAN as GLOBAL_BOOLEAN,
   EVENT as GLOBAL_FUNCTION,
   GLOBAL,
-} from "./attributes/global.ts";
+} from "./generated/attributes/global.ts";
 import type {
   BOOLEAN as LOCAL_BOOLEAN,
   LOCAL,
   NUMBER as LOCAL_NUMBER,
-} from "./attributes/local.ts";
-import type { ELEMENTS } from "./elements.ts";
+} from "./generated/attributes/local.ts";
+import type { ELEMENTS } from "./generated/elements.ts";
 
 export type Elements = (typeof ELEMENTS)[number];
 

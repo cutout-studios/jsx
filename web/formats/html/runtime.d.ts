@@ -6,7 +6,7 @@ import type {
   Elements,
   NumberAttributes,
   PickElementAttributes,
-} from "../constants/types.ts";
+} from "../constants/module.ts";
 
 declare namespace JSX {
   type IntrinsicElements =
