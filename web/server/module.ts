@@ -7,4 +7,4 @@ export class Server {
   constructor(registry: CutoutRegistry = new CutoutRegistry()) {
     this.registry = registry;
   }
-};
+}

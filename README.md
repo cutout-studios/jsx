@@ -16,7 +16,7 @@ possible to their respective targets.
 | Module                      | Description                                                      | Status                                                                  | Notes                                                                               |
 | --------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | [`@cutout/jsx`](./jsx/)     | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |                                                                                     |
-| [`@cutout/web`](./web/)     | Core library for authoring full-stack webapps.                   | _Partially Implemented_                                                 | **3 of 4** submodules drafted.                                                      |
+| [`@cutout/web`](./web/)     | Core library for authoring full-stack webapps.                   | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/web) |                                                                                     |
 | [`@cutout/tauri`](./tauri/) | Embed your `@cutout/web` app in a cross-platform Tauri shell!    | _Researching_                                                           | Seems viable _so_ far...                                                            |
 | [`@cutout/agent`](./agent/) | QDT-compliant local LLM service.                                 | _Partially Implemented_                                                 | **Shim**: run with `deno task --cwd=agent start`, but it doesn't do much currently. |
 
@@ -27,8 +27,8 @@ studio focused on building experiences for personal growth.
 
 ## Contributing
 
-**Interested in contributing?** See our [Contribution Guide](./CONTRIBUTING.md).
+**Interested in contributing?** See our [Contribution Guide](https://github.com/cutout-studios/toolbox/blob/main/CONTRIBUTING.md).
 
 ---
 
-[Copyright 2026, Cutout Studios](./LICENSE)
+[Copyright 2026, Cutout Studios](https://github.com/cutout-studios/toolbox/blob/main/LICENSE)

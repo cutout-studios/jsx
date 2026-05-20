@@ -11,7 +11,7 @@
 ### **Unexpected Behavior**
 
 If you find a bug, please
-[open an issue](https://github.com/cutout-studios/jsx/issues)! Include as much
+[open an issue](https://github.com/cutout-studios/toolbox/issues)! Include as much
 detail as possible in the form. Screenshots, logs, and video captures are super
 helpful!
 
@@ -22,7 +22,7 @@ helpful!
 ### **Feature Requests**
 
 If you have an idea for a new feature or an improvement to an existing one,
-please [open an issue](https://github.com/cutout-studios/jsx/issues) to discuss
+please [open an issue](https://github.com/cutout-studios/toolbox/issues) to discuss
 it!
 
 ## **Submitting Code**

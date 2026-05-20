@@ -16,7 +16,7 @@
     // To ensure "internal" stays private, we alias it here.
     "@cutout/internal": "../internal/module.ts",
     "@cutout/internal/polyfill": "../internal/polyfill.ts",
-  
+
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/http/route": "jsr:@std/http/unstable-route",
