@@ -4,6 +4,12 @@ import { relative } from "@std/path";
 import { CutoutError } from "./error.ts";
 
 /**
+ * @internal
+ * This is published! We don't need to re-export it!
+ */
+type GeneratorToken = CutoutGeneratorToken;
+
+/**
  * Convert the provided CutoutError into a `@cutout/jsx` IR stream.
  *
  * @param {CutoutError} error The error to render.
@@ -13,8 +19,8 @@ import { CutoutError } from "./error.ts";
  */
 export function toJSX(
   error: CutoutError,
-  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
-): CutoutGeneratorToken {
+  render: (error: CutoutError) => GeneratorToken = _defaultRender,
+): GeneratorToken {
   return render(error);
 }
 
@@ -28,7 +34,7 @@ export function toJSX(
  */
 export function toHTML(
   error: CutoutError,
-  render: (error: CutoutError) => CutoutGeneratorToken = _defaultRender,
+  render: (error: CutoutError) => GeneratorToken = _defaultRender,
 ): string {
   return html(toJSX(error, render));
 }

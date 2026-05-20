@@ -2,8 +2,8 @@ import "@cutout/web/polyfill";
 
 import { assert } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
-import { BaseRegistry as Registry } from "../base.ts";
 import { registerElement } from "./element.ts";
+import { BaseRegistry as Registry } from "./registry/base.ts";
 import { registerRoute } from "./route.ts";
 import { registerStyle } from "./style.ts";
 

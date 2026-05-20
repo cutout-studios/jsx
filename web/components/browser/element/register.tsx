@@ -1,20 +1,13 @@
 /** @jsxImportSourceTypes @cutout/web/format/dom */
 
-import type { BaseRegistry } from "../../../base.ts";
-import { ELEMENT_TAG_PREFIX } from "../../../constants.ts";
-import type {
-  ElementEntry,
-  EntryDefinition,
-  ShapeValueFor,
-} from "../../../types.ts";
-import type {
-  ElementJSXFunction,
-  ElementJSXFunctionFactoryOptions,
-} from "../../types.ts";
+import { ELEMENT_TAG_PREFIX } from "../../constants.ts";
+import type { BaseRegistry } from "../../registry/base.ts";
+import type { Definition, ShapeValueFor } from "../../types.ts";
+import type { Element, ElementJSX, ElementJSXOptions } from "../../types.ts";
 import { BaseElement } from "./base.tsx";
 
 export function registerBrowserElement<
-  D extends EntryDefinition,
+  D extends Definition,
 >(tag: string, {
   definition,
   tagPrefix = ELEMENT_TAG_PREFIX,
@@ -25,13 +18,13 @@ export function registerBrowserElement<
   attributeChangedCallback,
   disconnectedCallback,
   stylesheet = [],
-}: ElementJSXFunctionFactoryOptions<D>): ElementJSXFunction<D> {
+}: ElementJSXOptions<D>): ElementJSX<D> {
   const systemTag = `${tagPrefix}-${tag}`;
   const observedAttributes = Object.keys(definition ?? []);
 
   registry.define(
     systemTag,
-    class extends BaseElement<D> implements ElementEntry<D> {
+    class extends BaseElement<D> implements Element<D> {
       static override observedAttributes = observedAttributes;
 
       override readonly observedAttributesMirror: string[] = observedAttributes;

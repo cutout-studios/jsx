@@ -4,22 +4,22 @@ import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { dom } from "@cutout/web/formats";
 
-import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../../constants.ts";
-import { parseRawValue } from "../../../parse.ts";
+import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../constants.ts";
+import { parseRawValue } from "../../parse.ts";
 import type {
-  EntryDefinition,
+  Definition,
   ShapeFor,
   ShapeValueFor,
-  StyleEntry,
+  Style,
   ValidDefinitionConstructor,
-} from "../../../types.ts";
+} from "../../types.ts";
 
-export class BaseElement<D extends EntryDefinition> extends HTMLElement {
+export class BaseElement<D extends Definition> extends HTMLElement {
   static readonly observedAttributes: string[];
 
   readonly observedAttributesMirror: string[] = BaseElement.observedAttributes;
   readonly definition?: D;
-  readonly stylesheet?: StyleEntry[] = [];
+  readonly stylesheet?: Style[] = [];
   readonly render?: (attributes: ShapeFor<D>) => CutoutGeneratorToken = () => (
     <slot></slot>
   );

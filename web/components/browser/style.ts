@@ -1,11 +1,10 @@
-import type { StyleEntry } from "../../types.ts";
-import type { StyleEntryFactory } from "../types.ts";
+import type { Style, StyleFactory } from "../types.ts";
 
-export const registerBrowserStyle: StyleEntryFactory = (
+export const registerBrowserStyle: StyleFactory = (
   cssText,
   { route, registry },
-) => {
-  const result = class extends CSSRule implements StyleEntry {
+): Style => {
+  const result = class extends CSSRule implements Style {
     name = cssText;
     route = route;
     constructor() {

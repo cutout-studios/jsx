@@ -7,21 +7,20 @@ import {
 } from "@cutout/jsx/tokens";
 import type { Formatter } from "../types.ts";
 
-type DOMFormatOptions = {
-  event?: AddEventListenerOptions;
-};
-
 /**
  * A formatter that creates a collection of DOM element objects, for
  * client-side rendering.
  *
  * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
+ * @param {{ event?: AddEventListenerOptions }} options Options for customizing the output.
  * @returns {HTMLCollection} The created DOM element objects.
  */
-export const dom: Formatter<HTMLCollection, DOMFormatOptions> = (
+export const dom: Formatter<HTMLCollection, {
+  event?: AddEventListenerOptions;
+}> = (
   [, generator],
   options,
-) => {
+): HTMLCollection => {
   const state: _FormatState = {
     root: globalThis.document.createDocumentFragment(),
     stack: [],

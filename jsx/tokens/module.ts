@@ -20,4 +20,3 @@ export type {
   SymbolToken as CutoutSymbolToken,
   UndefinedToken as CutoutUndefinedToken,
 } from "./types.ts";
-export type { AnyFunction } from "@cutout/common";

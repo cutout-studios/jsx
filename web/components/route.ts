@@ -1,26 +1,24 @@
+import { CutoutError } from "@cutout/web/errors";
 import { html } from "@cutout/web/formats";
-import type { Route } from "@std/http/route";
+import type { Route as StandardRoute } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
-import { CutoutError } from "../../errors/error.ts";
 import {
   ROUTE_CONTENT_TYPE_DEFAULT,
   ROUTE_CSP_HEADER_DEFAULT,
   ROUTE_FILE_EXTENSION_DEFAULT,
   SupportedHTTPHeaders,
-} from "../constants.ts";
-import { parseRawValue } from "../parse.ts";
-import type { ShapeFor } from "../types.ts";
-import type { EntryDefinition, RouteEntry } from "../types.ts";
-import type { RouteEntryFactoryOptions } from "./types.ts";
+} from "./constants.ts";
+import { parseRawValue } from "./parse.ts";
+import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
 
-export function registerRoute<const D extends EntryDefinition>(
+export function registerRoute<const D extends Definition>(
   path: string,
-  { registry, definition, render }: RouteEntryFactoryOptions<D>,
-): RouteEntry<D> {
+  { registry, definition, render }: RouteOptions<D>,
+): Route<D> {
   const sanitizedPath = _sanitizePath(path);
 
-  const result = class implements Route {
+  const result = class implements StandardRoute {
     name = sanitizedPath;
     pattern = new URLPattern({ pathname: sanitizedPath });
     handler = async (

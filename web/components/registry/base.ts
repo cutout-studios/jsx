@@ -1,32 +1,32 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
-import { DUPLICATE_ENTRY_GUIDANCE } from "./constants.ts";
+import { DUPLICATE_ENTRY_GUIDANCE } from "../constants.ts";
+import type { Definition } from "../types.ts";
 import { isElementEntryConstructor } from "./guards.ts";
 import type {
+  ComponentProxyConstructor,
   ElementConstructor,
-  EntryDefinition,
-  EntryProxyConstructor,
-  Registry as RegistryInterface,
-  RouteProxyContructor,
+  Registry,
+  RouteProxyConstructor,
   StyleProxyConstructor,
 } from "./types.ts";
 
-export class BaseRegistry implements RegistryInterface {
-  #internalRegistry = new Map<string, EntryProxyConstructor>();
-  #reverseRegistry = new WeakMap<EntryProxyConstructor, string>();
+export class BaseRegistry implements Registry {
+  #internalRegistry = new Map<string, ComponentProxyConstructor>();
+  #reverseRegistry = new WeakMap<ComponentProxyConstructor, string>();
   #baseRegistry = globalThis.customElements;
 
   define(name: string, constructor: StyleProxyConstructor): void;
-  define<D extends EntryDefinition>(
+  define<D extends Definition>(
     name: string,
     constructor: ElementConstructor<D>,
   ): void;
-  define<D extends EntryDefinition>(
+  define<D extends Definition>(
     name: string,
-    constructor: RouteProxyContructor<D>,
+    constructor: RouteProxyConstructor<D>,
   ): void;
   define(
     name: string,
-    constructor: EntryProxyConstructor,
+    constructor: ComponentProxyConstructor,
   ) {
     if (this.#internalRegistry.has(name)) {
       throw new CutoutError(CutoutErrorCode.OPERATION_READONLY, {
@@ -43,13 +43,13 @@ export class BaseRegistry implements RegistryInterface {
     }
   }
 
-  get<D extends EntryDefinition>(
+  get<D extends Definition>(
     name: string,
-  ): EntryProxyConstructor<D> | undefined {
-    return this.#internalRegistry.get(name) as EntryProxyConstructor<D>;
+  ): ComponentProxyConstructor<D> | undefined {
+    return this.#internalRegistry.get(name) as ComponentProxyConstructor<D>;
   }
 
-  getName(entry: EntryProxyConstructor): string | null {
+  getName(entry: ComponentProxyConstructor): string | null {
     return this.#reverseRegistry.get(entry) ?? null;
   }
 

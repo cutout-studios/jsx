@@ -1,21 +1,20 @@
 import type { EmptyShape } from "@cutout/common";
 import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import type { RouteEntry } from "../types.ts";
 import { registerBrowserStyle } from "./browser/style.ts";
 import { registerRoute } from "./route.ts";
-import type { StyleEntryFactory } from "./types.ts";
+import type { Route, Style, StyleOptions } from "./types.ts";
 
-export const registerStyle: StyleEntryFactory = (
+export function registerStyle(
   rawCSS: string,
-  { registry, root = Deno.cwd() },
-) => {
+  { registry, root = Deno.cwd() }: StyleOptions,
+): Style {
   const cleanCSS = _cleanRawCSSRule(rawCSS);
   const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  let route: RouteEntry<EmptyShape> | undefined;
+  let route: Route<EmptyShape> | undefined;
   if (path) {
     route = registerRoute(path.replace(/\.tsx?$/, ".css"), {
       registry,
@@ -24,7 +23,7 @@ export const registerStyle: StyleEntryFactory = (
   }
 
   return registerBrowserStyle(cleanCSS, { route, registry });
-};
+}
 
 // TODO(#): better CSS parsing - this currently only works in limited cases
 const STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX =

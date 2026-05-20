@@ -1,8 +1,8 @@
-import type { ElementConstructor, EntryDefinition } from "./types.ts";
+import type { ComponentDefinition, ElementConstructor } from "./types.ts";
 
 export function isElementEntryConstructor(
   value: unknown,
-): value is ElementConstructor<EntryDefinition> {
+): value is ElementConstructor<ComponentDefinition> {
   if (typeof value !== "function") {
     return false;
   }
