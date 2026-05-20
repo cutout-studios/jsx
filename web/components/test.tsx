@@ -1,4 +1,4 @@
-import "@cutout/web/polyfill";
+import "@cutout/internal/polyfill";
 
 import { assert, assertEquals } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
@@ -40,7 +40,6 @@ Deno.test(`${TEST_GROUP} - V8CallSite.getParent`, () => {
   test1();
 });
 
-// TODO(@cutout/web/server): Server instance will generate its own registry, if one is not provided
 Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
   const testRegistry = new Registry();
   const redText = registerStyle(/* css */ `:host { color: red; }`, {

@@ -38,13 +38,13 @@ export function registerElement<D extends Definition>(
     route = registerRoute(path, {
       registry,
       render: async () => {
-        // TODO(#62): Dev vs. Prod environment
+        // TODO(#62): Prod environment
         const { outputFiles, errors } = await Deno.bundle({
           entrypoints: [path],
           format: "esm",
           inlineImports: false,
-          minify: true,
-          keepNames: false,
+          minify: false,
+          keepNames: true,
           sourcemap: "linked",
           codeSplitting: true,
           packages: "external",

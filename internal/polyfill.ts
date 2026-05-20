@@ -1,4 +1,4 @@
-import type { AnyShape } from "@cutout/internal";
+import type { AnyShape } from "./module.ts";
 
 export class HTMLElement {}
 export class CSSRule {}

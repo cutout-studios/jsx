@@ -1,4 +1,7 @@
 {
   "name": "@cutout/internal",
-  "exports": "./module.ts"
+  "exports": {
+    ".": "./module.ts",
+    "./polyfill": "./polyfill.ts"
+  }
 }

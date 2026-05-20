@@ -54,14 +54,14 @@ export function registerRoute<const D extends Definition>(
         responseBody = renderResult;
       } else {
         switch (this.#contentType) {
-          case "text/html": // TODO(@cutout/web/server): Inject importmaps, etc.
+          case "text/html": // TODO(@cutout/web/server): Inject importmaps by hash, etc.
           default:
             responseBody = html(renderResult);
         }
       }
 
       return new Response(responseBody, {
-        // TODO(@cutout/web/server): Construct request-specific headers: CORS, CSP & Session Token
+        // TODO(#62): In production, construct request-specific headers: CORS, CSP & Session Token
         "headers": this.#defaultHeaders,
       });
     };
