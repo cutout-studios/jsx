@@ -1,12 +1,14 @@
 import type { EmptyShape } from "@cutout/internal";
-import { CutoutError } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserStyle } from "./browser/style.ts";
+import { V8CallSite } from "./callsite.ts";
 import { registerRoute } from "./route.ts";
 import type { Route, Style, StyleOptions } from "./types.ts";
 
 /**
  * Registers a Style in the given component registry.
+ *
+ * Also registers a route to the styles' file in V8 environments.
  *
  * @param {string} rawCSS The text of the raw CSS rule to be registered. Must be unique after sanitization.
  * @param {StyleOptions} options Options for configuring the Style generation.
@@ -17,7 +19,7 @@ export function registerStyle(
   { registry, root = Deno.cwd() }: StyleOptions,
 ): Style {
   const cleanCSS = _cleanRawCSSRule(rawCSS);
-  const callSiteFilePath = CutoutError.getV8CallSiteParent()?.getFileName() ??
+  const callSiteFilePath = V8CallSite.getParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 

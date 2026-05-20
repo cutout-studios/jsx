@@ -13,17 +13,6 @@ export enum ErrorCode {
   HTTP_NOT_IMPLEMENTED = 501,
 }
 
-export const ERROR_STACK_FRAME_INDEX = 0;
-export const ERROR_STACK_FRAME_PARENT_INDEX = 1;
-export const ERROR_STACK_OVERWRITTEN_MESSAGE =
-  "`Error.prepareStackTrace` overwritten by `@cutout/web`.";
-
-export const ERROR_CONTEXT_MAX_SIZE = 100;
-export const ERROR_CONTEXT_TRUNCATION_CHARACTER = "…";
-export const ERROR_CONTEXT_MISSING_MESSAGE = "None.";
-
-export const ERROR_GUIDANCE_MISSING_MESSAGE = "Not provided.";
-
 const MODULE_NAME = "`@cutout/web`";
 
 export const ERROR_CODE_MESSAGES = {
@@ -45,3 +34,9 @@ export const ERROR_CODE_MESSAGES = {
   [ErrorCode.HTTP_NOT_IMPLEMENTED]:
     `${MODULE_NAME} the requested HTTP resource is not implemented.`,
 };
+
+export const ERROR_CONTEXT_MAX_SIZE = 100;
+export const ERROR_CONTEXT_TRUNCATION_CHARACTER = "…";
+export const ERROR_CONTEXT_MISSING_MESSAGE = "None.";
+
+export const ERROR_GUIDANCE_MISSING_MESSAGE = "Not provided.";
