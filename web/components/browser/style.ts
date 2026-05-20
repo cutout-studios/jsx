@@ -1,11 +1,11 @@
-import type { Style, StyleFactory } from "../types.ts";
+import type { Style, StyleOptions } from "../types.ts";
 
-export const registerBrowserStyle: StyleFactory = (
-  cssText,
-  { route, registry },
-): Style => {
+export function registerBrowserStyle(
+  cssText: string,
+  { route, registry }: StyleOptions,
+): Style {
   const result = class extends CSSRule implements Style {
-    name = cssText;
+    text = cssText;
     route = route;
     constructor() {
       super();
@@ -16,4 +16,4 @@ export const registerBrowserStyle: StyleFactory = (
   registry?.define(cssText, result);
 
   return Reflect.construct(result, []);
-};
+}

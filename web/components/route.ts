@@ -19,7 +19,7 @@ export function registerRoute<const D extends Definition>(
   const sanitizedPath = _sanitizePath(path);
 
   const result = class implements StandardRoute {
-    name = sanitizedPath;
+    path = sanitizedPath;
     pattern = new URLPattern({ pathname: sanitizedPath });
     handler = async (
       request: Request,

@@ -32,7 +32,7 @@ export function registerBrowserElement<
       override readonly render = render;
       override readonly stylesheet = stylesheet;
       route = route;
-      name = systemTag;
+      tag = systemTag;
 
       override connectedCallback() {
         connectedCallback?.();
