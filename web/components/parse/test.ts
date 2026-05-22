@@ -5,12 +5,13 @@ const TEST_GROUP = "web/components/parse";
 
 Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
   const result = parseCSSRule(
-    /* css */`
+    /* css */ `
     :host {
       all: initial;
       font-family: system-ui;
     }
-  `);
+  `,
+  );
 
   assertArrayIncludes(result?.selectors ?? [], [":host"]);
   assert(result?.properties.get("all"), "initial");
@@ -19,7 +20,7 @@ Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, given messy CSS`, () => {
   const result = parseCSSRule(
-    /* css */`
+    /* css */ `
       :host {
         all: unset;
         font-family: system;
@@ -27,7 +28,7 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, given messy CSS`, () => {
         font-family:;
         font-family: system-ui;
       }
-    `
+    `,
   );
 
   assertArrayIncludes(result?.selectors ?? [], [":host"]);
@@ -46,7 +47,7 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, given invalid CSS`, () => {
         font-family: system-ui;
       }
       typo
-    `
+    `,
   );
 
   assertEquals(result1, undefined);
@@ -54,33 +55,32 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, given invalid CSS`, () => {
   const result2 = parseCSSRule(`:host,,, {}`);
 
   assertEquals(result2, undefined);
-
 });
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, content`, () => {
   const result1 = parseCSSRule(
-    /* css */`
+    /* css */ `
       :host {
         content: "{}";
       }
-    `
+    `,
   );
 
   assert(result1?.properties.get("content"), '"{}"');
 
   const result2 = parseCSSRule(
-    /* css */`
+    /* css */ `
       :host {
         content: "all: initial;";
       }
-    `
+    `,
   );
 
   assert(result2?.properties.get("content"), '"all: initial;"');
 });
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, no whitespace`, () => {
-  const result = parseCSSRule(/* css */`:host{all:initial;}`);
+  const result = parseCSSRule(/* css */ `:host{all:initial;}`);
 
   assertArrayIncludes(result?.selectors ?? [], [":host"]);
   assertArrayIncludes(Array.from(result?.properties.keys() ?? []), ["all"]);
@@ -88,11 +88,11 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, no whitespace`, () => {
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, semantic whitespace`, () => {
   const result = parseCSSRule(
-    /* css */`
+    /* css */ `
       :host {
         border: 1px solid black;
       }
-    `
+    `,
   );
 
   assertEquals(result?.properties.get("border"), "1px solid black");
@@ -100,14 +100,14 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, semantic whitespace`, () => {
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, sorting`, () => {
   const result = parseCSSRule(
-    /* css */`
+    /* css */ `
       span.red, :host, :host * > :first-child {
         font-family: system-ui;
         color: red;
         text-overflow: ellipsis;
         text-align: center;
       }
-    `
+    `,
   );
 
   assertEquals(result?.selectors[0], ":host");

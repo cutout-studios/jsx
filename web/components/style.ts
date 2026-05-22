@@ -41,7 +41,7 @@ function _cleanRawCSSRule(rawCSSRule: string): string {
 
   if (!result) {
     throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
-      context: rawCSSRule
+      context: rawCSSRule,
     });
   }
 
