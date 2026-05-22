@@ -1,7 +1,9 @@
 import type { EmptyShape } from "@cutout/internal";
+import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserStyle } from "./browser/style.ts";
 import { V8CallSite } from "./callsite.ts";
+import { parseCSSRule } from "./parse/cssRule.ts";
 import { registerRoute } from "./route.ts";
 import type { Route, Style, StyleOptions } from "./types.ts";
 
@@ -34,46 +36,17 @@ export function registerStyle(
   return registerBrowserStyle(cleanCSS, { route, registry });
 }
 
-// TODO(#61): Better CSS parsing - this currently only works in limited cases
-const STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX =
-  /[^\s"']+|\"([^\"]*)\"|'([^']*)'/g;
-
 function _cleanRawCSSRule(rawCSSRule: string): string {
-  const tokens =
-    rawCSSRule.match(STRIP_WHITESPACE_EXCEPT_BETWEEN_QUOTES_REGEX) ??
-      [];
-  const styleProperties = new Map<string, string>();
+  const result = parseCSSRule(rawCSSRule);
 
-  let selectorText = "", propertyText = "", currentProperty: string | undefined;
-  for (const token of tokens) {
-    if (token === "{") {
-      continue;
-    }
-
-    if (token === "}") {
-      break;
-    }
-
-    if (token.endsWith(":")) {
-      currentProperty = token;
-      continue;
-    }
-
-    if (token.endsWith(";")) {
-      if (currentProperty) {
-        styleProperties.set(currentProperty, token);
-      }
-      currentProperty = undefined;
-      continue;
-    }
-
-    selectorText += token;
+  if (!result) {
+    throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
+      context: rawCSSRule
+    });
   }
 
-  const sortedPropertyKeys = [...styleProperties.keys()].sort();
-  for (const key of sortedPropertyKeys) {
-    propertyText += key + styleProperties.get(key);
-  }
-
-  return `${selectorText}{${propertyText}}`;
+  return `${result.selectors.join()}{${
+    result.properties.entries().reduce((string, [key, value]) =>
+      `${string}${key}:${value};`, "")
+  }}`;
 }

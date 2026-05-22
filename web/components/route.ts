@@ -9,7 +9,7 @@ import {
   ROUTE_FILE_EXTENSION_DEFAULT,
   SupportedHTTPHeaders,
 } from "./constants.ts";
-import { parseRawValue } from "./parse.ts";
+import { parseRawValue } from "./parse/rawValue.ts";
 import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
 
 /**

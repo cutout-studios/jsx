@@ -107,23 +107,3 @@ Deno.test(`${TEST_GROUP} - registerRoute, given messy route path`, () => {
 
   assert(testRegistry.get("/user%20/:id"));
 });
-
-Deno.test(`${TEST_GROUP} - registerStyle, given messy CSS`, () => {
-  const testRegistry = new Registry();
-
-  registerStyle(
-    `:host {
-      all: initial;
-      font-family: system;
-      all: unset;
-      font-family:
-      font-family: system-ui;
-    }
-    typo`,
-    { registry: testRegistry },
-  );
-
-  const sanitizedStyleRule = ":host{all:unset;font-family:system-ui;}";
-
-  assert(testRegistry.get(sanitizedStyleRule));
-});

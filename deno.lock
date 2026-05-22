@@ -4,6 +4,7 @@
     "jsr:@ayk/lint-import-order@*": "0.1.0",
     "jsr:@std/assert@*": "1.0.19",
     "jsr:@std/assert@^1.0.17": "1.0.19",
+    "jsr:@std/data-structures@*": "1.0.10",
     "jsr:@std/fs@^1.0.22": "1.0.23",
     "jsr:@std/http@*": "1.0.25",
     "jsr:@std/internal@^1.0.12": "1.0.12",
@@ -24,6 +25,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/data-structures@1.0.10": {
+      "integrity": "f574f86b0e07c69b9edc555fcc814b57d29258bad39fd5a34ba8a80ecf033cfe"
     },
     "@std/fs@1.0.23": {
       "integrity": "3ecbae4ce4fee03b180fa710caff36bb5adb66631c46a6460aaad49515565a37",
@@ -120,6 +124,7 @@
       "web": {
         "dependencies": [
           "jsr:@std/assert@*",
+          "jsr:@std/data-structures@*",
           "jsr:@std/fmt@*",
           "jsr:@std/http@*",
           "jsr:@std/media-types@*",
