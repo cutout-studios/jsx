@@ -6,8 +6,8 @@ type CSSParseResult = {
 };
 
 export function parseCSSRule(cssText: string): CSSParseResult | undefined {
-  const ruleStructure = cssText.trim().match(
-    /^(?<selectorText>.+){(?<propertyText>.+)}$/,
+  const ruleStructure = cssText.match(
+    /(?<selectorText>[^]+){(?<propertyText>[^]+)}/,
   );
 
   if (!ruleStructure || !ruleStructure.groups) {
@@ -25,33 +25,33 @@ export function parseCSSRule(cssText: string): CSSParseResult | undefined {
   const selectors = new BinaryHeap<string>((selector1, selector2) =>
     selector1.localeCompare(selector2)
   );
-  const selectorRegex = /\S+,\s*/;
-  let currentSelector = selectorRegex.exec(selectorText);
-  while (currentSelector) {
-    // NOTE: classes are case-sensitive
-    selectors.push(currentSelector[0].trim());
 
-    currentSelector = selectorRegex.exec(selectorText);
+  // NOTE: the global 'g' flag is required to avoid infinite loops, here.
+  const selectorRegex = /\s*([^,]+),?/g;
+  let [, currentSelector] = selectorRegex.exec(selectorText) ?? [];
+  while (typeof currentSelector !== "undefined") {
+    // NOTE: selectors are case-sensitive
+    // TODO: avoid the `trim` call
+    selectors.push(currentSelector.trim());
+
+    [, currentSelector] = selectorRegex.exec(selectorText) ?? [];
   }
 
-  const properties = new BinaryHeap<[string, string]>(([key1, key2]) =>
+  const properties = new BinaryHeap<[string, string]>(([key1], [key2]) => 
     key1.localeCompare(key2)
   );
-  const propertyRegex = /(?<propertyName>.*):(?<propertyValue>.*);/;
+  const propertyRegex = /\s*(?<propertyName>.*):\s*(?<propertyValue>.*);/g;
   let currentPropertySet = propertyRegex.exec(propertyText);
   while (currentPropertySet) {
-    if (
-      !currentPropertySet.groups?.propertyName ||
-      !currentPropertySet.groups?.propertyValue
-    ) {
+    if (!currentPropertySet.groups) {
       return;
     }
 
     const { propertyName, propertyValue } = currentPropertySet.groups;
 
-    properties.push([propertyName.trim().toLowerCase(), propertyValue.trim()]);
+    properties.push([propertyName.toLowerCase(), propertyValue]);
 
-    currentPropertySet = propertyRegex.exec(selectorText);
+    currentPropertySet = propertyRegex.exec(propertyText);
   }
 
   return {
