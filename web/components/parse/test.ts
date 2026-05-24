@@ -43,7 +43,6 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, given invalid CSS`, () => {
         all: unset;
         font-family: system;
         all: initial;
-        font-family:
         font-family: system-ui;
       }
       typo
@@ -52,9 +51,20 @@ Deno.test(`${TEST_GROUP} - parseCSSRule, given invalid CSS`, () => {
 
   assertEquals(result1, undefined);
 
-  const result2 = parseCSSRule(`:host,,, {}`);
+  const result2 = parseCSSRule(
+    `
+      :host {
+        all:
+        all: initial;
+      }
+    `,
+  );
 
   assertEquals(result2, undefined);
+
+  const result3 = parseCSSRule(`:host,,, {}`);
+
+  assertEquals(result3, undefined);
 });
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, content`, () => {
