@@ -6,60 +6,73 @@ type CSSParseResult = {
 };
 
 const INVALID = undefined;
-const SPECIAL_CHARACTERS = `(){},:;'"`;
+const SELECTOR_TERMINATORS = `,{`;
+const PROPERTY_TERMINATORS = `:;}`;
+const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
 export function parseCSSRule(cssText: string): CSSParseResult | undefined {
-  const state = _createCSSParseState(cssText);
+  const parse = _createCSSParseState();
 
-  while (state.next()) {
-    if (
-      state.phase === "selectors" && state.hasSelectorTerminator
+  try {
+    for (
+      const match of _regexMatches(
+        `[^${TERMINATORS}]*[${TERMINATORS}]`,
+        cssText,
+      )
     ) {
-      state.append(state.tokenFragment);
-      state.commitSelector();
-      continue;
+      parse.index += match.length;
+
+      if (
+        parse.phase === "selectors" && _hasSelectorTerminator(match) &&
+        !parse.inside.parenthesis
+      ) {
+        parse.appendValue(_stripTerminator(match));
+        parse.commitSelector();
+
+        if (match.endsWith("{")) {
+          parse.phase = "properties";
+        }
+
+        continue;
+      }
+
+      if (
+        parse.phase === "properties" && !parse.inside.any &&
+        match.endsWith(":")
+      ) {
+        parse.setKey(_stripTerminator(match));
+        continue;
+      }
+
+      if (
+        parse.phase === "properties" && !parse.inside.any &&
+        match.endsWith(";")
+      ) {
+        parse.appendValue(_stripTerminator(match));
+        parse.commitProperty();
+        continue;
+      }
+
+      parse.inside.update(_getLastChar(match));
+      parse.appendValue(match.trim());
     }
-
-    if (
-      state.phase === "properties" && !state.inside.any &&
-      state.token.endsWith(":")
-    ) {
-      state.appendKey(state.tokenFragment);
-    } else if (
-      state.phase === "properties" && !state.inside.any &&
-      state.token.endsWith(";")
-    ) {
-      state.append(state.tokenFragment);
-      state.commitProperty();
-      continue;
-    }
-
-    state.append(state.token);
+  } catch {
+    return INVALID;
   }
 
   // There's leftover text that wasn't parsed
-  if (state.index < cssText.trim().length) return INVALID;
+  if (parse.index < cssText.trim().length) return INVALID;
 
-  return state.result;
+  return parse.result;
 }
 
-const _createCSSParseState = (cssText: string) => ({
+const _createCSSParseState = () => ({
   phase: "selectors",
   index: 0,
-  token: "",
-  key: "",
-  value: "",
-  get hasSelectorTerminator() {
-    return this.token.endsWith("{") || (
-      this.token.endsWith(",") && !this.inside.parenthesis
-    );
+  current: {
+    key: "",
+    value: "",
   },
-  selectors: new BinaryHeap<string>((selector1, selector2) =>
-    selector1.localeCompare(selector2)
-  ),
-  properties: new BinaryHeap<[string, string]>(([key1], [key2]) =>
-    key1.localeCompare(key2)
-  ),
   inside: {
     singleQuote: false,
     doubleQuote: false,
@@ -67,74 +80,86 @@ const _createCSSParseState = (cssText: string) => ({
     get any() {
       return this.singleQuote || this.doubleQuote || this.parenthesis > 0;
     },
+    update(terminator: string) {
+      switch (terminator) {
+        case "(":
+          this.parenthesis++;
+          break;
+        case ")":
+          this.parenthesis--;
+          break;
+        case "'":
+          this.singleQuote = !this.singleQuote;
+          break;
+        case '"':
+          this.doubleQuote = !this.doubleQuote;
+          break;
+      }
+    },
   },
-  get result() {
-    return {
-      selectors: Array.from(this.selectors.drain()),
-      properties: new Map(this.properties.drain()),
-    };
-  },
-  get tokenFragment() {
-    return this.token.slice(0, -1).trim();
-  },
-  append(value: string) {
-    this.value += value;
-  },
-  appendKey(key: string) {
-    if (this.key) {
+  setKey(key: string) {
+    if (this.current.key) {
       throw INVALID;
     }
 
-    this.key = key;
+    this.current.key = key;
   },
-  next() {
-    switch (this.token.charAt(-1)) {
-      case "(":
-        this.inside.parenthesis++;
-        break;
-      case ")":
-        this.inside.parenthesis--;
-        break;
-      case '"':
-        this.inside.doubleQuote = !this.inside.doubleQuote;
-        break;
-      case "'":
-        this.inside.singleQuote = !this.inside.singleQuote;
-        break;
-    }
-
-    const _match = this._regex.exec(cssText);
-
-    if (!_match) return;
-
-    const [raw] = _match;
-
-    this.token = raw.trim();
-    this.index = _match.index + raw.length;
-
-    return this.token;
+  appendValue(value: string) {
+    this.current.value += value;
   },
-  // TODO: extract csvs btwn parens and sort
   commitSelector() {
-    if (this.token.endsWith("{")) {
-      this.phase = "properties";
-    }
-
-    if (!this.value) {
+    if (!this.current.value) {
       throw INVALID;
     }
 
-    this.selectors.push(this.value);
-    this.value = "";
+    const [, rawSelectorSublist] = this.current.value.match(/\((.*)\)/) ?? [];
+
+    if (rawSelectorSublist) {
+      this.current.value = this.current.value.replace(
+        rawSelectorSublist,
+        rawSelectorSublist.split(/,\s*/).sort().join(","),
+      );
+    }
+
+    this._selectors.push(this.current.value);
+    this.current.value = "";
   },
   commitProperty() {
-    if (!this.key || !this.value) {
+    if (!this.current.key || !this.current.value) {
       throw INVALID;
     }
 
-    this.properties.push([this.key, this.value]);
-    this.key = "";
-    this.value = "";
+    this._properties.push([this.current.key, this.current.value]);
+    this.current.key = "";
+    this.current.value = "";
   },
-  _regex: new RegExp(`[^${SPECIAL_CHARACTERS}]*[${SPECIAL_CHARACTERS}]`, "g"),
+
+  _selectors: new BinaryHeap<string>((selector1, selector2) =>
+    selector1.localeCompare(selector2)
+  ),
+  _properties: new BinaryHeap<[string, string]>(([key1], [key2]) =>
+    key1.localeCompare(key2)
+  ),
+  get result() {
+    return {
+      selectors: Array.from(this._selectors.drain()),
+      properties: new Map(this._properties.drain()),
+    };
+  },
 });
+
+function* _regexMatches(regexString: string, text: string) {
+  const regex = new RegExp(regexString, "g");
+
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    yield match[0];
+  }
+}
+
+const _hasSelectorTerminator = (str: string) =>
+  SELECTOR_TERMINATORS.includes(_getLastChar(str));
+
+const _stripTerminator = (str: string) => str.slice(0, -1).trim();
+
+const _getLastChar = (str: string) => str.charAt(str.length - 1);
