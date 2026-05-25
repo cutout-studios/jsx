@@ -18,7 +18,7 @@ Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
   assert(result1?.properties.get("font-family"), "system-ui");
 
   const result2 = parseCSSRule(
-    /* css */`:not(i, em) { text-emphasis: none; }`
+    /* css */ `:not(i, em) { text-emphasis: none; }`,
   );
 
   assertArrayIncludes(result2?.selectors ?? [], [":not(em,i)"]);
