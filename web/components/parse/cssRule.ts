@@ -5,57 +5,99 @@ type CSSParseResult = {
   properties: Map<string, string>;
 };
 
-// TODO: Let's make this more scanner-style; this is getting a bit too complicated.
-// TODO(#): likely belongs in the polyfill; and is really CSSStyleRule only atm.
+const SPECIAL_CHARACTERS = `(){},:;'"`;
+
 export function parseCSSRule(cssText: string): CSSParseResult | undefined {
-  const selectorSectionRegex = /(?<selectorText>[^{}]+)\s*{/;
-  const propertySectionRegex = /(?<propertyText>[\s\S]*?)\s*}\s*$/;
-
-  const _selectorMatch = cssText.match(selectorSectionRegex);
-  const _propertyMatch = cssText.slice(
-    (_selectorMatch?.index ?? 0) + (_selectorMatch?.[0]?.length ?? 0),
-  ).match(propertySectionRegex);
-
-  const rawSelectors = _selectorMatch?.groups?.selectorText.trim();
-  const rawProperties = _propertyMatch?.groups?.propertyText.trim();
-
-  if (!rawSelectors || !rawProperties) {
-    return;
-  }
-
+  const nextChunk = new RegExp(
+    `[^${SPECIAL_CHARACTERS}]*[${SPECIAL_CHARACTERS}]`,
+    "g",
+  );
   const selectors = new BinaryHeap<string>((selector1, selector2) =>
     selector1.localeCompare(selector2)
   );
-
-  // NOTE: the global 'g' flag is required to avoid infinite loops, here.
-  const selectorRegex = /\s*([^,]+),?/g;
-  let [, currentSelector] = selectorRegex.exec(rawSelectors) ?? [];
-  while (typeof currentSelector !== "undefined") {
-    // NOTE: selectors are case-sensitive
-    selectors.push(currentSelector.trim());
-
-    [, currentSelector] = selectorRegex.exec(rawSelectors) ?? [];
-  }
-
   const properties = new BinaryHeap<[string, string]>(([key1], [key2]) =>
     key1.localeCompare(key2)
   );
-  const propertyRegex = /\s*(?<propertyName>[a-zA-Z_-]+):\s*(?<propertyValue>.*);/g;
-  let currentPropertySet = propertyRegex.exec(rawProperties);
-  while (currentPropertySet) {
-    if (!currentPropertySet.groups) {
-      return;
+
+  let phase = "selectors";
+  let [currentToken, currentKey] = ["", ""];
+  let currentChunk;
+  let [insideSingleQuote, insideDoubleQuote, insideParenthesis] = [
+    false,
+    false,
+    0,
+  ];
+  while ((currentChunk = nextChunk.exec(cssText)) !== null) {
+    const tokenFragment = currentChunk[0].trim();
+
+    if (phase === "selectors") {
+      if (tokenFragment.endsWith("{")) {
+        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
+        selectors.push(currentToken);
+        currentToken = "";
+        phase = "properties";
+        continue;
+      } else if (tokenFragment.endsWith(",") && !insideParenthesis) {
+        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
+        selectors.push(currentToken);
+        currentToken = "";
+      } else {
+        if (tokenFragment.endsWith("(")) {
+          insideParenthesis++;
+        }
+
+        if (tokenFragment.endsWith(")")) {
+          insideParenthesis--;
+        }
+
+        currentToken += tokenFragment;
+      }
     }
 
-    const { propertyName, propertyValue } = currentPropertySet.groups;
+    if (phase === "properties") {
+      if (
+        tokenFragment.endsWith(":") && !insideDoubleQuote &&
+        !insideSingleQuote && !insideParenthesis
+      ) {
+        if (currentKey) return;
 
-    if (typeof propertyName !== "string" || typeof propertyValue !== "string") {
-      return;
+        currentKey = tokenFragment.slice(0, tokenFragment.length - 1).trim();
+      } else if (
+        tokenFragment.endsWith(";") && !insideDoubleQuote &&
+        !insideSingleQuote && !insideParenthesis
+      ) {
+        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
+        properties.push([currentKey, currentToken]);
+        [currentKey, currentToken] = ["", ""];
+      } else if (
+        tokenFragment.endsWith("}") && !insideDoubleQuote && !insideSingleQuote
+      ) {
+        phase = "end";
+        continue;
+      } else {
+        if (tokenFragment.endsWith("(")) {
+          insideParenthesis++;
+        }
+
+        if (tokenFragment.endsWith(")")) {
+          insideParenthesis--;
+        }
+
+        if (tokenFragment.endsWith('"')) {
+          insideDoubleQuote = !insideDoubleQuote;
+        }
+
+        if (tokenFragment.endsWith("'")) {
+          insideSingleQuote = !insideSingleQuote;
+        }
+
+        currentToken += tokenFragment;
+      }
     }
 
-    properties.push([propertyName.toLowerCase(), propertyValue]);
-
-    currentPropertySet = propertyRegex.exec(rawProperties);
+    if (phase === "end") {
+      return;
+    }
   }
 
   return {
