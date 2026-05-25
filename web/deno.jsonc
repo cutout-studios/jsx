@@ -21,6 +21,7 @@
     "@cutout/web/polyfill": "./polyfill/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
+    "@std/data-structures": "jsr:@std/data-structures",
     "@std/http/route": "jsr:@std/http/unstable-route",
     "@std/media-types": "jsr:@std/media-types",
     "@std/path": "jsr:@std/path",
