@@ -4,7 +4,7 @@ import { parseCSSRule } from "./cssRule.ts";
 const TEST_GROUP = "web/components/parse";
 
 Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
-  const result = parseCSSRule(
+  const result1 = parseCSSRule(
     /* css */ `
     :host {
       all: initial;
@@ -13,9 +13,15 @@ Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
   `,
   );
 
-  assertArrayIncludes(result?.selectors ?? [], [":host"]);
-  assert(result?.properties.get("all"), "initial");
-  assert(result?.properties.get("font-family"), "system-ui");
+  assertArrayIncludes(result1?.selectors ?? [], [":host"]);
+  assert(result1?.properties.get("all"), "initial");
+  assert(result1?.properties.get("font-family"), "system-ui");
+
+  const result2 = parseCSSRule(
+    /* css */`:not(i, em) { text-emphasis: none; }`
+  );
+
+  assertArrayIncludes(result2?.selectors ?? [], [":not(em,i)"]);
 });
 
 Deno.test(`${TEST_GROUP} - parseCSSRule, given messy CSS`, () => {

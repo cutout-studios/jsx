@@ -5,103 +5,136 @@ type CSSParseResult = {
   properties: Map<string, string>;
 };
 
+const INVALID = undefined;
 const SPECIAL_CHARACTERS = `(){},:;'"`;
 
 export function parseCSSRule(cssText: string): CSSParseResult | undefined {
-  const nextChunk = new RegExp(
-    `[^${SPECIAL_CHARACTERS}]*[${SPECIAL_CHARACTERS}]`,
-    "g",
-  );
-  const selectors = new BinaryHeap<string>((selector1, selector2) =>
-    selector1.localeCompare(selector2)
-  );
-  const properties = new BinaryHeap<[string, string]>(([key1], [key2]) =>
-    key1.localeCompare(key2)
-  );
+  const state = _createCSSParseState(cssText);
 
-  let phase = "selectors";
-  let [currentToken, currentKey] = ["", ""];
-  let currentChunk;
-  let [insideSingleQuote, insideDoubleQuote, insideParenthesis] = [
-    false,
-    false,
-    0,
-  ];
-  while ((currentChunk = nextChunk.exec(cssText)) !== null) {
-    const tokenFragment = currentChunk[0].trim();
-
-    if (phase === "selectors") {
-      if (tokenFragment.endsWith("{")) {
-        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
-        selectors.push(currentToken);
-        currentToken = "";
-        phase = "properties";
-        continue;
-      } else if (tokenFragment.endsWith(",") && !insideParenthesis) {
-        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
-        selectors.push(currentToken);
-        currentToken = "";
-      } else {
-        if (tokenFragment.endsWith("(")) {
-          insideParenthesis++;
-        }
-
-        if (tokenFragment.endsWith(")")) {
-          insideParenthesis--;
-        }
-
-        currentToken += tokenFragment;
-      }
+  while (state.next()) {
+    if (
+      state.phase === "selectors" && state.hasSelectorTerminator
+    ) {
+      state.append(state.tokenFragment);
+      state.commitSelector();
+      continue;
     }
 
-    if (phase === "properties") {
-      if (
-        tokenFragment.endsWith(":") && !insideDoubleQuote &&
-        !insideSingleQuote && !insideParenthesis
-      ) {
-        if (currentKey) return;
-
-        currentKey = tokenFragment.slice(0, tokenFragment.length - 1).trim();
-      } else if (
-        tokenFragment.endsWith(";") && !insideDoubleQuote &&
-        !insideSingleQuote && !insideParenthesis
-      ) {
-        currentToken += tokenFragment.slice(0, tokenFragment.length - 1).trim();
-        properties.push([currentKey, currentToken]);
-        [currentKey, currentToken] = ["", ""];
-      } else if (
-        tokenFragment.endsWith("}") && !insideDoubleQuote && !insideSingleQuote
-      ) {
-        phase = "end";
-        continue;
-      } else {
-        if (tokenFragment.endsWith("(")) {
-          insideParenthesis++;
-        }
-
-        if (tokenFragment.endsWith(")")) {
-          insideParenthesis--;
-        }
-
-        if (tokenFragment.endsWith('"')) {
-          insideDoubleQuote = !insideDoubleQuote;
-        }
-
-        if (tokenFragment.endsWith("'")) {
-          insideSingleQuote = !insideSingleQuote;
-        }
-
-        currentToken += tokenFragment;
-      }
+    if (
+      state.phase === "properties" && !state.inside.any &&
+      state.token.endsWith(":")
+    ) {
+      state.appendKey(state.tokenFragment);
+    } else if (
+      state.phase === "properties" && !state.inside.any &&
+      state.token.endsWith(";")
+    ) {
+      state.append(state.tokenFragment);
+      state.commitProperty();
+      continue;
     }
 
-    if (phase === "end") {
-      return;
-    }
+    state.append(state.token);
   }
 
-  return {
-    selectors: Array.from(selectors.drain()),
-    properties: new Map(properties.drain()),
-  };
+  // There's leftover text that wasn't parsed
+  if (state.index < cssText.trim().length) return INVALID;
+
+  return state.result;
 }
+
+const _createCSSParseState = (cssText: string) => ({
+  phase: "selectors",
+  index: 0,
+  token: "",
+  key: "",
+  value: "",
+  get hasSelectorTerminator() {
+    return this.token.endsWith("{") || (
+      this.token.endsWith(",") && !this.inside.parenthesis
+    );
+  },
+  selectors: new BinaryHeap<string>((selector1, selector2) =>
+    selector1.localeCompare(selector2)
+  ),
+  properties: new BinaryHeap<[string, string]>(([key1], [key2]) =>
+    key1.localeCompare(key2)
+  ),
+  inside: {
+    singleQuote: false,
+    doubleQuote: false,
+    parenthesis: 0,
+    get any() {
+      return this.singleQuote || this.doubleQuote || this.parenthesis > 0;
+    },
+  },
+  get result() {
+    return {
+      selectors: Array.from(this.selectors.drain()),
+      properties: new Map(this.properties.drain()),
+    };
+  },
+  get tokenFragment() {
+    return this.token.slice(0, -1).trim();
+  },
+  append(value: string) {
+    this.value += value;
+  },
+  appendKey(key: string) {
+    if (this.key) {
+      throw INVALID;
+    }
+
+    this.key = key;
+  },
+  next() {
+    switch (this.token.charAt(-1)) {
+      case "(":
+        this.inside.parenthesis++;
+        break;
+      case ")":
+        this.inside.parenthesis--;
+        break;
+      case '"':
+        this.inside.doubleQuote = !this.inside.doubleQuote;
+        break;
+      case "'":
+        this.inside.singleQuote = !this.inside.singleQuote;
+        break;
+    }
+
+    const _match = this._regex.exec(cssText);
+
+    if (!_match) return;
+
+    const [raw] = _match;
+
+    this.token = raw.trim();
+    this.index = _match.index + raw.length;
+
+    return this.token;
+  },
+  // TODO: extract csvs btwn parens and sort
+  commitSelector() {
+    if (this.token.endsWith("{")) {
+      this.phase = "properties";
+    }
+
+    if (!this.value) {
+      throw INVALID;
+    }
+
+    this.selectors.push(this.value);
+    this.value = "";
+  },
+  commitProperty() {
+    if (!this.key || !this.value) {
+      throw INVALID;
+    }
+
+    this.properties.push([this.key, this.value]);
+    this.key = "";
+    this.value = "";
+  },
+  _regex: new RegExp(`[^${SPECIAL_CHARACTERS}]*[${SPECIAL_CHARACTERS}]`, "g"),
+});
