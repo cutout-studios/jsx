@@ -79,5 +79,4 @@ interface CallSite {
   isEval(): boolean;
   getEvalOrigin(): string | undefined;
   isToplevel(): boolean;
-  getEvalLineOffset(): number;
 }
