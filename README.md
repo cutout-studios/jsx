@@ -18,7 +18,7 @@ possible to their respective targets.
 | Module                  | Description                                                                                             | Status                                                                  |
 | ----------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer.                                        | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
-| [`@cutout/web`](./web/) | **_A full-stack framework built on top of `@cutout/jsx`._** Think Next.js but for Deno + WebComponents. | <progress value="3" max="4"></progress>                                 |
+| [`@cutout/web`](./web/) | **_A full-stack framework built on top of `@cutout/jsx`._** Think Next.js but for Deno + WebComponents. | <progress value="3" max="4">3 / 4 modules</progress>                                 |
 
 ### Experimental
 
