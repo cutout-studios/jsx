@@ -26,7 +26,7 @@ for `deno_core`. The next steps are to:
 
 ## Core Security Considerations
 
-Likely we'll build these into `@cutout/web` directly:
+We intend to build these into `@cutout/web` directly:
 
 - The local server is a blatant attack surface: bind `@cutout/web` to `[::1]`
   with an ephemeral port.

@@ -15,7 +15,7 @@
     "internal",
     "jsx",
     "web",
-    "tauri",
-    "agent"
+    "experimental/tauri",
+    "experimental/agent"
   ]
 }
