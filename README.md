@@ -7,11 +7,11 @@ A collection of NPM-free tools for building cross-platform webapps. JSX, web
 components, UI primitives, and a native shell: all designed to stay as close as
 possible to their respective targets.
 
+## Contents
+
 > [!CAUTION]
 > Currently these tools are either speculative and/or untested: not yet for
 > production use.
-
-## Contents
 
 ### Core
 
