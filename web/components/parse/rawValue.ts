@@ -1,6 +1,6 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 
-import type { ShapeValueFor, ValidDefinitionConstructor } from "./types.ts";
+import type { ShapeValueFor, ValidDefinitionConstructor } from "../types.ts";
 
 export function parseRawValue<C extends ValidDefinitionConstructor>(
   value: string,
