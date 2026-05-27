@@ -1,7 +1,13 @@
-import type { AnyShape } from "./module.ts";
+import { parseCSSRule } from "./parse.ts";
+import type { AnyShape } from "@cutout/internal";
 
 export class HTMLElement {}
-export class CSSRule {}
+export class CSSRule {
+  constructor(cssText: string) {
+    // ...
+    const { selectors } = parseCSSRule(cssText);
+  }
+}
 
 type CustomElementConstructor = new (...args: unknown[]) => HTMLElement;
 

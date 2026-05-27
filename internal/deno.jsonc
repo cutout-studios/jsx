@@ -2,6 +2,10 @@
   "name": "@cutout/internal",
   "exports": {
     ".": "./module.ts",
-    "./polyfill": "./polyfill.ts"
+    "./polyfill": "./polyfill/module.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert",
+    "@std/data-structures": "jsr:@std/data-structures"
   }
 }

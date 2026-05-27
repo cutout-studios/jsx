@@ -115,6 +115,12 @@
   },
   "workspace": {
     "members": {
+      "internal": {
+        "dependencies": [
+          "jsr:@std/assert@*",
+          "jsr:@std/data-structures@*"
+        ]
+      },
       "jsx": {
         "dependencies": [
           "jsr:@std/assert@*",

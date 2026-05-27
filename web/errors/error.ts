@@ -1,3 +1,4 @@
+import { V8CallSite } from "@cutout/internal";
 import {
   ERROR_CODE_MESSAGES,
   ERROR_CONTEXT_MAX_SIZE,
@@ -33,8 +34,15 @@ export class CutoutError extends Error {
     super(`[${code}] ${ERROR_CODE_MESSAGES[code]}`, options);
 
     this.code = code;
+    this.#callsite = V8CallSite.getParent();
     this.#context = context;
     this.#guidance = guidance;
+  }
+
+  get callsite() {
+    return {
+      // ...
+    };
   }
 
   /**
@@ -65,6 +73,7 @@ export class CutoutError extends Error {
     return this.#guidance?.trim() || ERROR_GUIDANCE_MISSING_MESSAGE;
   }
 
+  #callsite?: V8CallSite;
   #context?: unknown;
   #guidance?: string;
 }

@@ -1,9 +1,7 @@
-import type { EmptyShape } from "@cutout/internal";
+import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserStyle } from "./browser/style.ts";
-import { V8CallSite } from "./callsite.ts";
-import { parseCSSRule } from "./parse/cssRule.ts";
 import { registerRoute } from "./route.ts";
 import type { Route, Style, StyleOptions } from "./types.ts";
 
@@ -37,7 +35,9 @@ export function registerStyle(
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {
-  const result = parseCSSRule(rawCSSRule);
+  const result = new CSSStyleRule();
+
+  result.cssText = rawCSSRule;
 
   if (!result) {
     throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
@@ -45,8 +45,9 @@ function _cleanRawCSSRule(rawCSSRule: string): string {
     });
   }
 
-  return `${result.selectors.join()}{${
-    result.properties.entries().reduce((string, [key, value]) =>
-      `${string}${key}:${value};`, "")
-  }}`;
+  let properties = "";
+
+  result.styleMap.forEach((values, key) => properties += `${key}:${values};`);
+
+  return `${result.selectorText}{${properties}}`;
 }

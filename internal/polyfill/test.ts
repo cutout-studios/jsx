@@ -1,7 +1,7 @@
 import { assert, assertArrayIncludes, assertEquals } from "@std/assert";
-import { parseCSSRule } from "./cssRule.ts";
+import { parseCSSRule } from "./parse.ts";
 
-const TEST_GROUP = "web/components/parse";
+const TEST_GROUP = "internal/polyfill";
 
 Deno.test(`${TEST_GROUP} - parseCSSRule`, () => {
   const result1 = parseCSSRule(

@@ -37,6 +37,8 @@ function _defaultRender(error: CutoutError) {
     <div data-xo-error={error.code}>
       <h2>{error.message}</h2>
       <dl>
+        <dt>Callsite</dt>
+        <dd>{error.callsite}</dd>
         <dt>Context</dt>
         <dd>{error.context}</dd>
         <dt>Guidance</dt>

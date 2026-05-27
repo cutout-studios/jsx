@@ -1,8 +1,7 @@
-import type { EmptyShape } from "@cutout/internal";
+import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserElement } from "./browser/element/register.tsx";
-import { V8CallSite } from "./callsite.ts";
 import { registerRoute } from "./route.ts";
 import type {
   Definition,

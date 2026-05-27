@@ -14,7 +14,6 @@ const SELECTOR_TERMINATORS = `,{`;
 const PROPERTY_TERMINATORS = `:;}`;
 const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
-// TODO(#65): Likely lives inside the polyfill.
 export function parseCSSRule(cssText: string): CSSParseResult | undefined {
   const parse = _createCSSParseState();
 
