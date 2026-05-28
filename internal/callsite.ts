@@ -13,26 +13,13 @@ import {
  * At present, to enable per-component routing in a buildless-but-seamless way,
  * this is our main recourse.
  */
-export class V8CallSite extends Error {
-  /** Expose the current call site information. */
-  static get(index: number = CALLSITE_INDEX): CallSite | undefined {
-    return this.#resolveCallSite(index);
-  }
-
+export class V8CallSite extends Error implements CallSite {
   /** Alias for getting the call site of the this caller's parent. */
-  static getParent(): CallSite | undefined {
-    return this.get(CALLSITE_PARENT_INDEX + 1); // (+1 to account for this callsite)
+  static getParent(): V8CallSite | undefined {
+    return new V8CallSite(CALLSITE_PARENT_INDEX + 1); // (+1 to account for this callsite)
   }
 
-  static #resolveCallSite(index: number) {
-    const error = new V8CallSite();
-
-    index += 1 + 1; // #resolveCallSite (+1) -> getCallSite (+1) -> <target callsite>
-
-    return error.#callStack?.[index];
-  }
-
-  constructor() {
+  constructor(frameIndex: number = CALLSITE_INDEX) {
     super();
 
     // In order to safely populate the internal #callStack property,
@@ -46,7 +33,7 @@ export class V8CallSite extends Error {
 
     V8_Error.prepareStackTrace = (error: Error, trace: CallSite[]) => {
       if (error instanceof V8CallSite) {
-        this.#callStack = trace;
+        this.#callsite = trace[frameIndex];
       }
 
       if (v8_prepareStackTrace) {
@@ -61,7 +48,39 @@ export class V8CallSite extends Error {
     V8_Error.prepareStackTrace = v8_prepareStackTrace;
   }
 
-  #callStack?: CallSite[];
+  // TODO(?): More concise way to do this?
+  getMethodName(): string | null {
+    return this.#callsite?.getMethodName() ?? null;
+  }
+  getFileName(): string | null {
+    return this.#callsite?.getFileName() ?? null;
+  }
+  getLineNumber(): number | null {
+    return this.#callsite?.getLineNumber() ?? null;
+  }
+  getColumnNumber(): number | null {
+    return this.#callsite?.getColumnNumber() ?? null;
+  }
+  getFunctionName(): string | null {
+    return this.#callsite?.getFunctionName() ?? null;
+  }
+  getTypeName(): string | null {
+    return this.#callsite?.getTypeName() ?? null;
+  }
+  isNative(): boolean {
+    return this.#callsite?.isNative() ?? false;
+  }
+  isEval(): boolean {
+    return this.#callsite?.isEval() ?? false;
+  }
+  getEvalOrigin(): string | undefined {
+    return this.#callsite?.getEvalOrigin();
+  }
+  isToplevel(): boolean {
+    return this.#callsite?.isToplevel() ?? false;
+  }
+
+  #callsite?: CallSite;
 }
 
 /** @internal */

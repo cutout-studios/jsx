@@ -33,12 +33,32 @@ export function toHTML(
 }
 
 function _defaultRender(error: CutoutError) {
+  let callsite;
+
+  if (error.callsite?.file) {
+    let callsiteText = error.callsite.file;
+
+    if (error.callsite.line) {
+      callsiteText += `:${error.callsite.line}`
+    }
+
+    if (error.callsite.line && error.callsite.column) {
+      callsiteText += `:${error.callsite.column}`;
+    }
+
+    callsite = (
+      <>
+        <dt>Callsite</dt>
+        <dd>{callsiteText}</dd>
+      </>
+    );
+  }
+
   return (
     <div data-xo-error={error.code}>
       <h2>{error.message}</h2>
       <dl>
-        <dt>Callsite</dt>
-        <dd>{error.callsite}</dd>
+        {callsite}
         <dt>Context</dt>
         <dd>{error.context}</dd>
         <dt>Guidance</dt>

@@ -1,4 +1,5 @@
 import { V8CallSite } from "@cutout/internal";
+import { relative } from "@std/path";
 import {
   ERROR_CODE_MESSAGES,
   ERROR_CONTEXT_MAX_SIZE,
@@ -34,14 +35,29 @@ export class CutoutError extends Error {
     super(`[${code}] ${ERROR_CODE_MESSAGES[code]}`, options);
 
     this.code = code;
-    this.#callsite = V8CallSite.getParent();
+    this.#callsite = new V8CallSite();
     this.#context = context;
     this.#guidance = guidance;
   }
 
+  /**
+   * The actual call information re: where this
+   * error was created.
+   */
   get callsite() {
+    if (!this.#callsite) return undefined;
+
+    let file = this.#callsite.getFileName();
+
+    if (file) {
+      // TODO(#): replace Deno.cwd with root, which will default to Deno.cwd
+      file = relative(Deno.cwd(), file);
+    }
+
     return {
-      // ...
+      file,
+      column: this.#callsite.getColumnNumber(),
+      line: this.#callsite.getLineNumber()
     };
   }
 

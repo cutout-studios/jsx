@@ -1,4 +1,32 @@
 import { BinaryHeap } from "@std/data-structures";
+import { _globalThis } from "../global.ts";
+import { CSSRule } from "./CSSRule.ts";
+import { StylePropertyMap } from "./StylePropertyMap.ts";
+
+export class CSSStyleRule extends CSSRule {
+  styleMap: StylePropertyMap = new StylePropertyMap();
+  selectorText?: string;
+
+  set cssText(cssText: string) {
+    this.styleMap.clear();
+
+    const parsedCSS = _parseCSSStyleRule(cssText);
+
+    if (!parsedCSS) {
+      throw null;
+    }
+
+    this.selectorText = parsedCSS.selectors.join(", ");
+
+    for (const [property, value] of parsedCSS.properties.entries()) {
+      this.styleMap.set(property, value);
+    }
+  }
+}
+
+_globalThis.CSSStyleRule = CSSStyleRule;
+
+// -- PARSER --
 
 // NOTE: While tested, this parser has not been vetted
 // for complete thoroughness.
@@ -14,7 +42,7 @@ const SELECTOR_TERMINATORS = `,{`;
 const PROPERTY_TERMINATORS = `:;}`;
 const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
-export function parseCSSRule(cssText: string): CSSParseResult | undefined {
+export function _parseCSSStyleRule(cssText: string): CSSParseResult | undefined {
   const parse = _createCSSParseState();
 
   try {
