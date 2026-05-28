@@ -11,9 +11,9 @@ possible to their respective targets.
 
 ### Core
 
-| Module                  | Description                                                      | Release                                                                 |
-| ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
+| Module                  | Description                                                      | Status    | Release                                                                 |
+| ----------------------- | ---------------------------------------------------------------- | --------- | ----------------------------------------------------------------------- |
+| [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | **Alpha** | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 
 ### Experimental
 
