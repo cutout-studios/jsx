@@ -37,13 +37,16 @@ export function registerStyle(
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {
+  // TODO(?): This may be invalid on the FE, we have to use document.createElement, etc.
+  // Rather than construct directly.
   const result = new CSSStyleRule();
 
-  result.cssText = rawCSSRule;
-
-  if (!result) {
+  try {
+    result.cssText = rawCSSRule;
+  } catch (cause) {
     throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
       context: rawCSSRule,
+      cause,
     });
   }
 

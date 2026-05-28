@@ -2,7 +2,11 @@ import { _globalThis } from "../global.ts";
 
 export class StylePropertyMap {
   get(property: string): string | undefined {
-    return this.#properties.get(property)?.[0];
+    return this.#properties.get(property)?.at(-1);
+  }
+
+  getAll(property: string): string[] | undefined {
+    return this.#properties.get(property);
   }
 
   set(property: string, ...values: string[]) {

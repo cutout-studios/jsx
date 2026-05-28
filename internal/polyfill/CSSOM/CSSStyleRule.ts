@@ -12,20 +12,19 @@ export class CSSStyleRule extends CSSRule {
   }
 
   set cssText(cssText: string) {
-    this.#cssText = cssText;
+    let parsedCSS;
+    try {
+      parsedCSS = _parseCSSStyleRule(cssText);
 
-    this.styleMap.clear();
+      this.#cssText = cssText;
+      this.selectorText = parsedCSS.selectors.join(", ");
 
-    const parsedCSS = _parseCSSStyleRule(cssText);
-
-    if (!parsedCSS) {
-      throw null;
-    }
-
-    this.selectorText = parsedCSS.selectors.join(", ");
-
-    for (const [property, value] of parsedCSS.properties.entries()) {
-      this.styleMap.set(property, value);
+      this.styleMap.clear();
+      for (const [property, values] of parsedCSS.properties.entries()) {
+        this.styleMap.set(property, ...values);
+      }
+    } catch {
+      throw new SyntaxError(`Failed to parse invalid CSS: ${cssText}`);
     }
   }
 
@@ -42,7 +41,7 @@ _globalThis.CSSStyleRule = CSSStyleRule;
 
 type CSSParseResult = {
   selectors: string[];
-  properties: Map<string, string>;
+  properties: Map<string, Set<string>>;
 };
 
 const INVALID = undefined;
@@ -52,58 +51,54 @@ const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
 export function _parseCSSStyleRule(
   cssText: string,
-): CSSParseResult | undefined {
+): CSSParseResult {
   const parse = _createCSSParseState();
 
-  try {
-    for (
-      const match of _regexMatches(
-        `[^${TERMINATORS}]*[${TERMINATORS}]`,
-        cssText,
-      )
+  for (
+    const match of _regexMatches(
+      `[^${TERMINATORS}]*[${TERMINATORS}]`,
+      cssText,
+    )
+  ) {
+    parse.index += match.length;
+
+    if (
+      parse.phase === "selectors" && _hasSelectorTerminator(match) &&
+      !parse.inside.parenthesis
     ) {
-      parse.index += match.length;
+      parse.appendValue(_stripTerminator(match));
+      parse.commitAsSelector();
 
-      if (
-        parse.phase === "selectors" && _hasSelectorTerminator(match) &&
-        !parse.inside.parenthesis
-      ) {
-        parse.appendValue(_stripTerminator(match));
-        parse.commitAsSelector();
-
-        if (match.endsWith("{")) {
-          parse.phase = "properties";
-        }
-
-        continue;
+      if (match.endsWith("{")) {
+        parse.phase = "properties";
       }
 
-      if (
-        parse.phase === "properties" && !parse.inside.anything &&
-        match.endsWith(":")
-      ) {
-        parse.setKey(_stripTerminator(match));
-        continue;
-      }
-
-      if (
-        parse.phase === "properties" && !parse.inside.anything &&
-        match.endsWith(";")
-      ) {
-        parse.appendValue(_stripTerminator(match));
-        parse.commitAsProperty();
-        continue;
-      }
-
-      parse.appendValue(match);
-      parse.inside.update(_getLastChar(match));
+      continue;
     }
-  } catch {
-    return INVALID;
+
+    if (
+      parse.phase === "properties" && !parse.inside.anything &&
+      match.endsWith(":")
+    ) {
+      parse.setKey(_stripTerminator(match));
+      continue;
+    }
+
+    if (
+      parse.phase === "properties" && !parse.inside.anything &&
+      match.endsWith(";")
+    ) {
+      parse.appendValue(_stripTerminator(match));
+      parse.commitAsProperty();
+      continue;
+    }
+
+    parse.appendValue(match);
+    parse.inside.update(_getLastChar(match));
   }
 
   // There's leftover text that wasn't parsed
-  if (parse.index < cssText.trim().length) return INVALID;
+  if (parse.index < cssText.trim().length) throw INVALID;
 
   return parse.result;
 }
@@ -141,7 +136,7 @@ const _createCSSParseState = () => ({
   },
   setKey(key: string) {
     if (this.current.key) {
-      throw INVALID; // TODO: Throw something better
+      throw INVALID;
     }
 
     this.current.key = key;
@@ -171,7 +166,6 @@ const _createCSSParseState = () => ({
       throw INVALID;
     }
 
-    // TODO: support multiple values
     this._properties.push([this.current.key.trim(), this.current.value.trim()]);
     this.current.key = "";
     this.current.value = "";
@@ -184,9 +178,21 @@ const _createCSSParseState = () => ({
     key1.localeCompare(key2)
   ),
   get result() {
+    const properties = new Map<string, Set<string>>();
+
+    for (const [key, value] of this._properties.drain()) {
+      if (!properties.has(key)) {
+        properties.set(key, new Set());
+      }
+
+      const valueSet = properties.get(key)!;
+
+      valueSet.add(value);
+    }
+
     return {
       selectors: Array.from(this._selectors.drain()),
-      properties: new Map(this._properties.drain()),
+      properties,
     };
   },
 });

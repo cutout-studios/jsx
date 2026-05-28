@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { assertArrayIncludes, assertEquals, assertThrows } from "@std/assert";
 import { CSSStyleRule } from "./CSSStyleRule.ts";
 
 const TEST_GROUP = "internal/polyfill";
@@ -38,7 +38,10 @@ Deno.test(`${TEST_GROUP} - CSSStyleRule, handles messy CSS`, () => {
 
   assertEquals(result.selectorText, ":host");
   assertEquals(result.styleMap.get("all"), "initial");
-  assertEquals(result.styleMap.get("font-family"), "system-ui");
+  assertArrayIncludes(result.styleMap.getAll("font-family")!, [
+    "sans-serif",
+    "system-ui",
+  ]);
 });
 
 Deno.test(`${TEST_GROUP} - CSSStyleRule, throws invalid CSS`, () => {
