@@ -13,12 +13,10 @@
     "./formats": "./formats/module.ts"
   },
   "imports": {
-    ".bench": "./.bench/module.ts",
+    // To ensure "internal" stays private, we alias it here.
+    "@cutout/internal": "../internal/module.ts",
+    "@cutout/internal/polyfill": "../internal/polyfill/module.ts",
 
-    // To ensure "common" stays private, we alias it here.
-    "@cutout/common": "../common/module.ts",
-
-    "@cutout/web/polyfill": "./polyfill/module.ts",
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",
     "@std/data-structures": "jsr:@std/data-structures",

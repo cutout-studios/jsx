@@ -5,7 +5,7 @@ import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { dom } from "@cutout/web/formats";
 
 import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../constants.ts";
-import { parseRawValue } from "../../parse/rawValue.ts";
+import { parseRawValue } from "../../parse.ts";
 import type {
   Definition,
   ShapeFor,

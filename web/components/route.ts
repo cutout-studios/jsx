@@ -9,7 +9,7 @@ import {
   ROUTE_FILE_EXTENSION_DEFAULT,
   SupportedHTTPHeaders,
 } from "./constants.ts";
-import { parseRawValue } from "./parse/rawValue.ts";
+import { parseRawValue } from "./parse.ts";
 import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
 
 /**
@@ -54,14 +54,14 @@ export function registerRoute<const D extends Definition>(
         responseBody = renderResult;
       } else {
         switch (this.#contentType) {
-          case "text/html": // TODO(@cutout/web/server): Inject importmaps, etc.
+          case "text/html": // TODO(#75): Inject importmaps by integrity hash, etc.
           default:
             responseBody = html(renderResult);
         }
       }
 
       return new Response(responseBody, {
-        // TODO(@cutout/web/server): Construct request-specific headers: CORS, CSP & Session Token
+        // TODO(#70): In production, construct request-specific headers: CORS, CSP & Session Token
         "headers": this.#defaultHeaders,
       });
     };

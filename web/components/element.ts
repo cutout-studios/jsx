@@ -1,8 +1,7 @@
-import type { EmptyShape } from "@cutout/internal";
+import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserElement } from "./browser/element/register.tsx";
-import { V8CallSite } from "./callsite.ts";
 import { registerRoute } from "./route.ts";
 import type {
   Definition,
@@ -38,13 +37,13 @@ export function registerElement<D extends Definition>(
     route = registerRoute(path, {
       registry,
       render: async () => {
-        // TODO(#62): Dev vs. Prod environment
+        // TODO(#62): Prod environment
         const { outputFiles, errors } = await Deno.bundle({
           entrypoints: [path],
           format: "esm",
           inlineImports: false,
-          minify: true,
-          keepNames: false,
+          minify: false,
+          keepNames: true,
           sourcemap: "linked",
           codeSplitting: true,
           packages: "external",

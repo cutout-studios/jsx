@@ -1,4 +1,39 @@
 import { BinaryHeap } from "@std/data-structures";
+import { _globalThis } from "../global.ts";
+import { CSSRule } from "./CSSRule.ts";
+import { StylePropertyMap } from "./StylePropertyMap.ts";
+
+export class CSSStyleRule extends CSSRule {
+  styleMap: StylePropertyMap = new StylePropertyMap();
+  selectorText?: string;
+
+  get cssText(): string | undefined {
+    return this.#cssText;
+  }
+
+  set cssText(cssText: string) {
+    let parsedCSS;
+    try {
+      parsedCSS = _parseCSSStyleRule(cssText);
+
+      this.#cssText = cssText;
+      this.selectorText = parsedCSS.selectors.join(", ");
+
+      this.styleMap.clear();
+      for (const [property, values] of parsedCSS.properties.entries()) {
+        this.styleMap.set(property, ...values);
+      }
+    } catch {
+      throw new SyntaxError(`Failed to parse invalid CSS: ${cssText}`);
+    }
+  }
+
+  #cssText?: string;
+}
+
+_globalThis.CSSStyleRule = CSSStyleRule;
+
+// -- PARSER --
 
 // NOTE: While tested, this parser has not been vetted
 // for complete thoroughness.
@@ -6,7 +41,7 @@ import { BinaryHeap } from "@std/data-structures";
 
 type CSSParseResult = {
   selectors: string[];
-  properties: Map<string, string>;
+  properties: Map<string, Set<string>>;
 };
 
 const INVALID = undefined;
@@ -14,59 +49,56 @@ const SELECTOR_TERMINATORS = `,{`;
 const PROPERTY_TERMINATORS = `:;}`;
 const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
-// TODO(#65): Likely lives inside the polyfill.
-export function parseCSSRule(cssText: string): CSSParseResult | undefined {
+export function _parseCSSStyleRule(
+  cssText: string,
+): CSSParseResult {
   const parse = _createCSSParseState();
 
-  try {
-    for (
-      const match of _regexMatches(
-        `[^${TERMINATORS}]*[${TERMINATORS}]`,
-        cssText,
-      )
+  for (
+    const match of _regexMatches(
+      `[^${TERMINATORS}]*[${TERMINATORS}]`,
+      cssText,
+    )
+  ) {
+    parse.index += match.length;
+
+    if (
+      parse.phase === "selectors" && _hasSelectorTerminator(match) &&
+      !parse.inside.parenthesis
     ) {
-      parse.index += match.length;
+      parse.appendValue(_stripTerminator(match));
+      parse.commitAsSelector();
 
-      if (
-        parse.phase === "selectors" && _hasSelectorTerminator(match) &&
-        !parse.inside.parenthesis
-      ) {
-        parse.appendValue(_stripTerminator(match));
-        parse.commitAsSelector();
-
-        if (match.endsWith("{")) {
-          parse.phase = "properties";
-        }
-
-        continue;
+      if (match.endsWith("{")) {
+        parse.phase = "properties";
       }
 
-      if (
-        parse.phase === "properties" && !parse.inside.anything &&
-        match.endsWith(":")
-      ) {
-        parse.setKey(_stripTerminator(match));
-        continue;
-      }
-
-      if (
-        parse.phase === "properties" && !parse.inside.anything &&
-        match.endsWith(";")
-      ) {
-        parse.appendValue(_stripTerminator(match));
-        parse.commitAsProperty();
-        continue;
-      }
-
-      parse.inside.update(_getLastChar(match));
-      parse.appendValue(match.trim());
+      continue;
     }
-  } catch {
-    return INVALID;
+
+    if (
+      parse.phase === "properties" && !parse.inside.anything &&
+      match.endsWith(":")
+    ) {
+      parse.setKey(_stripTerminator(match));
+      continue;
+    }
+
+    if (
+      parse.phase === "properties" && !parse.inside.anything &&
+      match.endsWith(";")
+    ) {
+      parse.appendValue(_stripTerminator(match));
+      parse.commitAsProperty();
+      continue;
+    }
+
+    parse.appendValue(match);
+    parse.inside.update(_getLastChar(match));
   }
 
   // There's leftover text that wasn't parsed
-  if (parse.index < cssText.trim().length) return INVALID;
+  if (parse.index < cssText.trim().length) throw INVALID;
 
   return parse.result;
 }
@@ -122,11 +154,11 @@ const _createCSSParseState = () => ({
     if (rawSelectorSublist) {
       this.current.value = this.current.value.replace(
         rawSelectorSublist,
-        rawSelectorSublist.split(/,\s*/).sort().join(","),
+        rawSelectorSublist.split(/,\s*/).sort().join(", "),
       );
     }
 
-    this._selectors.push(this.current.value);
+    this._selectors.push(this.current.value.trim());
     this.current.value = "";
   },
   commitAsProperty() {
@@ -134,7 +166,7 @@ const _createCSSParseState = () => ({
       throw INVALID;
     }
 
-    this._properties.push([this.current.key, this.current.value]);
+    this._properties.push([this.current.key.trim(), this.current.value.trim()]);
     this.current.key = "";
     this.current.value = "";
   },
@@ -146,9 +178,21 @@ const _createCSSParseState = () => ({
     key1.localeCompare(key2)
   ),
   get result() {
+    const properties = new Map<string, Set<string>>();
+
+    for (const [key, value] of this._properties.drain()) {
+      if (!properties.has(key)) {
+        properties.set(key, new Set());
+      }
+
+      const valueSet = properties.get(key)!;
+
+      valueSet.add(value);
+    }
+
     return {
       selectors: Array.from(this._selectors.drain()),
-      properties: new Map(this._properties.drain()),
+      properties,
     };
   },
 });

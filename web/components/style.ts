@@ -1,9 +1,7 @@
-import type { EmptyShape } from "@cutout/internal";
+import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
 import { registerBrowserStyle } from "./browser/style.ts";
-import { V8CallSite } from "./callsite.ts";
-import { parseCSSRule } from "./parse/cssRule.ts";
 import { registerRoute } from "./route.ts";
 import type { Route, Style, StyleOptions } from "./types.ts";
 
@@ -37,16 +35,22 @@ export function registerStyle(
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {
-  const result = parseCSSRule(rawCSSRule);
+  // TODO(?): This may be invalid on the FE, we have to use document.createElement, etc.
+  // Rather than construct directly.
+  const result = new CSSStyleRule();
 
-  if (!result) {
+  try {
+    result.cssText = rawCSSRule;
+  } catch (cause) {
     throw new CutoutError(CutoutErrorCode.DATA_CORRUPTED, {
       context: rawCSSRule,
+      cause,
     });
   }
 
-  return `${result.selectors.join()}{${
-    result.properties.entries().reduce((string, [key, value]) =>
-      `${string}${key}:${value};`, "")
-  }}`;
+  let properties = "";
+
+  result.styleMap.forEach((key, value) => properties += `${key}:${value};`);
+
+  return `${result.selectorText}{${properties}}`;
 }

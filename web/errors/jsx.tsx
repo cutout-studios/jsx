@@ -1,6 +1,6 @@
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { html } from "@cutout/web/formats";
-import type { CutoutError } from "./error.ts";
+import type { CutoutError, CutoutErrorCallsite } from "./error.ts";
 
 /**
  * Convert the provided CutoutError into a `@cutout/jsx` IR stream.
@@ -37,12 +37,38 @@ function _defaultRender(error: CutoutError) {
     <div data-xo-error={error.code}>
       <h2>{error.message}</h2>
       <dl>
+        {_defaultRenderCallsite(error.callsite)}
         <dt>Context</dt>
         <dd>{error.context}</dd>
         <dt>Guidance</dt>
         <dd>{error.guidance}</dd>
       </dl>
     </div>
+  );
+}
+
+function _defaultRenderCallsite(
+  callsite:
+    | CutoutErrorCallsite
+    | undefined,
+) {
+  if (!callsite?.file) return;
+
+  let callsiteText = callsite.file;
+
+  if (callsite.line) {
+    callsiteText += `:${callsite.line}`;
+  }
+
+  if (callsite.line && callsite.column) {
+    callsiteText += `:${callsite.column}`;
+  }
+
+  return (
+    <>
+      <dt>Callsite</dt>
+      <dd>{callsiteText}</dd>
+    </>
   );
 }
 
