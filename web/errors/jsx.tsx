@@ -39,7 +39,7 @@ function _defaultRender(error: CutoutError) {
     let callsiteText = error.callsite.file;
 
     if (error.callsite.line) {
-      callsiteText += `:${error.callsite.line}`
+      callsiteText += `:${error.callsite.line}`;
     }
 
     if (error.callsite.line && error.callsite.column) {

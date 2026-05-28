@@ -57,7 +57,7 @@ export class CutoutError extends Error {
     return {
       file,
       column: this.#callsite.getColumnNumber(),
-      line: this.#callsite.getLineNumber()
+      line: this.#callsite.getLineNumber(),
     };
   }
 

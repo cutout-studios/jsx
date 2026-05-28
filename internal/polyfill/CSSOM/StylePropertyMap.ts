@@ -9,12 +9,12 @@ export class StylePropertyMap {
   }
   set(property: string, ...values: string[]) {
     this.#properties.set(property, values);
-  };
+  }
   forEach(fn: (property: string, value: string) => void) {
     for (const [property, value] of this.#properties) {
       fn(property, value);
     }
-  };
+  }
 
   #properties = new Map();
 }

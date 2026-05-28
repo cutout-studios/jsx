@@ -4,7 +4,7 @@ import type { HTMLElement } from "./HTMLElement.ts";
 type _CustomElementConstructor = {
   prototype: HTMLElement;
   new (...args: unknown[]): HTMLElement;
-}
+};
 
 interface _CustomElementRegistry {
   get(tag: string): _CustomElementConstructor | undefined;

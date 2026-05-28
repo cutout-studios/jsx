@@ -42,7 +42,9 @@ const SELECTOR_TERMINATORS = `,{`;
 const PROPERTY_TERMINATORS = `:;}`;
 const TERMINATORS = SELECTOR_TERMINATORS + PROPERTY_TERMINATORS + `()"'`;
 
-export function _parseCSSStyleRule(cssText: string): CSSParseResult | undefined {
+export function _parseCSSStyleRule(
+  cssText: string,
+): CSSParseResult | undefined {
   const parse = _createCSSParseState();
 
   try {
