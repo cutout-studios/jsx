@@ -9,10 +9,6 @@ possible to their respective targets.
 
 ## Contents
 
-> [!CAUTION]
-> Currently these tools are either speculative and/or untested: not yet for
-> production use.
-
 ### Core
 
 | Module                  | Description                                                      | Release                                                                 |
@@ -20,6 +16,10 @@ possible to their respective targets.
 | [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 
 ### Experimental
+
+> [!CAUTION]
+> Currently these tools are either speculative and/or untested: not yet for
+> production use.
 
 | Module                      | Description                                                                                                                                      | Status                                                       | Notes                                                                               |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
