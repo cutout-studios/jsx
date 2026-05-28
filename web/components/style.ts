@@ -23,6 +23,8 @@ export function registerStyle(
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
+  console.log(cleanCSS);
+
   let route: Route<EmptyShape> | undefined;
   if (path) {
     route = registerRoute(path.replace(/\.tsx?$/, ".css"), {
@@ -47,7 +49,7 @@ function _cleanRawCSSRule(rawCSSRule: string): string {
 
   let properties = "";
 
-  result.styleMap.forEach((values, key) => properties += `${key}:${values};`);
+  result.styleMap.forEach((key, value) => properties += `${key}:${value};`);
 
   return `${result.selectorText}{${properties}}`;
 }

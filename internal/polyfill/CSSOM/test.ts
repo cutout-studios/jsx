@@ -30,7 +30,7 @@ Deno.test(`${TEST_GROUP} - CSSStyleRule, handles messy CSS`, () => {
   result.cssText = /* css */ `
       :host {
         all: unset;
-              font-family: system;
+              font-family: sans-serif;
         all: initial;font-family:;
         font-family: system-ui;
       }
@@ -65,7 +65,7 @@ Deno.test(`${TEST_GROUP} - CSSStyleRule, throws invalid CSS`, () => {
     `;
   });
 
-  assertThrows(() => result.cssText = `:host { all: initial; }`);
+  assertThrows(() => result.cssText = `:host,,, {}`);
 });
 
 Deno.test(`${TEST_GROUP} - CSSStyleRule, content`, () => {

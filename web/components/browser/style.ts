@@ -16,7 +16,7 @@ export function registerBrowserStyle(
   cssText: string,
   { route, registry }: StyleOptions,
 ): Style {
-  const result = class extends CSSRule implements Style {
+  const result = class extends CSSStyleRule implements Style {
     text = cssText;
     route = route;
     constructor() {

@@ -7,7 +7,13 @@ export class CSSStyleRule extends CSSRule {
   styleMap: StylePropertyMap = new StylePropertyMap();
   selectorText?: string;
 
+  get cssText(): string | undefined {
+    return this.#cssText;
+  }
+
   set cssText(cssText: string) {
+    this.#cssText = cssText;
+
     this.styleMap.clear();
 
     const parsedCSS = _parseCSSStyleRule(cssText);
@@ -22,6 +28,8 @@ export class CSSStyleRule extends CSSRule {
       this.styleMap.set(property, value);
     }
   }
+
+  #cssText?: string;
 }
 
 _globalThis.CSSStyleRule = CSSStyleRule;
@@ -87,8 +95,8 @@ export function _parseCSSStyleRule(
         continue;
       }
 
+      parse.appendValue(match);
       parse.inside.update(_getLastChar(match));
-      parse.appendValue(match.trim());
     }
   } catch {
     return INVALID;
@@ -133,7 +141,7 @@ const _createCSSParseState = () => ({
   },
   setKey(key: string) {
     if (this.current.key) {
-      throw INVALID;
+      throw INVALID; // TODO: Throw something better
     }
 
     this.current.key = key;
@@ -151,11 +159,11 @@ const _createCSSParseState = () => ({
     if (rawSelectorSublist) {
       this.current.value = this.current.value.replace(
         rawSelectorSublist,
-        rawSelectorSublist.split(/,\s*/).sort().join(","),
+        rawSelectorSublist.split(/,\s*/).sort().join(", "),
       );
     }
 
-    this._selectors.push(this.current.value);
+    this._selectors.push(this.current.value.trim());
     this.current.value = "";
   },
   commitAsProperty() {
@@ -163,7 +171,8 @@ const _createCSSParseState = () => ({
       throw INVALID;
     }
 
-    this._properties.push([this.current.key, this.current.value]);
+    // TODO: support multiple values
+    this._properties.push([this.current.key.trim(), this.current.value.trim()]);
     this.current.key = "";
     this.current.value = "";
   },
