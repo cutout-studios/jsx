@@ -23,8 +23,6 @@ export function registerStyle(
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  console.log(cleanCSS);
-
   let route: Route<EmptyShape> | undefined;
   if (path) {
     route = registerRoute(path.replace(/\.tsx?$/, ".css"), {

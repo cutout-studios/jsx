@@ -9,6 +9,12 @@ import {
   ErrorCode,
 } from "./constants.ts";
 
+export type CutoutErrorCallsite = {
+  file: string | null;
+  column: number | null;
+  line: number | null;
+};
+
 /**
  * A wrapper class for the native Error that
  * enforces a standard error code.
@@ -44,13 +50,13 @@ export class CutoutError extends Error {
    * The actual call information re: where this
    * error was created.
    */
-  get callsite() {
+  get callsite(): CutoutErrorCallsite | undefined {
     if (!this.#callsite) return undefined;
 
     let file = this.#callsite.getFileName();
 
     if (file) {
-      // TODO(#): replace Deno.cwd with root, which will default to Deno.cwd
+      // TODO(#62): replace Deno.cwd with root, which will default to Deno.cwd
       file = relative(Deno.cwd(), file);
     }
 

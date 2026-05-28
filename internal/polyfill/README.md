@@ -1,9 +1,9 @@
 # `@cutout/internal/polyfill`
 
 > [!WARNING]
-> This polyfill _only_ implements the minimum browser apis required to make to
-> toolbox work: no more, no less. Do not treat it as a comprehensive
-> implementation!!
+> This polyfill _only_ implements the minimum browser APIs required to make to
+> toolbox work on the server: no more, no less. Do not treat it as a
+> comprehensive implementation! There will be divergent or incomplete behavior.
 
 ---
 
