@@ -9,6 +9,7 @@ import {
   ErrorCode,
 } from "./constants.ts";
 
+/** @internal */
 export type CutoutErrorCallsite = {
   file: string | null;
   column: number | null;
