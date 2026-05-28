@@ -14,8 +14,8 @@
   },
   "imports": {
     // To ensure "internal" stays private, we alias it here.
-    "@cutout/internal": "../internal/module.ts",
-    "@cutout/internal/polyfill": "../internal/polyfill/module.ts",
+    "@cutout/internal": "../../internal/module.ts",
+    "@cutout/internal/polyfill": "../../internal/polyfill/module.ts",
 
     "@std/assert": "jsr:@std/assert",
     "@std/fmt": "jsr:@std/fmt",

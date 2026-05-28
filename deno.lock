@@ -115,19 +115,7 @@
   },
   "workspace": {
     "members": {
-      "internal": {
-        "dependencies": [
-          "jsr:@std/assert@*",
-          "jsr:@std/data-structures@*"
-        ]
-      },
-      "jsx": {
-        "dependencies": [
-          "jsr:@std/assert@*",
-          "jsr:@std/testing@*"
-        ]
-      },
-      "web": {
+      "experimental/web": {
         "dependencies": [
           "jsr:@std/assert@*",
           "jsr:@std/data-structures@*",
@@ -139,6 +127,18 @@
           "npm:happy-dom@*",
           "npm:react-dom@*",
           "npm:react@*"
+        ]
+      },
+      "internal": {
+        "dependencies": [
+          "jsr:@std/assert@*",
+          "jsr:@std/data-structures@*"
+        ]
+      },
+      "jsx": {
+        "dependencies": [
+          "jsr:@std/assert@*",
+          "jsr:@std/testing@*"
         ]
       }
     }

@@ -15,17 +15,17 @@ possible to their respective targets.
 
 ### Core
 
-| Module                  | Description                                                                                             | Status                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer.                                        | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
-| [`@cutout/web`](./web/) | **_A full-stack framework built on top of `@cutout/jsx`._** Think Next.js but for Deno + WebComponents. | <progress value="3" max="4">3 / 4 modules</progress>                    |
+| Module                  | Description                                                      | Release                                                                 |
+| ----------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 
 ### Experimental
 
-| Module                      | Description                                                            | Status                  | Notes                                                                               |
-| --------------------------- | ---------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
-| [`@cutout/tauri`](./tauri/) | Embed your `@cutout/web` app in a cross-platform Tauri shell!          | _Researching_           | Seems viable _so_ far...                                                            |
-| [`@cutout/agent`](./agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | _Partially Implemented_ | **Shim**: run with `deno task --cwd=agent start`, but it doesn't do much currently. |
+| Module                      | Description                                                                                                                                      | Status                                                       | Notes                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| [`@cutout/web`](./web/)     | **_A full-stack framework that glues together `@cutout/jsx`'s IR and Deno's awesome @std library._** Think Next.js but for Deno + WebComponents. | <progress value="3" max="4">3 / 4 modules drafted</progress> | Don't use this yet! Still building. **Est. alpha release: August 2026**             |
+| [`@cutout/tauri`](./tauri/) | Embed your `@cutout/web` app in a cross-platform Tauri shell!                                                                                    | _Researching_                                                | Seems viable _so_ far...                                                            |
+| [`@cutout/agent`](./agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service.                                                                           | _Partially Implemented_                                      | **Shim**: run with `deno task --cwd=agent start`, but it doesn't do much currently. |
 
 ## Contributing
 
