@@ -10,7 +10,8 @@
     "./errors": "./errors/module.ts",
     "./format/dom/jsx-runtime": "./formats/dom/runtime.d.ts",
     "./format/html/jsx-runtime": "./formats/html/runtime.d.ts",
-    "./formats": "./formats/module.ts"
+    "./formats": "./formats/module.ts",
+    "./serve": "./serve/module.ts"
   },
   "imports": {
     // To ensure "internal" stays private, we alias it here.

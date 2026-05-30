@@ -21,14 +21,15 @@ import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
  */
 export function registerRoute<const D extends Definition>(
   path: string,
-  { registry, definition, render }: RouteOptions<D>,
+  { registry, definition, render }: RouteOptions<D>, // TODO: extend to include method, format, search. remove #extension
 ): Route<D> {
   const sanitizedPath = _sanitizePath(path);
 
+  // TODO: "name" should strip vars so we can't re-register routes
   const result = class implements StandardRoute {
-    path = sanitizedPath;
-    pattern = new URLPattern({ pathname: sanitizedPath });
-    handler = async (
+    readonly path = sanitizedPath;
+    readonly pattern = new URLPattern({ pathname: sanitizedPath });
+    readonly handler = async (
       request: Request,
       { pathname, search, hash }: URLPatternResult,
     ) => {
@@ -45,17 +46,20 @@ export function registerRoute<const D extends Definition>(
 
       const renderResult = await render?.(params, request);
 
+      // TODO: handle error
       if (!renderResult) {
         throw new CutoutError();
       }
 
-      let responseBody;
+      let responseBody; 
       if (typeof renderResult === "string") {
         responseBody = renderResult;
       } else {
-        switch (this.#contentType) {
-          case "text/html": // TODO(#75): Inject importmaps by integrity hash, etc.
+        switch (this.#contentType) { // TODO: Resolve `Accept` headers.
+          case "text/html":
           default:
+            // TODO: Inject importmaps by integrity hash, etc. while respecting page budget (meat of this PR).
+            // get base from URLPatternResult.
             responseBody = html(renderResult);
         }
       }

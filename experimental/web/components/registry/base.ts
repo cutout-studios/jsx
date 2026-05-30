@@ -46,6 +46,8 @@ export class BaseRegistry implements Registry {
     this.#internalRegistry.set(name, constructor);
     this.#reverseRegistry.set(constructor, name);
 
+    console.info(`Registered Component: ${name}`);
+
     if (isElementEntryConstructor(constructor)) {
       this.#baseRegistry.define(name, constructor);
     }
@@ -63,6 +65,8 @@ export class BaseRegistry implements Registry {
     return this.#reverseRegistry.get(entry) ?? null;
   }
 
-  // TODO(#75): Get routes in order of decreasing specificity.
-  // getRoutes(): Route[] {}
+  // TODO(?): fix and maybe group by format
+  getRoutes(): CutoutRoute[] {
+    return this.#internalRegistry.entries();
+  }
 }
