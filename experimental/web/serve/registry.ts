@@ -3,13 +3,13 @@ import { route } from "@std/http/route";
 
 import type { Server } from "./types.ts";
 
+// TODO: get current location via V8 so we can generate relative pathings
 export function serveRegistry(
   registry: CutoutRegistry,
   { hostname = "[::1]", port = 0 },
 ): Server {
   const routes = registry.getRoutes();
-
-  // TODO: handle error
+  // TODO: fwd errors to error renderer
   const { addr: address } = Deno.serve(
     { hostname, port },
     route(routes, () => new Response("Not Found")),
