@@ -7,18 +7,18 @@ import { dom } from "@cutout/web/formats";
 import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../constants.ts";
 import { parseRawValue } from "../../parse.ts";
 import type {
-  Definition,
+  Type,
   ShapeFor,
   ShapeValueFor,
   Style,
   ValidDefinitionConstructor,
 } from "../../types.ts";
 
-export class BaseElement<D extends Definition> extends HTMLElement {
+export class BaseElement<D extends Type> extends HTMLElement {
   static readonly observedAttributes: string[];
 
   readonly observedAttributesMirror: string[] = BaseElement.observedAttributes;
-  readonly definition?: D;
+  readonly type?: D;
   readonly stylesheet?: Style[] = [];
   readonly render?: (attributes: ShapeFor<D>) => CutoutGeneratorToken = () => (
     <slot></slot>

@@ -12,9 +12,9 @@ import type { Style, StyleOptions } from "../types.ts";
  * @param {StyleOptions} options Options for configuring the Style generation.
  * @returns {Style} A generated Style instance.
  */
-export function registerBrowserStyle(
+export function createBrowserStyle(
   cssText: string,
-  { route, registry }: StyleOptions,
+  { route }: StyleOptions,
 ): Style {
   const result = class extends CSSStyleRule implements Style {
     text = cssText;
@@ -24,8 +24,6 @@ export function registerBrowserStyle(
       this.cssText = cssText;
     }
   };
-
-  registry?.define(cssText, result);
 
   return Reflect.construct(result, []);
 }

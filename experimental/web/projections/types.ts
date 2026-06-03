@@ -7,11 +7,7 @@ import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
  */
 type GeneratorToken = CutoutGeneratorToken;
 
-/**
- * A Formatter transforms the output of the Cutout JSX process (token stream)
- * into a specified format (html string, json, so on...)
- */
-export type Formatter<T, O extends AnyShape = EmptyShape> = (
+export type Projection<T, O extends AnyShape = EmptyShape> = (
   token: GeneratorToken,
   options?: O,
 ) => T;

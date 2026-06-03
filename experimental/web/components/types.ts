@@ -6,7 +6,6 @@ import type {
 } from "@cutout/internal";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Route as _Route } from "@std/http/route";
-import type { Registry } from "./registry/types.ts";
 
 /**
  * Used to define a `@cutout/web` component's attributes or parameters.
@@ -21,7 +20,7 @@ import type { Registry } from "./registry/types.ts";
  * validateData(definition, { name: 3 }); // Invalid
  * ```
  */
-export type Definition = Readonly<
+export type Type = Readonly<
   Record<PropertyKey, ValidDefinitionConstructor>
 >;
 
@@ -32,22 +31,22 @@ export type Definition = Readonly<
  *   - The provided `definition` to parse the extracted parameters.
  *   - The provided `render` function to craft the server response body.
  */
-export interface Route<D extends Definition> extends StandardRoute {
+export interface Endpoint<D extends Type> extends StandardRoute {
   /** The URLPattern string that this route matches. */
   readonly path: string;
 
   /** The specific route schema definition for its parameters. */
-  readonly definition?: D;
+  readonly type?: D;
 
-  /** See {@link RouteRenderFunction} */
-  readonly render?: RouteRenderFunction<D>;
+  /** See {@link EndpointRenderFunction} */
+  readonly render?: EndpointRenderFunction<D>;
 }
 
 /**
  * Handles the final stage of route resolution.
  * Receives parsed and validated parameters along with the raw request, to produce either JSX or raw string for the response body.
  */
-export type RouteRenderFunction<D extends Definition> = (
+export type EndpointRenderFunction<D extends Type> = (
   parameters: ShapeFor<D>,
   request?: Request,
 ) => Promise<GeneratorToken | string>;
@@ -55,9 +54,9 @@ export type RouteRenderFunction<D extends Definition> = (
 /**
  * Options for generating a `Route` by way of the `registerRoute` factory function.
  */
-export type RouteOptions<D extends Definition> =
+export type EndpointOptions<D extends Type> =
   & FactoryBaseOptions
-  & FactoryRenderableOptions<D, RouteRenderFunction<D>>;
+  & FactoryRenderableOptions<D, EndpointRenderFunction<D>>;
 
 /**
  * A specific, isolated CSSRule, based on the provided `text`.
@@ -77,7 +76,7 @@ export interface Style extends CSSRule {
   readonly text: string;
 
   /** On the server, the route component that resolves to this rule. */
-  readonly route?: Route<EmptyShape>;
+  readonly route?: Endpoint<EmptyShape>;
 }
 
 /**
@@ -92,12 +91,12 @@ export type StyleOptions =
  * Parses incoming attributes against the `definition`, applies registered `stylesheet` rules, and delegates
 DOM updates to the `render` function.
  */
-export interface Element<D extends Definition> extends HTMLElement {
+export interface Element<D extends Type> extends HTMLElement {
   /** The Element tagName (e.g. the "div" in <div></div>) */
   readonly tag: string;
 
   /** The specific Element schema definition for its attributes. */
-  readonly definition?: D;
+  readonly type?: D;
 
   /** The array of style rules to apply to this Element. */
   readonly stylesheet?: Style[];
@@ -106,7 +105,7 @@ export interface Element<D extends Definition> extends HTMLElement {
   readonly render?: ElementRenderFunction<D>;
 
   /** On the server, the route component that resolves to this element. */
-  readonly route?: Route<EmptyShape>;
+  readonly route?: Endpoint<EmptyShape>;
 }
 
 /**
@@ -114,14 +113,14 @@ export interface Element<D extends Definition> extends HTMLElement {
  * Runs when attributes change or during initial mount, converting validated attribute shapes into a JSX
 generator token for patching or hydration.
  */
-export type ElementRenderFunction<D extends Definition> = (
+export type ElementRenderFunction<D extends Type> = (
   attributes: ShapeFor<D>,
 ) => GeneratorToken;
 
 /**
  * Options for registering an `Element` function by way of the `registerElement` factory function.
  */
-export type ElementOptions<D extends Definition> =
+export type ElementOptions<D extends Type> =
   & FactoryBaseOptions
   & FactoryFileBasedRoutingOptions
   & FactoryRenderableOptions<D, ElementRenderFunction<D>>
@@ -151,7 +150,7 @@ export type ElementOptions<D extends Definition> =
  * );
  * ```
  */
-export type ElementJSX<D extends Definition> = (
+export type ElementJSX<D extends Type> = (
   attributes: ShapeFor<D>,
   options?: {
     shallow: boolean;
@@ -159,22 +158,20 @@ export type ElementJSX<D extends Definition> = (
 ) => GeneratorToken;
 
 /** @internal */
-type FactoryBaseOptions = {
-  readonly registry: Registry;
-};
+type FactoryBaseOptions = {};
 
 /** @internal */
 type FactoryFileBasedRoutingOptions = {
   readonly root?: string;
-  readonly route?: Route<EmptyShape>;
+  readonly route?: Endpoint<EmptyShape>;
 };
 
 /** @internal */
 type FactoryRenderableOptions<
-  D extends Definition,
+  D extends Type,
   R extends AnyFunction,
 > = {
-  readonly definition?: D;
+  readonly type?: D;
   readonly render?: R;
 };
 
@@ -201,7 +198,7 @@ export type ShapeValueFor<C extends ValidDefinitionConstructor> = C extends
   : never;
 
 /** @internal */
-export type ShapeFor<T extends Definition> = {
+export type ShapeFor<T extends Type> = {
   [K in keyof T]?: ShapeValueFor<T[K]>;
 };
 

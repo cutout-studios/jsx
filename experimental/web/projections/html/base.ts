@@ -6,18 +6,12 @@ import {
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 
 import { FUNCTION_SERIALIZATION, VOID } from "../constants/module.ts";
-import type { Formatter } from "../types.ts";
+import type { Projection } from "../types.ts";
 import { escape } from "./escape.ts";
 
 const VOID_SET: Set<string> = new Set(VOID);
 
-/**
- * A generic HTML formatter, for SSR.
- *
- * @param {CutoutGeneratorToken} generatorToken The Cutout JSX IR.
- * @returns {string} The formatted HTML.
- */
-export const html: Formatter<string> = ([, generator]): string => {
+export const html: Projection<string> = ([, generator]): string => {
   const state: _FormatState = {
     result: "",
     context: {

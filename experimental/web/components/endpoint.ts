@@ -1,5 +1,5 @@
 import { CutoutError } from "@cutout/web/errors";
-import { html } from "@cutout/web/formats";
+import { html } from "@cutout/web/projections";
 import type { Route as StandardRoute } from "@std/http/route";
 import { contentType, getCharset } from "@std/media-types";
 
@@ -10,19 +10,12 @@ import {
   SupportedHTTPHeaders,
 } from "./constants.ts";
 import { parseRawValue } from "./parse.ts";
-import type { Definition, Route, RouteOptions, ShapeFor } from "./types.ts";
+import type { Type, Endpoint, EndpointOptions, ShapeFor } from "./types.ts";
 
-/**
- * Registers a Route in the given component registry.
- *
- * @param {string} path The URLPattern string that will be matched with this route. Must be unique.
- * @param {RouteOptions} options Options for configuring the specific route.
- * @returns {Route} The registered Route object.
- */
-export function registerRoute<const D extends Definition>(
+export function createEndpoint<const D extends Type>(
   path: string,
-  { registry, definition, render }: RouteOptions<D>,
-): Route<D> {
+  { type: definition, render }: EndpointOptions<D>,
+): Endpoint<D> {
   const sanitizedPath = _sanitizePath(path);
 
   const result = class implements StandardRoute {
@@ -76,8 +69,6 @@ export function registerRoute<const D extends Definition>(
       [SupportedHTTPHeaders.CSP]: ROUTE_CSP_HEADER_DEFAULT,
     };
   };
-
-  registry.define(sanitizedPath, result);
 
   return Reflect.construct(result, []);
 }

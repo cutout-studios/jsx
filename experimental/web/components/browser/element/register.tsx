@@ -2,7 +2,7 @@
 
 import { ELEMENT_TAG_PREFIX } from "../../constants.ts";
 import type { BaseRegistry } from "../../registry/base.ts";
-import type { Definition, ShapeValueFor } from "../../types.ts";
+import type { Type, ShapeValueFor } from "../../types.ts";
 import type { Element, ElementJSX, ElementOptions } from "../../types.ts";
 import { BaseElement } from "./base.tsx";
 
@@ -18,12 +18,11 @@ import { BaseElement } from "./base.tsx";
  * @param {ElementOptions} options Options for configuring the Element generation.
  * @returns {ElementJSX} The generated Elements' JSX function.
  */
-export function registerBrowserElement<
-  D extends Definition,
+export function createBrowserElement<
+  D extends Type,
 >(tag: string, {
-  definition,
+  type,
   tagPrefix = ELEMENT_TAG_PREFIX,
-  registry = customElements as unknown as BaseRegistry, // Close enough
   render,
   route,
   connectedCallback,
@@ -32,15 +31,15 @@ export function registerBrowserElement<
   stylesheet = [],
 }: ElementOptions<D>): ElementJSX<D> {
   const systemTag = `${tagPrefix}-${tag}`;
-  const observedAttributes = Object.keys(definition ?? []);
+  const observedAttributes = Object.keys(type ?? []);
 
-  registry.define(
+  customElements.define(
     systemTag,
     class extends BaseElement<D> implements Element<D> {
       static override observedAttributes = observedAttributes;
 
       override readonly observedAttributesMirror: string[] = observedAttributes;
-      override readonly definition = definition;
+      override readonly type = type;
       override readonly render = render;
       override readonly stylesheet = stylesheet;
       route = route;

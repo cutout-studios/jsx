@@ -1,29 +1,18 @@
 import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import { registerBrowserElement } from "./browser/element/register.tsx";
-import { registerRoute } from "./route.ts";
+import { createBrowserElement } from "./browser/element/register.tsx";
+import { createEndpoint } from "./endpoint.ts";
 import type {
-  Definition,
+  Type,
   ElementJSX,
   ElementOptions as ElementOptions,
-  Route,
+  Endpoint,
 } from "./types.ts";
 
-/**
- * Registers an Element in the given component registry,
- * returning a function that can be used to invoke that Element via JSX.
- *
- * Also registers a route to the element's file in V8 environments.
- *
- * @param {string} tag The desired element tag for use in HTML. Must be unique.
- * @param {ElementOptions} options Options for configuring the Element generation.
- * @returns {ElementJSX} The generated Elements' JSX function.
- */
-export function registerElement<D extends Definition>(
+export function createElement<D extends Type>(
   tag: string,
   {
-    registry,
     root = Deno.cwd(),
     ...options
   }: ElementOptions<D>,
@@ -32,10 +21,9 @@ export function registerElement<D extends Definition>(
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  let route: Route<EmptyShape> | undefined;
+  let route: Endpoint<EmptyShape> | undefined;
   if (path) {
-    route = registerRoute(path, {
-      registry,
+    route = createEndpoint(path, {
       render: async () => {
         // TODO(#62): Prod environment
         const { outputFiles, errors } = await Deno.bundle({
@@ -69,5 +57,5 @@ export function registerElement<D extends Definition>(
     });
   }
 
-  return registerBrowserElement(tag, { ...options, registry, route });
+  return createBrowserElement(tag, { ...options, route });
 }

@@ -1,37 +1,27 @@
 import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { relative } from "@std/path";
-import { registerBrowserStyle } from "./browser/style.ts";
-import { registerRoute } from "./route.ts";
-import type { Route, Style, StyleOptions } from "./types.ts";
+import { createBrowserStyle } from "./browser/style.ts";
+import { createEndpoint } from "./endpoint.ts";
+import type { Endpoint, Style, StyleOptions } from "./types.ts";
 
-/**
- * Registers a Style in the given component registry.
- *
- * Also registers a route to the styles' file in V8 environments.
- *
- * @param {string} rawCSS The text of the raw CSS rule to be registered. Must be unique after sanitization.
- * @param {StyleOptions} options Options for configuring the Style generation.
- * @returns {Style} A generated Style instance.
- */
-export function registerStyle(
+export function createStyle(
   rawCSS: string,
-  { registry, root = Deno.cwd() }: StyleOptions,
+  { root = Deno.cwd() }: StyleOptions = {}
 ): Style {
   const cleanCSS = _cleanRawCSSRule(rawCSS);
   const callSiteFilePath = V8CallSite.getParent()?.getFileName() ??
     undefined;
   const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  let route: Route<EmptyShape> | undefined;
+  let route: Endpoint<EmptyShape> | undefined;
   if (path) {
-    route = registerRoute(path.replace(/\.tsx?$/, ".css"), {
-      registry,
+    route = createEndpoint(path.replace(/\.tsx?$/, ".css"), {
       render: () => Promise.resolve(cleanCSS),
     });
   }
 
-  return registerBrowserStyle(cleanCSS, { route, registry });
+  return createBrowserStyle(cleanCSS, { route });
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {

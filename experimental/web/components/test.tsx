@@ -1,23 +1,18 @@
 import "@cutout/internal/polyfill";
 
-import { assert } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
-import { registerElement } from "./element.ts";
-import { BaseRegistry as Registry } from "./registry/base.ts";
-import { registerRoute } from "./route.ts";
-import { registerStyle } from "./style.ts";
+import { createElement } from "./element.ts";
+import { createEndpoint } from "./endpoint.ts";
+import { createStyle } from "./style.ts";
 
 const TEST_GROUP = "web/registry";
 
 Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
-  const testRegistry = new Registry();
-  const redText = registerStyle(/* css */ `:host { color: red; }`, {
-    registry: testRegistry,
-  });
-  const Greeting = registerElement("greeting", {
-    registry: testRegistry,
+  const redText = createStyle(/* css */ `:host { color: red; }`);
+  const Greeting = createElement("greeting", {
     tagPrefix: "test",
-    definition: {
+    type: {
       name: String,
     },
     stylesheet: [redText],
@@ -26,9 +21,8 @@ Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
     },
   });
 
-  const greetingPage = registerRoute("/greet/:name", {
-    registry: testRegistry,
-    definition: {
+  const greetingPage = createEndpoint("/greet/:name", {
+    type: {
       name: String,
     },
     render({ name = "World" }) {
@@ -45,10 +39,6 @@ Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
     },
   });
 
-  assert(testRegistry.get(":host{color:red;}"));
-  assert(testRegistry.get("test-greeting"));
-  assert(testRegistry.get("/greet/:name"));
-
   await assertSnapshot(
     test,
     await (await greetingPage.handler(
@@ -61,11 +51,8 @@ Deno.test(`${TEST_GROUP} - compose style, element, and route`, async (test) => {
 });
 
 Deno.test(`${TEST_GROUP} - registerRoute, given messy route path`, () => {
-  const testRegistry = new Registry();
-
-  registerRoute("///user //:id/", {
-    registry: testRegistry,
-    definition: {
+  const endpoint = createEndpoint("///user //:id/", {
+    type: {
       id: Number,
     },
     render({ id }) {
@@ -73,5 +60,5 @@ Deno.test(`${TEST_GROUP} - registerRoute, given messy route path`, () => {
     },
   });
 
-  assert(testRegistry.get("/user%20/:id"));
+  assertEquals(endpoint.name, "/user%20/:id");
 });
