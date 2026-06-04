@@ -10,7 +10,7 @@ import {
   SupportedHTTPHeaders,
 } from "./constants.ts";
 import { parseRawValue } from "./parse.ts";
-import type { Type, Endpoint, EndpointOptions, ShapeFor } from "./types.ts";
+import type { Endpoint, EndpointOptions, ShapeFor, Type } from "./types.ts";
 
 export function createEndpoint<const D extends Type>(
   path: string,

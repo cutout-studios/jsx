@@ -1,27 +1,11 @@
-import { type EmptyShape, V8CallSite } from "@cutout/internal";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
-import { relative } from "@std/path";
 import { createBrowserStyle } from "./browser/style.ts";
-import { createEndpoint } from "./endpoint.ts";
-import type { Endpoint, Style, StyleOptions } from "./types.ts";
+import type { Style } from "./types.ts";
 
-export function createStyle(
-  rawCSS: string,
-  { root = Deno.cwd() }: StyleOptions = {}
-): Style {
+export function createStyle(rawCSS: string): Style {
   const cleanCSS = _cleanRawCSSRule(rawCSS);
-  const callSiteFilePath = V8CallSite.getParent()?.getFileName() ??
-    undefined;
-  const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
 
-  let route: Endpoint<EmptyShape> | undefined;
-  if (path) {
-    route = createEndpoint(path.replace(/\.tsx?$/, ".css"), {
-      render: () => Promise.resolve(cleanCSS),
-    });
-  }
-
-  return createBrowserStyle(cleanCSS, { route });
+  return createBrowserStyle(cleanCSS, {});
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {

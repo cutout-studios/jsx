@@ -1,16 +1,16 @@
-/** @jsxImportSourceTypes @cutout/web/format/dom */
+/** @jsxImportSourceTypes @cutout/web/projections/dom */
 
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
-import { dom } from "@cutout/web/formats";
+import { dom } from "@cutout/web/projections";
 
 import { DOCUMENT_QUERY_SPECIFICITY_GUIDANCE } from "../../constants.ts";
 import { parseRawValue } from "../../parse.ts";
 import type {
-  Type,
   ShapeFor,
   ShapeValueFor,
   Style,
+  Type,
   ValidDefinitionConstructor,
 } from "../../types.ts";
 
@@ -39,7 +39,7 @@ export class BaseElement<D extends Type> extends HTMLElement {
       ...result,
       [attributeName]: parseRawValue(
         this.getAttribute(attributeName)!,
-        this.definition![attributeName] as ValidDefinitionConstructor,
+        this.type![attributeName] as ValidDefinitionConstructor,
       ),
     }), {});
   }

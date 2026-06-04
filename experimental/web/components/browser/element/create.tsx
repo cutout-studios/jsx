@@ -1,8 +1,7 @@
-/** @jsxImportSourceTypes @cutout/web/format/dom */
+/** @jsxImportSourceTypes @cutout/web/projections/dom */
 
 import { ELEMENT_TAG_PREFIX } from "../../constants.ts";
-import type { BaseRegistry } from "../../registry/base.ts";
-import type { Type, ShapeValueFor } from "../../types.ts";
+import type { ShapeValueFor, Type } from "../../types.ts";
 import type { Element, ElementJSX, ElementOptions } from "../../types.ts";
 import { BaseElement } from "./base.tsx";
 

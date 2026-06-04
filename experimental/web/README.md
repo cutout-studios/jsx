@@ -4,7 +4,7 @@ A thin library for meant for authoring Webapps that take full advantage of
 [`@cutout/jsx`](https://github.com/cutout-studios/toolbox/blob/main/jsx/)'s
 streaming architecture.
 
-### Likely Requirements
+## Likely Requirements
 
 - Deno 2.4+ (for `Deno.bundle`).
 - Modern browsers with
@@ -14,6 +14,11 @@ streaming architecture.
 > [!CAUTION]
 > `@cutout/web` is currently being implemented. Feel free to weigh in, but don't
 > use anything here yet.
+
+## Target Architecture
+
+`@cutout/web` aspires to provide the core primitives necessary for the
+development of most applications. [Read more here.](./ARCHITECTURE.md)
 
 ### Dependency reductions
 

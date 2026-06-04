@@ -1,5 +1,4 @@
 export type {
-  Type as CutoutDefinition,
   Element as CutoutElement,
   ElementJSX as CutoutElementJSX,
   ElementOptions as CutoutElementJSXOptions,
@@ -9,6 +8,7 @@ export type {
   EndpointRenderFunction as CutoutRouteRenderFunction,
   Style as CutoutStyle,
   StyleOptions as CutoutStyleOptions,
+  Type as CutoutDefinition,
 } from "./types.ts";
 
 export { createEndpoint as registerRoute } from "./endpoint.ts";
