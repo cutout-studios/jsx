@@ -1,11 +1,11 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
-import { createBrowserStyle } from "./browser/style.ts";
+import { createBrowserStyle } from "./browser/style.tsx";
 import type { Style } from "./types.ts";
 
 export function createStyle(rawCSS: string): Style {
   const cleanCSS = _cleanRawCSSRule(rawCSS);
 
-  return createBrowserStyle(cleanCSS, {});
+  return createBrowserStyle(cleanCSS, { name: cleanCSS, content: cleanCSS });
 }
 
 function _cleanRawCSSRule(rawCSSRule: string): string {

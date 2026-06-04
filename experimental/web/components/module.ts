@@ -1,16 +1,10 @@
 export type {
   Element as CutoutElement,
-  ElementJSX as CutoutElementJSX,
-  ElementOptions as CutoutElementJSXOptions,
-  ElementRenderFunction as CutoutElementRenderFunction,
-  Endpoint as CutoutRoute,
-  EndpointOptions as CutoutRouteOptions,
-  EndpointRenderFunction as CutoutRouteRenderFunction,
+  Endpoint as CutoutEndpoint,
   Style as CutoutStyle,
-  StyleOptions as CutoutStyleOptions,
-  Type as CutoutDefinition,
+  Type as CutoutType,
 } from "./types.ts";
 
-export { createEndpoint as registerRoute } from "./endpoint.ts";
+export { createEndpoint as registerRoute } from "./endpoint.tsx";
 export { createStyle as registerStyle } from "./style.ts";
 export { createElement as registerElement } from "./element.ts";

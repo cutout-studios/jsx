@@ -1,5 +1,6 @@
 /** @jsxImportSourceTypes @cutout/web/projections/dom */
 
+import type { OneOrMany } from "@cutout/internal";
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
 import { dom } from "@cutout/web/projections";
@@ -11,24 +12,36 @@ import type {
   ShapeValueFor,
   Style,
   Type,
+  TypeDefinition,
   ValidDefinitionConstructor,
 } from "../../types.ts";
 
-export class BaseElement<D extends Type> extends HTMLElement {
+/** @internal */
+export class BaseElement<const D extends TypeDefinition> extends HTMLElement {
   static readonly observedAttributes: string[];
 
   readonly observedAttributesMirror: string[] = BaseElement.observedAttributes;
-  readonly type?: D;
-  readonly stylesheet?: Style[] = [];
+  readonly type?: Type<D>;
+  readonly stylesheet: OneOrMany<Style>;
   readonly render?: (attributes: ShapeFor<D>) => CutoutGeneratorToken = () => (
     <slot></slot>
   );
 
+  constructor(stylesheet: OneOrMany<Style>) {
+    super();
+
+    this.stylesheet = stylesheet;
+  }
+
   get stylesheets() {
     const stylesheet = new CSSStyleSheet();
 
-    for (const rule of this?.stylesheet ?? []) {
-      stylesheet.insertRule(rule.cssText);
+    for (
+      const rule of Array.isArray(this.stylesheet)
+        ? this.stylesheet
+        : [this.stylesheet]
+    ) {
+      stylesheet.insertRule(rule.content);
     }
 
     return [stylesheet];
@@ -39,7 +52,7 @@ export class BaseElement<D extends Type> extends HTMLElement {
       ...result,
       [attributeName]: parseRawValue(
         this.getAttribute(attributeName)!,
-        this.type![attributeName] as ValidDefinitionConstructor,
+        this.type!.definition[attributeName] as ValidDefinitionConstructor,
       ),
     }), {});
   }

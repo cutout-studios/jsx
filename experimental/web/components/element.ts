@@ -1,15 +1,17 @@
 import { createBrowserElement } from "./browser/element/create.tsx";
 import type {
+  Element,
   ElementJSX,
-  ElementOptions as ElementOptions,
-  Type,
+  OptionsFor,
+  TypeDefinition,
 } from "./types.ts";
 
-export function createElement<D extends Type>(
+/** @internal */
+export function createElement<D extends TypeDefinition>(
   tag: string,
   {
     ...options
-  }: ElementOptions<D>,
+  }: OptionsFor<Element<D>>,
 ): ElementJSX<D> {
   return createBrowserElement(tag, { ...options });
 }
