@@ -7,7 +7,7 @@ import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
  */
 type GeneratorToken = CutoutGeneratorToken;
 
-export type Projection<T, O extends AnyShape = EmptyShape> = (
+export type Projection<T = unknown, O extends AnyShape = EmptyShape> = (
   token: GeneratorToken,
   options?: O,
 ) => T;
