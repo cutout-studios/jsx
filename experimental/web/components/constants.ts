@@ -9,6 +9,14 @@ export enum SupportedHTTPHeaders {
   CORS = "Access-Control-Allow-Origin",
 }
 
+export enum SupportedHTTPMethods {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
+  DELETE = "DELETE",
+}
+
 export const ELEMENT_TAG_PREFIX = "xo";
 
 export const ROUTE_FILE_EXTENSION_DEFAULT = ".txt";

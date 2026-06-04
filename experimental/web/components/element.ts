@@ -1,73 +1,17 @@
-import { type EmptyShape, V8CallSite } from "@cutout/internal";
-import { CutoutError, CutoutErrorCode } from "@cutout/web/errors";
-import { relative } from "@std/path";
-import { registerBrowserElement } from "./browser/element/register.tsx";
-import { registerRoute } from "./route.ts";
+import { createBrowserElement } from "./browser/element/create.tsx";
 import type {
-  Definition,
+  Element,
   ElementJSX,
-  ElementOptions as ElementOptions,
-  Route,
+  OptionsFor,
+  TypeDefinition,
 } from "./types.ts";
 
-/**
- * Registers an Element in the given component registry,
- * returning a function that can be used to invoke that Element via JSX.
- *
- * Also registers a route to the element's file in V8 environments.
- *
- * @param {string} tag The desired element tag for use in HTML. Must be unique.
- * @param {ElementOptions} options Options for configuring the Element generation.
- * @returns {ElementJSX} The generated Elements' JSX function.
- */
-export function registerElement<D extends Definition>(
+/** @internal */
+export function createElement<D extends TypeDefinition>(
   tag: string,
   {
-    registry,
-    root = Deno.cwd(),
     ...options
-  }: ElementOptions<D>,
+  }: OptionsFor<Element<D>>,
 ): ElementJSX<D> {
-  const callSiteFilePath = V8CallSite.getParent()?.getFileName() ??
-    undefined;
-  const path = callSiteFilePath ? relative(root, callSiteFilePath) : undefined;
-
-  let route: Route<EmptyShape> | undefined;
-  if (path) {
-    route = registerRoute(path, {
-      registry,
-      render: async () => {
-        // TODO(#62): Prod environment
-        const { outputFiles, errors } = await Deno.bundle({
-          entrypoints: [path],
-          format: "esm",
-          inlineImports: false,
-          minify: false,
-          keepNames: true,
-          sourcemap: "linked",
-          codeSplitting: true,
-          packages: "external",
-          platform: "browser",
-          write: false,
-        });
-
-        if (errors.length) {
-          throw new CutoutError(CutoutErrorCode.OPERATION_FAILURE, {
-            cause: errors,
-          });
-        }
-
-        const result = outputFiles?.find((file) => file.path.endsWith(path))
-          ?.text();
-
-        if (!result) {
-          throw new CutoutError(CutoutErrorCode.DATA_UNKNOWN);
-        }
-
-        return result;
-      },
-    });
-  }
-
-  return registerBrowserElement(tag, { ...options, registry, route });
+  return createBrowserElement(tag, { ...options });
 }

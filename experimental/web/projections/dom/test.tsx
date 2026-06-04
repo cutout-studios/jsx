@@ -1,4 +1,4 @@
-/** @jsxImportSourceTypes @cutout/web/format/dom */
+/** @jsxImportSourceTypes @cutout/web/projections/dom */
 
 import { assertSnapshot } from "@std/testing/snapshot";
 import { Window } from "happy-dom";

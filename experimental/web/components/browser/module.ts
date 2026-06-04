@@ -1,2 +1,2 @@
-export { registerBrowserElement as registerElement } from "./element/register.tsx";
-export { registerBrowserStyle as registerStyle } from "./style.ts";
+export { createBrowserElement as registerElement } from "./element/create.tsx";
+export { createBrowserStyle as registerStyle } from "./style.tsx";
