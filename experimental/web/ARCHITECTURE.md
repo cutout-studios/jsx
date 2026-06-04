@@ -142,7 +142,8 @@ stability.
 
 ## v0.0.x TODOs
 
-I'm taking these out of the issues - too much overhead to track them both internally and externally.
+I'm taking these out of the issues - too much overhead to track them both
+internally and externally.
 
 - [ ] Document v0.0.x scope and revise components' types file. _(in progress)_
 - [ ] Get a `service` projection and simple router working (just renders a

@@ -1,8 +1,8 @@
 import { createBrowserElement } from "./browser/element/create.tsx";
 import type {
-  Type,
   ElementJSX,
   ElementOptions as ElementOptions,
+  Type,
 } from "./types.ts";
 
 export function createElement<D extends Type>(

@@ -54,9 +54,10 @@ export type EndpointRenderFunction<D extends Type> = (
 /**
  * Options for generating a `Route` by way of the `registerRoute` factory function.
  */
-export type EndpointOptions<D extends Type> =
-  & FactoryBaseOptions
-  & FactoryRenderableOptions<D, EndpointRenderFunction<D>>;
+export type EndpointOptions<D extends Type> = FactoryRenderableOptions<
+  D,
+  EndpointRenderFunction<D>
+>;
 
 /**
  * A specific, isolated CSSRule, based on the provided `text`.
@@ -82,9 +83,7 @@ export interface Style extends CSSRule {
 /**
  * Options for generating a `Style` by way of the `registerStyle` factory function.
  */
-export type StyleOptions =
-  & FactoryBaseOptions
-  & FactoryFileBasedRoutingOptions;
+export type StyleOptions = FactoryFileBasedRoutingOptions;
 
 /**
  * Custom web component that bridges attribute validation, styling, and rendering.
@@ -121,7 +120,6 @@ export type ElementRenderFunction<D extends Type> = (
  * Options for registering an `Element` function by way of the `registerElement` factory function.
  */
 export type ElementOptions<D extends Type> =
-  & FactoryBaseOptions
   & FactoryFileBasedRoutingOptions
   & FactoryRenderableOptions<D, ElementRenderFunction<D>>
   & {
@@ -156,9 +154,6 @@ export type ElementJSX<D extends Type> = (
     shallow: boolean;
   },
 ) => GeneratorToken;
-
-/** @internal */
-type FactoryBaseOptions = {};
 
 /** @internal */
 type FactoryFileBasedRoutingOptions = {

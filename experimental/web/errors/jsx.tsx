@@ -1,5 +1,5 @@
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
-import { html } from "@cutout/web/formats";
+import { html } from "@cutout/web/projections";
 import type { CutoutError, CutoutErrorCallsite } from "./error.ts";
 
 /**
