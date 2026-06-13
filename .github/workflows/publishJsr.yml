@@ -1,0 +1,19 @@
+name: Publish JSR
+
+on:
+  release
+
+jobs:
+  publish-jsr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Publish JSR
+        run: deno publish --cwd=$(echo '${{ github.event.release.tag_name }}' | cut -d '/' -f1)

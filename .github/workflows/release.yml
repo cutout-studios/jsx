@@ -1,0 +1,64 @@
+name: Create Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      directory:
+        type: choice
+        required: true
+        description: The workspace directory to publish.
+        options:
+          - jsx
+      version:
+        type: string
+        required: true
+        description: A valid semver string (e.g. `0.0.1` or `1.2.3-alpha.0`)
+
+env:
+  TAG_NAME: ${{ inputs.directory }}@${{ inputs.version }}
+
+jobs:
+  release-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Inputs
+        run: |
+          D='0|[1-9][0-9]*'
+          PW='[0-9]*[a-zA-Z-][0-9a-zA-Z-]*'
+          MW='[0-9a-zA-Z-]+'
+
+          if [[ "${{ inputs.version }}" =~ ^($D)\.($D)\.($D)(-(($D|$PW)(\.($D|$PW))*))?(\+($MW(\.$MW)*))?$ ]]; then
+            exit 0
+          else
+            echo "Input version '${{ inputs.version }}' is not a valid semver string!"\
+            exit 1
+          fi
+      - name: Clone Repository
+        uses: actions/checkout@v6
+      - name: Validate Tag
+        run: |
+          if [[ git tag -l ${{ env.TAG_NAME }} ]];
+            echo "Tag '${{ env.TAG_NAME }}' already exists!"
+            exit 1
+          fi
+      - name: Commit Version
+        run: |
+          jq '.version="${{ input.version }}"' ${{ inputs.directory }}/deno.jsonc > ${{ inputs.directory }}/deno.jsonc
+          git add ${{ inputs.directory }}/deno.jsonc
+          git commit -m "${{ env.TAG_NAME }}" -t ${{ env.TAG_NAME }}
+      - name: Push Tag
+        run: git push origin ${{ env.TAG_NAME }}
+  draft-release:
+    needs: release-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TAG_NAME }}
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          draft: true
+          generate_release_notes: true
