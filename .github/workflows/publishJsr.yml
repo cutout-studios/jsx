@@ -1,7 +1,14 @@
 name: Publish JSR
-
 on:
-  release
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  TAG_NAME: ${{ github.event.release.tag_name }}
 
 jobs:
   publish-jsr:
@@ -10,10 +17,17 @@ jobs:
       - name: Clone Repository
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ env.TAG_NAME }}
+
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
+
+      - name: Get Package Directory
+        id: package
+        run: echo "directory=${TAG%@*}" >> "${GITHUB_OUTPUT}"
+
       - name: Publish JSR
-        run: deno publish --cwd=$(echo '${{ github.event.release.tag_name }}' | cut -d '/' -f1)
+        working-directory: ${{ steps.package.outputs.directory }}
+        run: deno publish
