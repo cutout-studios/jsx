@@ -1,0 +1,65 @@
+name: Create Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      directory:
+        type: choice
+        required: true
+        description: The workspace directory to publish.
+        default: jsx
+        options: [jsx]
+      increment:
+        type: choice
+        required: true
+        description: The semver increment to apply.
+        default: patch
+        options: [patch, minor, major]
+
+permissions:
+  contents: write
+
+jobs:
+  draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Bump Version & Tag
+        id: version
+        working-directory: ${{ inputs.directory }}
+        env:
+          INCREMENT: ${{ inputs.increment }}
+          DIRECTORY: ${{ inputs.directory }}
+        run: |
+          deno bump-version "${INCREMENT}" >/dev/null 2>&1
+          NEW_VERSION="$(deno bump-version 2>/dev/null | tail -n1)"
+          TAG_NAME="${DIRECTORY}/${NEW_VERSION}"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config commit.gpgsign false
+          git config tag.gpgsign false
+
+          git add -A
+          git commit -m "${TAG_NAME}"
+          git tag "${TAG_NAME}"
+          git push origin HEAD
+          git push origin "${TAG_NAME}"
+
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag_name }}
+          draft: true
+          generate_release_notes: true
