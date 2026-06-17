@@ -1,6 +1,8 @@
-import quickSearch, { definition as quickSearchDefinition } from "./quickSearch/tool.tsx";
+import quickSearch, {
+  definition as quickSearchDefinition,
+} from "./quickSearch/tool.tsx";
 
 export const QuickSearch = {
   call: quickSearch,
-  definition: quickSearchDefinition
+  definition: quickSearchDefinition,
 };

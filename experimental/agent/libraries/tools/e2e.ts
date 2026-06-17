@@ -1,5 +1,5 @@
 import quickSearch from "./quickSearch/tool.tsx";
 
 console.log(
-  await quickSearch({ query: "Alphabet Soup" })
+  await quickSearch({ query: "alphabet soup" }),
 );

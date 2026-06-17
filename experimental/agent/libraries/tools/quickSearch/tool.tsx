@@ -15,15 +15,15 @@ export const definition = {
       properties: {
         query: {
           type: "string",
-          description: "The search query, e.g. 'Alphabet Soup.'",
+          description: "The query to search for, e.g. 'alphabet soup'.",
         },
       },
       required: ["query"],
     },
   },
-}
+};
 
-export default async ({ query }: { query: string }) => {
+export default async ({ query }: { query: string }): Promise<string> => {
   const cleanQuery = query.trim().replaceAll(/\s+/g, "+");
 
   const results = await fetch(

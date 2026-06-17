@@ -1,8 +1,10 @@
+import { Spinner } from "@std/cli/spinner";
+
 import { LLM } from "../libraries/services/module.ts";
 import { QuickSearch } from "../libraries/tools/module.ts";
 import systemPrompt from "./SYSTEM.md" with { type: "text" };
 
-const llmDependencies = LLM.getRequiredDependencies();
+const llmDependencies = await LLM.getRequiredDependencies();
 if (llmDependencies) {
   console.error(
     `Agent requires the following dependencies: ${llmDependencies}. Aborting.`,
@@ -21,7 +23,7 @@ const chatLog = [{
 }];
 
 while (true) {
-  const input = prompt(">>");
+  const input = prompt("[input]>");
 
   if (input === null) break;
 
@@ -30,6 +32,10 @@ while (true) {
   let hasToolCalls = false;
 
   do {
+    const spinStart = performance.now();
+    const spinner = new Spinner({ message: "Thinking…", color: "gray" });
+    spinner.start();
+
     const response: Response = await fetch(
       llmService.apiRoot + "chat/completions",
       {
@@ -47,29 +53,52 @@ while (true) {
     const { choices: [{ message, finish_reason: finishReason }] } =
       await response.json();
 
-    if (message.content) console.log(message.content.trim());
+    spinner.stop();
+    console.log(
+      `%cThought for ${Math.round(performance.now() - spinStart)}ms.`,
+      "color: gray;",
+    );
 
     chatLog.push(message);
+    if (message.content && message.content.trim().length) {
+      console.log("[output]> " + message.content.trim());
+    }
 
     hasToolCalls = finishReason === "tool_calls";
     for (
       const { id, function: { name, arguments: _arguments } }
         of message.tool_calls ?? []
     ) {
-      let content;
+      let content, toolSpinner, toolStart;
       try {
         switch (name) {
-          case QuickSearch.definition.function.name:
-            console.log(`%csearch(${_arguments});`, "color: blue;");
+          case QuickSearch.definition.function.name: {
+            toolStart = performance.now();
+            toolSpinner = new Spinner({
+              message: `Calling: quickSearch(${_arguments})…`,
+              color: "gray",
+            });
+
+            toolSpinner.start();
             content = await QuickSearch.call(JSON.parse(_arguments));
+
+            toolSpinner.stop();
+            console.log(
+              `%cCalled quickSearch(${_arguments}) for ${
+                Math.floor(performance.now() - toolStart)
+              }ms.`,
+              "color: gray;",
+            );
             break;
+          }
           default:
-            content = `Unknown tool: ${name}`;
+            content = `Unknown Tool: ${name}`;
         }
       } catch (error) {
         content = `Error: ${(error as Error).message}`;
+      } finally {
+        toolSpinner?.stop();
       }
-
       chatLog.push({ role: "tool", tool_call_id: id, content });
     }
   } while (hasToolCalls);
