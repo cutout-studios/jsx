@@ -1,5 +1,6 @@
 import * as LLM from "./llm.ts";
 import systemPrompt from "./SYSTEM.md" with { type: "text" };
+import search, { definition as searchToolDefinition } from "./tools/search.ts";
 
 const service = LLM.createService();
 
@@ -7,7 +8,6 @@ service.start();
 
 const chatLog = [{ role: "system", content: systemPrompt }];
 
-// TODO: improved ux, time spent, timestamps, etc.
 while (true) {
   const input = prompt(">>");
 
@@ -17,21 +17,47 @@ while (true) {
 
   chatLog.push({ role: "user", content: input });
 
-  const response: Response = await fetch(
-    service.apiRoot + "chat/completions",
-    {
-      method: "POST",
-      body: JSON.stringify({ // TODO: Add tools here!
-        model: service.model,
-        messages: chatLog,
-      }),
-    },
-  );
+  let hasToolCalls = false;
 
-  const { choices: [{ message }] } = await response.json();
+  do {
+    const response: Response = await fetch(
+      service.apiRoot + "chat/completions",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          model: service.model,
+          messages: chatLog,
+          tools: [
+            searchToolDefinition,
+          ],
+        }),
+      },
+    );
 
-  console.log(message.content);
-  chatLog.push(message);
+    const { choices: [{ message, finish_reason: finishReason }] } =
+      await response.json();
+
+    console.log(message.content.trim());
+    chatLog.push(message);
+
+    hasToolCalls = finishReason === "tool_calls";
+    for (
+      const { function: { name, arguments: _arguments } }
+        of message.tool_calls ?? []
+    ) {
+      let content;
+      switch (name) {
+        case searchToolDefinition.function.name:
+          console.log(`%csearch(${_arguments});`, "color: blue;");
+          content = await search(JSON.parse(_arguments));
+          break;
+        default:
+          continue;
+      }
+
+      chatLog.push({ role: "tool", content });
+    }
+  } while (hasToolCalls);
 }
 
 service.stop();

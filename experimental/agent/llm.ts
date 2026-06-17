@@ -8,7 +8,7 @@ type LocalLLMService = {
   stop: () => void;
 };
 
-// TODO: use @cutout/web
+// TODO(#): use @cutout/web
 export const createService = (
   {
     host = "localhost",
@@ -34,7 +34,7 @@ export const createService = (
       PYTHONWARNINGS: "ignore",
       HF_HUB_DISABLE_PROGRESS_BARS: "1",
     },
-    // TODO: send to a log file
+    // TODO(#): send to a log file
     stdout: "piped",
     stderr: "piped",
   });
