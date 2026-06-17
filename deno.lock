@@ -115,6 +115,11 @@
   },
   "workspace": {
     "members": {
+      "experimental/agent": {
+        "dependencies": [
+          "jsr:@std/path@*"
+        ]
+      },
       "experimental/web": {
         "dependencies": [
           "jsr:@std/assert@*",
