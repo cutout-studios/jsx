@@ -1,5 +1,15 @@
 {
+  "name": "@cutout/agent",
   "tasks": {
-    "start": "./start"
+    "e2e:tools": "deno --allow-net ./libraries/tools/e2e.ts",
+    "setup": "brew bundle"
+  },
+  "exports": {
+    ".": "./app/run.ts",
+    "./tools": "./libraries/tools/module.ts",
+    "./services": "./libraries/services/module.ts"
+  },
+  "imports": {
+    "@std/cli/spinner": "jsr:@std/cli/unstable-spinner"
   }
 }
