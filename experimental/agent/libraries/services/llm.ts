@@ -20,7 +20,6 @@ export const getRequiredDependencies = async (): Promise<string | null> => {
   return missing.length ? missing.join(", ") : null;
 };
 
-// TODO(#): use @cutout/web
 export const createService = (
   {
     host = "localhost",
@@ -46,7 +45,6 @@ export const createService = (
       PYTHONWARNINGS: "ignore",
       HF_HUB_DISABLE_PROGRESS_BARS: "1",
     },
-    // TODO(#): send to a log file
     stdout: "piped",
     stderr: "piped",
   });
