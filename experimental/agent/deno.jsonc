@@ -1,8 +1,5 @@
 {
   "tasks": {
     "start": "deno --allow-run --allow-net ./start.ts"
-  },
-  "imports": {
-    "@std/path": "jsr:@std/path"
   }
 }
