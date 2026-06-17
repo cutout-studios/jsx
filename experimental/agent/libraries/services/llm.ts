@@ -8,6 +8,12 @@ type LocalLLMService = {
   stop: () => void;
 };
 
+// TODO: actually check the required dependencies
+export const getRequiredDependencies = () => {
+  // return "mlx_lm";
+  return null;
+};
+
 // TODO(#): use @cutout/web
 export const createService = (
   {

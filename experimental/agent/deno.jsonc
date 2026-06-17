@@ -1,5 +1,11 @@
 {
   "tasks": {
-    "start": "deno --allow-run --allow-net ./start.ts"
+    "e2e:tools": "deno --allow-net ./libraries/tools/e2e.ts",
+    "setup": "brew bundle"
+  },
+  "exports": {
+    ".": "./app/run.ts",
+    "./tools": "./libraries/tools/module.ts",
+    "./services": "./libraries/services/module.ts"
   }
 }

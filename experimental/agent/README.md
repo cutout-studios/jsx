@@ -1,13 +1,14 @@
 # `@cutout/agent`
 
-<!-- TODO: progress description, TODOs -->
-
-```sh
-deno task --cwd=experimental/agent start
-```
+**The Idea**: An interactive, [QDT-compliant](https://cutoutstudios.com/llm-use/) local agent.
 
 > [!WARNING]
 > This is an Apple Silicon-only agent.
+
+```sh
+deno task --cwd=experimental/agent setup
+deno run @cutout/agent
+```
 
 ---
 
