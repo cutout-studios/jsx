@@ -1,5 +1,5 @@
 import calculate, {
-  definition as calculateDefinition
+  definition as calculateDefinition,
 } from "./calculate/tool.ts";
 import quickSearch, {
   definition as quickSearchDefinition,
@@ -12,5 +12,5 @@ export const QuickSearch = {
 
 export const Calculate = {
   call: calculate,
-  definition: calculateDefinition
+  definition: calculateDefinition,
 };

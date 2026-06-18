@@ -40,13 +40,9 @@ while (true) {
     const spinner = new Spinner({ message: "Thinking…", color: "gray" });
     spinner.start();
 
-    let seconds = 0;
+    let seconds = 1;
     const thinkingInterval = setInterval(() => {
       spinner.message = `Thinking… (${seconds++}s)`;
-
-      if (seconds >= 30) {
-        spinner.color = "red";
-      }
     }, 1000);
 
     const response: Response = await fetch(
@@ -60,7 +56,7 @@ while (true) {
             Calculate.definition,
             QuickSearch.definition,
           ],
-          
+
           // TODO: per-model/QDT setting
           temperature: 0.7,
           top_p: 0.95, // note to self: don't consider the options making up <5%
@@ -80,14 +76,18 @@ while (true) {
       `%cThought for ${seconds}s.`,
       "color: gray;",
     );
-    console.log(
-      `%c  -> Est. Context Used: ${estimateContextUsage()}%`,
-      "color: gray;",
-    );
 
     chatLog.push(message);
     if (message.content && message.content.trim().length) {
       console.log("[output]> " + message.content.trim());
+    }
+
+    const contextUsage = estimateContextUsage();
+    if (contextUsage) {
+      console.log(
+        `%c  -> Est. Context Remaining: ${100 - contextUsage}%`,
+        "color: gray;",
+      );
     }
 
     hasToolCalls = finishReason === "tool_calls";
@@ -150,6 +150,6 @@ function estimateContextUsage() {
 
   return Math.min(
     100,
-    Math.round((llmService.contextLength / estLength) * 100),
+    Math.round((estLength / llmService.contextLength) * 100),
   );
 }

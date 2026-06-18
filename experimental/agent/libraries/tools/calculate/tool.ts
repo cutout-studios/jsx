@@ -6,7 +6,7 @@ enum CalculatorOperations {
   MULTIPLY = "MULTIPLY",
   DIVIDE = "DIVIDE",
   MODULUS = "MODULUS",
-  POWER = "POWER"
+  POWER = "POWER",
 }
 
 export const definition = {
@@ -19,16 +19,22 @@ export const definition = {
       properties: {
         operation: {
           type: "string",
-          description: "TODO",
-          enum: Object.values(CalculatorOperations)
+          description:
+            "The operation you wish to execute on the provdided terms.",
+          enum: Object.values(CalculatorOperations),
         },
         firstTerm: {
           type: "number",
-          description: "TODO"
+          description: `
+              The first term in the calculation.
+              Remember that for commutive operations like addition, 
+              the term order does not produce different results:
+              but for division, subtraction, etc, the order *does* matter.
+            `,
         },
         secondTerm: {
           type: "number",
-          description: "TODO"
+          description: "The second term in the calculation.",
         },
       },
       required: ["operation", "firstTerm", "secondTerm"],

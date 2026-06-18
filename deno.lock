@@ -4,6 +4,7 @@
     "jsr:@ayk/lint-import-order@*": "0.1.0",
     "jsr:@std/assert@*": "1.0.19",
     "jsr:@std/assert@^1.0.17": "1.0.19",
+    "jsr:@std/bytes@^1.0.6": "1.0.6",
     "jsr:@std/cli@*": "1.0.30",
     "jsr:@std/data-structures@*": "1.0.10",
     "jsr:@std/fs@^1.0.22": "1.0.23",
@@ -12,6 +13,7 @@
     "jsr:@std/media-types@*": "1.1.0",
     "jsr:@std/path@*": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
+    "jsr:@std/streams@*": "1.1.1",
     "jsr:@std/testing@*": "1.0.17",
     "npm:happy-dom@*": "20.9.0",
     "npm:react-dom@*": "19.2.5_react@19.2.5",
@@ -26,6 +28,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/bytes@1.0.6": {
+      "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
     },
     "@std/cli@1.0.30": {
       "integrity": "769446536522d0417d7127ebcabcafac1ab0ce6766d0eb3fca1d36326fe98d13"
@@ -52,6 +57,12 @@
       "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
       "dependencies": [
         "jsr:@std/internal"
+      ]
+    },
+    "@std/streams@1.1.1": {
+      "integrity": "92556d350e537e9dce527a6d08f6f15be3ff65e656079dea69d15252187c7613",
+      "dependencies": [
+        "jsr:@std/bytes"
       ]
     },
     "@std/testing@1.0.17": {
@@ -121,7 +132,8 @@
     "members": {
       "experimental/agent": {
         "dependencies": [
-          "jsr:@std/cli@*"
+          "jsr:@std/cli@*",
+          "jsr:@std/streams@*"
         ]
       },
       "experimental/web": {
