@@ -82,14 +82,6 @@ while (true) {
       console.log("[output]> " + message.content.trim());
     }
 
-    const contextUsage = estimateContextUsage();
-    if (contextUsage) {
-      console.log(
-        `%c  -> Est. Context Remaining: ${100 - contextUsage}%`,
-        "color: gray;",
-      );
-    }
-
     hasToolCalls = finishReason === "tool_calls";
     for (
       const { id, function: { name, arguments: _arguments } }
@@ -139,17 +131,3 @@ while (true) {
 }
 
 llmService.stop();
-
-// ---
-
-function estimateContextUsage() {
-  const estLength = chatLog.reduce(
-    (sum, entry) => sum + Math.ceil(entry.content.length / 3.2) * 1.15 / 4,
-    0,
-  );
-
-  return Math.min(
-    100,
-    Math.round((estLength / llmService.contextLength) * 100),
-  );
-}
