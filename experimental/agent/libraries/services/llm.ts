@@ -26,8 +26,8 @@ export const createService = (
   {
     host = "localhost",
     port = getFreePort(),
-    maxTokens = 16384, // per response
     model = DEFAULT_MODEL,
+    maxResponseLength = 16384,
     logFileName = "mlx_lm.server.log",
   } = {},
 ): LocalLLMService => {
@@ -38,7 +38,7 @@ export const createService = (
       "--port",
       String(port),
       "--max-tokens",
-      String(maxTokens),
+      String(maxResponseLength),
       "--model",
       model,
       "--log-level",
