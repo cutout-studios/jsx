@@ -11,7 +11,8 @@ enum CalculatorOperations {
   POWER = "POWER",
 }
 
-export const definition = {
+// TODO: json schema type
+export const definition: unknown = {
   type: "function",
   function: {
     name: "calculate",
