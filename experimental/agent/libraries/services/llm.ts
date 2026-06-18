@@ -42,7 +42,7 @@ export const createService = (
       "--model",
       model,
       "--log-level",
-      "DEBUG"
+      "DEBUG",
     ],
     env: {
       PYTHONWARNINGS: "ignore",
