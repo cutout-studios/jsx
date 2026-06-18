@@ -10,6 +10,7 @@
     "./services": "./libraries/services/module.ts"
   },
   "imports": {
-    "@std/cli/spinner": "jsr:@std/cli/unstable-spinner"
+    "@std/cli/spinner": "jsr:@std/cli/unstable-spinner",
+    "@std/streams": "jsr:@std/streams"
   }
 }

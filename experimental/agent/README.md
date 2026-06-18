@@ -8,7 +8,7 @@
 
 ```sh
 deno task --cwd=experimental/agent setup
-deno run --allow-net --allow-run @cutout/agent
+deno run --allow-net --allow-sys --allow-run --allow-write @cutout/agent
 ```
 
 ---

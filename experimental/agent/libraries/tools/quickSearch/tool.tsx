@@ -1,6 +1,8 @@
 /** @jsxImportSource @cutout/jsx */
 /** @jsxImportSourceTypes @cutout/web/projections/html */
 
+// TODO: run a searXNG instance
+
 import { html } from "@cutout/web/projections";
 
 import description from "./description.md" with { type: "text" };

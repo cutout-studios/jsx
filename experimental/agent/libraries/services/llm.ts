@@ -1,3 +1,5 @@
+import { mergeReadableStreams } from "@std/streams";
+
 const REQUIRED_COMMANDS = ["mlx_lm.server"];
 const DEFAULT_MODEL = "mlx-community/Qwen3.6-35B-A3B-mxfp8";
 
@@ -24,8 +26,9 @@ export const createService = (
   {
     host = "localhost",
     port = getFreePort(),
-    maxTokens = 65536,
     model = DEFAULT_MODEL,
+    maxResponseLength = 16384,
+    logFileName = "mlx_lm.server.log",
   } = {},
 ): LocalLLMService => {
   const command = new Deno.Command("mlx_lm.server", {
@@ -35,15 +38,16 @@ export const createService = (
       "--port",
       String(port),
       "--max-tokens",
-      String(maxTokens),
+      String(maxResponseLength),
       "--model",
       model,
       "--log-level",
-      "WARNING",
+      "DEBUG",
     ],
     env: {
       PYTHONWARNINGS: "ignore",
       HF_HUB_DISABLE_PROGRESS_BARS: "1",
+      PYTHONUNBUFFERED: "1",
     },
     stdout: "piped",
     stderr: "piped",
@@ -57,7 +61,31 @@ export const createService = (
         `%cServing "modelID:${this.model}" @ ${this.apiRoot}`,
         "color: gray;",
       );
-      return this.process = command.spawn();
+
+      this.process = command.spawn();
+
+      Deno.mkdirSync("./.output/agent/", { recursive: true });
+
+      const logFile = Deno.openSync("./.output/agent/" + logFileName, {
+        create: true,
+        append: true,
+        write: true,
+      });
+
+      mergeReadableStreams(
+        this.process.stdout,
+        this.process.stderr,
+      ).pipeTo(
+        new WritableStream<Uint8Array>({
+          write: (chunk) => {
+            logFile.writeSync(chunk);
+          },
+          close: () => logFile.close(),
+          abort: () => logFile.close(),
+        }),
+      ).catch(() => {});
+
+      return this.process;
     },
     stop() {
       this.process?.kill();

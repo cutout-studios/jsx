@@ -1,13 +1,19 @@
 import { Spinner } from "@std/cli/spinner";
 
 import { LLM } from "../libraries/services/module.ts";
-import { QuickSearch } from "../libraries/tools/module.ts";
+import { Calculate, QuickSearch } from "../libraries/tools/module.ts";
 import systemPrompt from "./SYSTEM.md" with { type: "text" };
+
+type ChatLog = {
+  role: string;
+  content: string;
+  tool_call_id?: number;
+}[];
 
 const llmDependencies = await LLM.getRequiredDependencies();
 if (llmDependencies) {
   console.error(
-    `Agent requires the following dependencies: ${llmDependencies}. Aborting.`,
+    `Agent requires the following dependencies: "${llmDependencies}". Aborting.`,
   );
   Deno.exit(1);
 }
@@ -16,10 +22,9 @@ const llmService = LLM.createService();
 
 llmService.start();
 
-const chatLog = [{
+const chatLog: ChatLog = [{
   role: "system",
   content: systemPrompt,
-  tool_call_id: undefined,
 }];
 
 while (true) {
@@ -27,14 +32,18 @@ while (true) {
 
   if (input === null) break;
 
-  chatLog.push({ role: "user", content: input, tool_call_id: undefined });
+  chatLog.push({ role: "user", content: input });
 
   let hasToolCalls = false;
 
   do {
-    const spinStart = performance.now();
     const spinner = new Spinner({ message: "Thinking…", color: "gray" });
     spinner.start();
+
+    let seconds = 1;
+    const thinkingInterval = setInterval(() => {
+      spinner.message = `Thinking… (${seconds++}s)`;
+    }, 1000);
 
     const response: Response = await fetch(
       llmService.apiRoot + "chat/completions",
@@ -44,8 +53,16 @@ while (true) {
           model: llmService.model,
           messages: chatLog,
           tools: [
+            Calculate.definition,
             QuickSearch.definition,
           ],
+
+          // TODO: per-model/QDT setting
+          temperature: 0.7,
+          top_p: 0.95, // note to self: don't consider the options making up <5%
+          top_k: 20, // note to self: keep the top 20 options
+          min_p: 0.0,
+          presence_penalty: 1.5,
         }),
       },
     );
@@ -54,8 +71,9 @@ while (true) {
       await response.json();
 
     spinner.stop();
+    clearInterval(thinkingInterval);
     console.log(
-      `%cThought for ${Math.round(performance.now() - spinStart)}ms.`,
+      `%cThought for ${seconds}s.`,
       "color: gray;",
     );
 
@@ -91,6 +109,14 @@ while (true) {
             );
             break;
           }
+          case Calculate.definition.function.name:
+            content = String(await Calculate.call(JSON.parse(_arguments)));
+            console.log(
+              `%cCalled calculate(${_arguments})`,
+              "color: gray;",
+            );
+
+            break;
           default:
             content = `Unknown Tool: ${name}`;
         }
