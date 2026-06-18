@@ -1,5 +1,7 @@
 import description from "./description.md" with { type: "text" };
 
+// TODO: full expression evaluation (wolfram alpha)
+
 enum CalculatorOperations {
   ADD = "ADD",
   SUBTRACT = "SUBTRACT",
