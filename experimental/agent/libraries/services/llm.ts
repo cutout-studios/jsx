@@ -1,10 +1,13 @@
 const REQUIRED_COMMANDS = ["mlx_lm.server"];
 const DEFAULT_MODEL = "mlx-community/Qwen3.6-35B-A3B-mxfp8";
+const DEFAULT_MODEL_MAX_TOKENS = 262_144;
+const DEFAULT_MODEL_KB_PER_TOKEN = 96;
 
 type LocalLLMService = {
   model: string;
   process?: Deno.ChildProcess;
   apiRoot: string;
+  contextLength: number;
   start: () => Deno.ChildProcess;
   stop: () => void;
 };
@@ -24,7 +27,10 @@ export const createService = (
   {
     host = "localhost",
     port = getFreePort(),
-    maxTokens = 65536,
+    maxTokens = chooseMaxContext(
+      DEFAULT_MODEL_MAX_TOKENS,
+      DEFAULT_MODEL_KB_PER_TOKEN,
+    ),
     model = DEFAULT_MODEL,
   } = {},
 ): LocalLLMService => {
@@ -51,11 +57,16 @@ export const createService = (
 
   return {
     model,
+    contextLength: maxTokens,
     apiRoot: `http://${host}:${port}/v1/`,
     start() {
       console.info(
         `%cServing "modelID:${this.model}" @ ${this.apiRoot}`,
         "color: gray;",
+      );
+      console.info(
+        `%c  -> Context Length: ${maxTokens} tokens.`,
+        `color: gray;`
       );
       return this.process = command.spawn();
     },
@@ -70,6 +81,18 @@ export const createService = (
 };
 
 // ---
+
+function chooseMaxContext(
+  supportedTokenCount: number,
+  estimatedTokenSizeKB: number,
+  memoryOverhead: number = 0.5,
+): number {
+  const totalSpaceKB = Deno.systemMemoryInfo().total;
+  const availableSpace = totalSpaceKB * memoryOverhead;
+  const availableTokens = Math.floor(availableSpace / estimatedTokenSizeKB);
+
+  return Math.min(availableTokens, supportedTokenCount);
+}
 
 async function commandExists(cmd: string): Promise<boolean> {
   try {
