@@ -26,20 +26,6 @@ jobs:
           scopes: |
             [a-z]+(/[a-z]+)*
 
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-
-      - name: Pull Request Issue
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const validateLinkedIssue =
-              await import(
-                "${{ github.workspace }}/.github/workflows/scripts/validateLinkedIssue.js"
-              );
-
-            await validateLinkedIssue.default({ github, context, core });
-
   label:
     name: Label
     runs-on: ubuntu-latest
