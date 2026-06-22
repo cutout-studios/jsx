@@ -97,7 +97,7 @@ export const jsx = (
     // 2. If the element is a function, yield said function resolution.
     if (typeof element === "function") {
       const [_, result] = element({ children, ...attributes });
-      yield* result;
+      yield* result();
       return;
     }
 
@@ -125,7 +125,7 @@ export const jsx = (
     ] as ElementCloseToken;
   };
 
-  return [TokenType.GENERATOR, _generator()];
+  return [TokenType.GENERATOR, _generator];
 };
 
 /**
@@ -144,7 +144,7 @@ export const Fragment: string = FRAGMENT_LABEL;
 
 function* _forwardTokens(value: unknown, debug = false) {
   if (isGeneratorToken(value)) {
-    yield* value[TOKEN_VALUE_INDEX];
+    yield* value[TOKEN_VALUE_INDEX]();
     return;
   }
 

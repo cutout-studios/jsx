@@ -48,7 +48,7 @@ export type UnknownToken = AnyToken<
  */
 export type GeneratorToken = AnyToken<
   TokenType.GENERATOR,
-  Generator<OutputToken>
+  () => Generator<OutputToken>
 >;
 
 // -----------------------------------------------------------------------------

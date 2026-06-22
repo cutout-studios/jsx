@@ -72,6 +72,13 @@ export const isGeneratorToken = (
 };
 
 const isGenerator = (value: unknown): value is Generator => {
-  return typeof value === "object" && value !== null && "next" in value &&
-    "return" in value && "throw" in value;
+  if (typeof value !== "function") {
+    return false;
+  }
+
+  const maybeGenerator = value();
+
+  return typeof maybeGenerator === "object" && maybeGenerator !== null &&
+    "next" in maybeGenerator &&
+    "return" in maybeGenerator && "throw" in maybeGenerator;
 };

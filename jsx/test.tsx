@@ -102,7 +102,7 @@ Deno.test(
   },
 );
 
-function assertCutoutJsxSnapshot([, generator]: GeneratorToken) {
+function assertCutoutJsxSnapshot([, render]: GeneratorToken) {
   return async (test: Deno.TestContext) =>
-    await assertSnapshot(test, [...generator]);
+    await assertSnapshot(test, [...render()]);
 }
