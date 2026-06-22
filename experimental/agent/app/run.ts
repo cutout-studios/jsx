@@ -1,7 +1,7 @@
 import { Spinner } from "@std/cli/spinner";
 
 import { LLM } from "../libraries/services/module.ts";
-import { Calculate, QuickSearch } from "../libraries/tools/module.ts";
+import { QuickSearch } from "../libraries/tools/module.ts";
 import systemPrompt from "./SYSTEM.md" with { type: "text" };
 
 type ChatLog = {
@@ -53,7 +53,6 @@ while (true) {
           model: llmService.model,
           messages: chatLog,
           tools: [
-            Calculate.definition,
             QuickSearch.definition,
           ],
 
@@ -109,14 +108,6 @@ while (true) {
             );
             break;
           }
-          case Calculate.definition.function.name:
-            content = String(await Calculate.call(JSON.parse(_arguments)));
-            console.log(
-              `%cCalled calculate(${_arguments})`,
-              "color: gray;",
-            );
-
-            break;
           default:
             content = `Unknown Tool: ${name}`;
         }
