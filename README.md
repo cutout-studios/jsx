@@ -3,28 +3,16 @@
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 [![Code Coverage](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/coverage.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 
-A collection of NPM-free tools for building cross-platform webapps. JSX, web
-components, UI primitives, and a native shell: all designed to stay as close as
+A collection of Deno-first development tools, all designed to stay as close as
 possible to their respective targets.
 
 ## Contents
 
-### Core
-
-| Module                  | Description                                                      | Status    | Release                                                                 |
-| ----------------------- | ---------------------------------------------------------------- | --------- | ----------------------------------------------------------------------- |
-| [`@cutout/jsx`](./jsx/) | **_Write JSX once, use it anywhere._** Cutout's rendering layer. | **Alpha** | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
-
-### Experimental
-
-> [!CAUTION]
-> Currently these tools are either speculative and/or untested: not yet for
-> production use.
-
-| Module                                   | Description                                                            | Status                  | Notes                                                                      |
-| ---------------------------------------- | ---------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------- |
-| [`@cutout/tauri`](./experimental/tauri/) | Embed your app in a cross-platform Tauri shell!                        | _Researching_           | Seems viable _so_ far...                                                   |
-| [`@cutout/agent`](./experimental/agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | _Partially Implemented_ | Run with `deno run -A @cutout/agent`, but there's minimal QDT enforcement. |
+| Module Name                 | What is it?                                                            | Status           | Latest Release                                                          |
+| --------------------------- | ---------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------- |
+| [`@cutout/jsx`](./jsx/)     | **_Write JSX once, use it anywhere._**                                 | **Alpha**        | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
+| [`@cutout/agent`](./agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | **Experimental** | n/a                                                                     |
+| [`@cutout/tauri`](./agent/) | Embed Deno in a Tauri app?                                             | **Experimental** | n/a                                                                     |
 
 ## Contributing
 
