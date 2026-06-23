@@ -24,7 +24,7 @@ import type { TokenType } from "./constants.ts";
 export type AnyToken<
   A extends TokenType = TokenType.UNKNOWN,
   T = unknown,
-> = [A, T];
+> = Readonly<[A, T]>;
 
 // -----------------------------------------------------------------------------
 // System Tokens

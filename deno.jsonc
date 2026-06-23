@@ -14,6 +14,7 @@
   "workspace": [
     "internal",
     "jsx",
+    "store",
     "experimental/tauri",
     "experimental/agent"
   ]
