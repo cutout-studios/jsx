@@ -1,7 +1,6 @@
 # `@cutout/jsx`
 
 [![JSR](https://jsr.io/badges/@cutout/jsx)]([https://jsr.io/@cutout/jsx](https://jsr.io/@cutout/jsx))
-[![bundlejs](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx)]([https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx](https://deno.bundlejs.com/badge?q=jsr:@cutout/jsx))
 
 `@cutout/jsx` is a tiny, generic, interpretable JSX runtime for the Deno
 ecosystem. It's inspired in part by the long-abandoned
