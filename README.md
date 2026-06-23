@@ -12,7 +12,7 @@ possible to their respective targets.
 | --------------------------- | ---------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------- |
 | [`@cutout/jsx`](./jsx/)     | **_Write JSX once, use it anywhere._**                                 | **Alpha**        | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
 | [`@cutout/agent`](./experimental/agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | **Experimental** | n/a                                                                     |
-| [`@cutout/tauri`](./experimenta/tauri/) | Embed Deno in a Tauri app?                                             | **Experimental** | n/a                                                                     |
+| [`@cutout/tauri`](./experimental/tauri/) | Embed Deno in a Tauri app?                                             | **Experimental** | n/a                                                                     |
 
 ## Contributing
 
