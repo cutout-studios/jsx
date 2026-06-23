@@ -2,7 +2,7 @@
 
 **The Idea**: Embed `Deno` in a
 [cross-platform Tauri application](https://v2.tauri.app/distribute/). Have
-`Deno` run a `@cutout/web` server that the Tauri webview loads.
+`Deno` run a server that the Tauri webview loads.
 
 > [!CAUTION]
 > We're currently researching the viability of this approach. It seems promising
@@ -26,9 +26,7 @@ for `deno_core`. The next steps are to:
 
 ## Core Security Considerations
 
-We intend to build these into `@cutout/web` directly:
-
-- The local server is a blatant attack surface: bind `@cutout/web` to `[::1]`
+- The local server is a blatant attack surface: bind to `[::1]`
   with an ephemeral port.
 - Lock down the host and origin on every request. Use a per-session header-based
   token.
