@@ -26,8 +26,8 @@ for `deno_core`. The next steps are to:
 
 ## Core Security Considerations
 
-- The local server is a blatant attack surface: bind to `[::1]`
-  with an ephemeral port.
+- The local server is a blatant attack surface: bind to `[::1]` with an
+  ephemeral port.
 - Lock down the host and origin on every request. Use a per-session header-based
   token.
 - Strictly configure CORS and CSP.
