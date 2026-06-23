@@ -1,21 +1,3 @@
-import {
-  CutoutNumberToken,
-  CutoutStringToken,
-  CutoutSymbolToken,
-} from "@cutout/jsx/tokens";
+export type { Store as CutoutStore } from "./types.ts";
 
-type ValidStoreToken =
-  | CutoutStringToken
-  | CutoutSymbolToken
-  | CutoutNumberToken;
-
-export class Store implements Map<ValidStoreToken[], ValidStoreToken> {
-  constructor() {
-  }
-
-  get() {
-  }
-
-  set() {
-  }
-}
+export { MemoryStore as CutoutMemoryStore } from "./memory.ts";
