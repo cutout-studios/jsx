@@ -21,11 +21,10 @@ possible to their respective targets.
 > Currently these tools are either speculative and/or untested: not yet for
 > production use.
 
-| Module                                   | Description                                                                                                                                                 | Status                         | Notes                                                                                |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
-| `@cutout/web`                            | **_A full-stack framework will intends to fully leverage `@cutout/jsx`'s IR and Deno's awesome @std library._** Think Next.js but for Deno + WebComponents. | **Pending re-implementation.** | **Est. alpha release: August 2026**                                                  |
-| [`@cutout/tauri`](./experimental/tauri/) | Embed your `@cutout/web` app in a cross-platform Tauri shell!                                                                                               | _Researching_                  | Seems viable _so_ far...                                                             |
-| [`@cutout/agent`](./experimental/agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service.                                                                                      | _Partially Implemented_        | **Shim**: run with `deno run -A @cutout/agent`, but there's minimal QDT enforcement. |
+| Module                                   | Description                                                            | Status                  | Notes                                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------- |
+| [`@cutout/tauri`](./experimental/tauri/) | Embed your app in a cross-platform Tauri shell!                        | _Researching_           | Seems viable _so_ far...                                                   |
+| [`@cutout/agent`](./experimental/agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | _Partially Implemented_ | Run with `deno run -A @cutout/agent`, but there's minimal QDT enforcement. |
 
 ## Contributing
 

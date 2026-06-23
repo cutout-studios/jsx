@@ -1,8 +1,7 @@
 {
   "name": "@cutout/internal",
   "exports": {
-    ".": "./module.ts",
-    "./polyfill": "./polyfill/module.ts"
+    ".": "./module.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert",

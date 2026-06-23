@@ -54,33 +54,3 @@ jobs:
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: .output/coverage/lcov.info
-
-  bench:
-    name: Bench
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-
-      - name: Cache Dependencies
-        run: deno install
-
-      - name: Run Benchmarks
-        run: |
-          deno bench --allow-all > bench.txt 2>&1 || true
-
-          # Strip ANSI color codes
-          sed 's/\x1b\[[0-9;]*m//g' bench.txt > bench.txt
-
-          {
-            echo "## Benchmark Results"
-            echo '```'
-            cat bench.txt
-            echo '```'
-          } >> $GITHUB_STEP_SUMMARY
