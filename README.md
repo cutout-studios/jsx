@@ -11,8 +11,8 @@ possible to their respective targets.
 | Module Name                 | What is it?                                                            | Status           | Latest Release                                                          |
 | --------------------------- | ---------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------- |
 | [`@cutout/jsx`](./jsx/)     | **_Write JSX once, use it anywhere._**                                 | **Alpha**        | [![JSR](https://jsr.io/badges/@cutout/jsx)](https://jsr.io/@cutout/jsx) |
-| [`@cutout/agent`](./agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | **Experimental** | n/a                                                                     |
-| [`@cutout/tauri`](./agent/) | Embed Deno in a Tauri app?                                             | **Experimental** | n/a                                                                     |
+| [`@cutout/agent`](./experimental/agent/) | [QDT-compliant](https://cutoutstudios.com/llm-use/) local LLM service. | **Experimental** | n/a                                                                     |
+| [`@cutout/tauri`](./experimenta/tauri/) | Embed Deno in a Tauri app?                                             | **Experimental** | n/a                                                                     |
 
 ## Contributing
 
