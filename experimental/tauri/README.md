@@ -14,7 +14,7 @@ While all other major platforms seem to be accounted for, iOS forbids JIT-ful
 processes like V8, making it the biggest hurdle for this approach.
 
 So far we've been able to create
-[a repeatable iOS simulator build](https://github.com/cutout-studios/toolbox/blob/main/tauri/scripts/buildApple/main.sh)
+[a repeatable iOS simulator build](https://github.com/cutout-studios/toolbox/blob/main/experimental/tauri/scripts/buildApple/main.sh)
 for `deno_core`. The next steps are to:
 
 - [ ] Link this `rlib` into a Tauri app and exercise it in the iOS Simulator.
