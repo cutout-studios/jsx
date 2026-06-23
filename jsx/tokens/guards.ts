@@ -68,10 +68,10 @@ export const isGeneratorToken = (
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 
-  return value[0] === TokenType.GENERATOR && isGenerator(value[1]);
+  return value[0] === TokenType.GENERATOR && isGeneratorFactory(value[1]);
 };
 
-const isGenerator = (value: unknown): value is Generator => {
+const isGeneratorFactory = (value: unknown): value is () => Generator => {
   if (typeof value !== "function") {
     return false;
   }

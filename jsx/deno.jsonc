@@ -1,7 +1,8 @@
 {
   "exports": {
     "./jsx-runtime": "./module.ts",
-    "./tokens": "./tokens/module.ts"
+    "./tokens": "./tokens/module.ts",
+    "./projections": "./projections/module.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert",
@@ -11,7 +12,7 @@
     "@cutout/internal": "../internal/module.ts"
   },
   "tasks": {
-    "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts"
+    "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts ./projections/module.ts"
   },
   "name": "@cutout/jsx",
   "version": "0.0.3"

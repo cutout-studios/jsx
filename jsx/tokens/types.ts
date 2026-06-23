@@ -10,7 +10,7 @@ import type { TokenType } from "./constants.ts";
  */
 
 /**
- * The fundamental shape of a token in @cutout/jsx: a tuple of `[type, value]`.
+ * The fundamental shape of a token in @cutout/jsx: a readonly tuple of `[type, value]`.
  *
  * @template A The token type (default: `CutoutTokenType.UNKNOWN`).
  * @template T The actual data payload (default: `unknown`).

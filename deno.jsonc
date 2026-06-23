@@ -12,7 +12,6 @@
     ]
   },
   "workspace": [
-    "internal",
     "jsx",
     "store",
     "experimental/tauri",

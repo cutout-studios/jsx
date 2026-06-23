@@ -1,9 +1,6 @@
 /** @jsxImportSource @cutout/jsx */
-/** @jsxImportSourceTypes @cutout/web/projections/html */
 
-// TODO: run a searXNG instance
-
-import { html } from "@cutout/web/projections";
+import { rawText } from "@cutout/jsx/projections";
 
 import description from "./description.md" with { type: "text" };
 
@@ -83,7 +80,7 @@ export default async ({ query }: { query: string }): Promise<string> => {
     );
   };
 
-  return html(
+  return rawText(
     <article>
       <header>
         <h1>Quick Search: "{Heading}"</h1>
