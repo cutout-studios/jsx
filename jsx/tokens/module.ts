@@ -16,7 +16,11 @@ export type {
   NumberToken as CutoutNumberToken,
   ObjectToken as CutoutObjectToken,
   OutputToken as CutoutOutputToken,
+  PrimitiveToken as CutoutPrimitiveToken,
+  ReferenceToken as CutoutReferenceToken,
   StringToken as CutoutStringToken,
   SymbolToken as CutoutSymbolToken,
+  SyntaxToken as CutoutSyntaxToken,
+  SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
 } from "./types.ts";

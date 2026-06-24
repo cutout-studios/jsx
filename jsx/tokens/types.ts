@@ -30,6 +30,10 @@ export type AnyToken<
 // System Tokens
 // -----------------------------------------------------------------------------
 
+export type SystemToken =
+  | UnknownToken
+  | GeneratorToken
+
 /**
  * A token where we genuinely don't know the type or value yet.
  * Handy for initial parsing stages or error fallbacks.
@@ -52,8 +56,16 @@ export type GeneratorToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// JavaScript Primitives
+// Primitive Tokens
 // -----------------------------------------------------------------------------
+
+export type PrimitiveToken =
+  | NullToken
+  | UndefinedToken
+  | BooleanToken
+  | NumberToken
+  | StringToken
+  | SymbolToken
 
 /**
  * A token for the literal null value.
@@ -101,8 +113,13 @@ export type SymbolToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// Complex Types
+// References
 // -----------------------------------------------------------------------------
+
+export type ReferenceToken = 
+  | ArrayToken
+  | ObjectToken
+  | FunctionToken
 
 /**
  * A token wrapping an object.
@@ -134,8 +151,13 @@ export type FunctionToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// JSX Structure
+// Syntax
 // -----------------------------------------------------------------------------
+
+export type SyntaxToken =
+  | ElementOpenToken
+  | ElementCloseToken
+  | AttributeToken
 
 /**
  * A token representing the opening of a JSX element.
@@ -171,18 +193,9 @@ export type AttributeToken = AnyToken<
  * streams that actually _contain_ the output).
  */
 export type OutputToken =
-  | ArrayToken
-  | BooleanToken
-  | ElementCloseToken
-  | ElementOpenToken
-  | FunctionToken
-  | NullToken
-  | NumberToken
-  | ObjectToken
-  | AttributeToken
-  | StringToken
-  | SymbolToken
-  | UndefinedToken;
+  | PrimitiveToken
+  | ReferenceToken
+  | SyntaxToken
 
 /**
  * This covers every valid token you might encounter when working with `@cutout/jsx`.

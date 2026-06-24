@@ -1,7 +1,5 @@
 /** @jsxImportSource @cutout/jsx */
 
-import { entries } from "@cutout/jsx/projections";
-
 import { MemoryStore } from "./memory.ts";
 
 const TEST_GROUP = "store";
