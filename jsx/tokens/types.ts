@@ -32,7 +32,7 @@ export type AnyToken<
 
 export type SystemToken =
   | UnknownToken
-  | GeneratorToken
+  | GeneratorToken;
 
 /**
  * A token where we genuinely don't know the type or value yet.
@@ -65,7 +65,7 @@ export type PrimitiveToken =
   | BooleanToken
   | NumberToken
   | StringToken
-  | SymbolToken
+  | SymbolToken;
 
 /**
  * A token for the literal null value.
@@ -116,10 +116,10 @@ export type SymbolToken = AnyToken<
 // References
 // -----------------------------------------------------------------------------
 
-export type ReferenceToken = 
+export type ReferenceToken =
   | ArrayToken
   | ObjectToken
-  | FunctionToken
+  | FunctionToken;
 
 /**
  * A token wrapping an object.
@@ -157,7 +157,7 @@ export type FunctionToken = AnyToken<
 export type SyntaxToken =
   | ElementOpenToken
   | ElementCloseToken
-  | AttributeToken
+  | AttributeToken;
 
 /**
  * A token representing the opening of a JSX element.
@@ -195,7 +195,7 @@ export type AttributeToken = AnyToken<
 export type OutputToken =
   | PrimitiveToken
   | ReferenceToken
-  | SyntaxToken
+  | SyntaxToken;
 
 /**
  * This covers every valid token you might encounter when working with `@cutout/jsx`.

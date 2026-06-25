@@ -19,7 +19,7 @@ const dataEntries = entries(
       <span name="username">denathor345</span>
       <span name="displayname">Denathor Roxx</span>
     </li>
-  </ul>
+  </ul>,
 );
 
 for (const [key, value] of dataEntries) {

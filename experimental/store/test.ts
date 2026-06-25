@@ -11,22 +11,22 @@ Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
   const keyPath1: ValidStoreToken[] = [
     "users",
     123,
-    "name"
+    "name",
   ].map(tokenizeValue);
 
   const valueList1: ValidStoreToken[] = [
-    "bobadams"
+    "bobadams",
   ].map(tokenizeValue);
 
   const keyPath2: ValidStoreToken[] = [
     "users",
     123,
     "address",
-    "zip"
+    "zip",
   ].map(tokenizeValue);
 
   const valueList2: ValidStoreToken[] = [
-    12345
+    12345,
   ].map(tokenizeValue);
 
   store.set(keyPath1, valueList1);
@@ -48,11 +48,11 @@ Deno.test(`${TEST_GROUP} - MemoryStore, escape`, () => {
   const store = new MemoryStore();
 
   const keyPath: ValidStoreToken[] = [
-    '"test";'
+    '"test";',
   ].map(tokenizeValue);
 
   const valueList: ValidStoreToken[] = [
-    '"cool:guy";'
+    '"cool:guy";',
   ].map(tokenizeValue);
 
   store.set(keyPath, valueList);
