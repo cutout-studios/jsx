@@ -24,3 +24,5 @@ export type {
   SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
 } from "./types.ts";
+
+export { tokenizeValue } from "./tokenizeValue.ts";
