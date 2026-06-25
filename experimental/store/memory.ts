@@ -40,14 +40,14 @@ export class MemoryStore implements Store {
 
     for (
       const { groups } of path.matchAll(
-        /(?:<type>):"(?:<value>)";/,
+        /(?<type>.*):"(?<value>.*)",/,
       )
     ) {
       let { type, value } = groups!;
       value = this.#unescape(value);
 
       let token: ValidStoreToken;
-      switch (type) {
+      switch (type as unknown as CutoutTokenType) { // ?
         case CutoutTokenType.NUMBER:
           token = [CutoutTokenType.NUMBER, Number(value)];
           break;
@@ -65,12 +65,33 @@ export class MemoryStore implements Store {
     return result;
   }
 
-  // TODO: escape/unescape
+  #escapeMap = new Map([
+    [",", "&#44;"],
+    ['"', "&#34;"],
+    [":", "&#58;"],
+  ]);
+
+  #escapeMapRegex = new RegExp(
+    `[${Array.from(this.#escapeMap.values()).join("")}]`,
+  );
+
   #escape(value: string): string {
-    return value;
+    return value.replaceAll(
+      this.#escapeMapRegex,
+      (char) => this.#escapeMap.get(char) ?? "",
+    );
   }
 
+  #unescapeMap = new Map([
+    ["&#44;", ","],
+    ["&#34;", '"'],
+    ["&#58;", ":"],
+  ]);
+
   #unescape(value: string): string {
-    return value;
+    return value.replaceAll(
+      /&#\d\d;/g,
+      (code) => this.#unescapeMap.get(code) ?? "",
+    );
   }
 }
