@@ -30,7 +30,8 @@ for (const [keyPath, values] of dataEntries) {
 }
 
 // Later...
-import { query, rawText } from "@cutout/store/projections";
+import { rawText } from "@cutout/jsx/projections";
+import { query } from "@cutout/store/projections";
 
 const dataQuery = query(
   <user id={123}></user>,
