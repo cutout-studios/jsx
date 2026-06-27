@@ -1,4 +1,4 @@
-# `@cutout/agent`
+# `@cutout/store`
 
 **The Idea**: Store and retrieve the JSX IR across various backends. Something
 like this:
