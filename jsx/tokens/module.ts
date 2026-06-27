@@ -16,7 +16,14 @@ export type {
   NumberToken as CutoutNumberToken,
   ObjectToken as CutoutObjectToken,
   OutputToken as CutoutOutputToken,
+  PrimitiveToken as CutoutPrimitiveToken,
+  ReferenceToken as CutoutReferenceToken,
   StringToken as CutoutStringToken,
   SymbolToken as CutoutSymbolToken,
+  SyntaxToken as CutoutSyntaxToken,
+  SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
+  UnknownToken, // We don't even know if it's a "Cutout" token.
 } from "./types.ts";
+
+export { tokenizeValue } from "./tokenizeValue.ts";

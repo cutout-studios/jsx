@@ -13,6 +13,7 @@
   },
   "workspace": [
     "jsx",
+    "experimental/store",
     "experimental/tauri",
     "experimental/agent"
   ]

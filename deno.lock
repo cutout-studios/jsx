@@ -68,6 +68,11 @@
           "jsr:@std/streams@*"
         ]
       },
+      "experimental/store": {
+        "dependencies": [
+          "jsr:@std/assert@*"
+        ]
+      },
       "jsx": {
         "dependencies": [
           "jsr:@std/assert@*",

@@ -31,6 +31,14 @@ export type AnyToken<
 // -----------------------------------------------------------------------------
 
 /**
+ * A `System Token` is reserved for the JSX system; manipulating these
+ * tokens directly should generally be avoided (unless you know what you're doing).
+ */
+export type SystemToken =
+  | UnknownToken
+  | GeneratorToken;
+
+/**
  * A token where we genuinely don't know the type or value yet.
  * Handy for initial parsing stages or error fallbacks.
  */
@@ -52,8 +60,20 @@ export type GeneratorToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// JavaScript Primitives
+// Primitive Tokens
 // -----------------------------------------------------------------------------
+
+/**
+ * A `Primitive Token` points to a -direct- value in the current stack frame
+ * (as opposed to a reference to something stored elsewhere).
+ */
+export type PrimitiveToken =
+  | NullToken
+  | UndefinedToken
+  | BooleanToken
+  | NumberToken
+  | StringToken
+  | SymbolToken;
 
 /**
  * A token for the literal null value.
@@ -101,8 +121,17 @@ export type SymbolToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// Complex Types
+// Reference Tokens
 // -----------------------------------------------------------------------------
+
+/**
+ * A `Reference Token` contains a reference to a more complex object
+ * stored in the memory heap.
+ */
+export type ReferenceToken =
+  | ArrayToken
+  | ObjectToken
+  | FunctionToken;
 
 /**
  * A token wrapping an object.
@@ -134,8 +163,17 @@ export type FunctionToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// JSX Structure
+// Syntax
 // -----------------------------------------------------------------------------
+
+/**
+ * `Syntax Token`s govern the actual structure of the JSX:
+ * Elements, attributes, and the like.
+ */
+export type SyntaxToken =
+  | ElementOpenToken
+  | ElementCloseToken
+  | AttributeToken;
 
 /**
  * A token representing the opening of a JSX element.
@@ -171,18 +209,9 @@ export type AttributeToken = AnyToken<
  * streams that actually _contain_ the output).
  */
 export type OutputToken =
-  | ArrayToken
-  | BooleanToken
-  | ElementCloseToken
-  | ElementOpenToken
-  | FunctionToken
-  | NullToken
-  | NumberToken
-  | ObjectToken
-  | AttributeToken
-  | StringToken
-  | SymbolToken
-  | UndefinedToken;
+  | PrimitiveToken
+  | ReferenceToken
+  | SyntaxToken;
 
 /**
  * This covers every valid token you might encounter when working with `@cutout/jsx`.
