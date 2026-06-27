@@ -1,6 +1,6 @@
-import {
-  type CutoutPrimitiveToken,
-  type CutoutSyntaxToken,
+import type {
+  CutoutPrimitiveToken,
+  CutoutSyntaxToken,
 } from "@cutout/jsx/tokens";
 
 export type ValidStoreToken =
