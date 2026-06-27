@@ -1,15 +1,22 @@
-import { CutoutTokenType } from "@cutout/jsx/tokens";
+import { type CutoutGeneratorToken, CutoutTokenType } from "@cutout/jsx/tokens";
 import type { Store, ValidStoreToken } from "./types.ts";
 
 export class MemoryStore implements Store {
   #map: Map<string, string> = new Map();
 
-  get(key: ValidStoreToken[]): ValidStoreToken[] | undefined {
-    const result = this.#map.get(this.#stringifyTokenList(key));
+  get(key: ValidStoreToken[]): CutoutGeneratorToken {
+    const raw = this.#map.get(this.#stringifyTokenList(key));
+    const result = raw ? this.#parseTokenList(raw) : null;
+    return [
+      CutoutTokenType.GENERATOR,
+      function* () {
+        if (!result) return;
 
-    if (!result) return;
-
-    return this.#parseTokenList(result);
+        for (const token of result) {
+          yield token;
+        }
+      },
+    ];
   }
 
   set(key: ValidStoreToken[], value: ValidStoreToken[]) {

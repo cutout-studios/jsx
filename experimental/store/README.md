@@ -1,6 +1,7 @@
 # `@cutout/agent`
 
-**The Idea**: Store and retrieve the JSX IR across various backends:
+**The Idea**: Store and retrieve the JSX IR across various backends. Something
+like this:
 
 ```tsx
 import { CutoutMemoryStore } from "@cutout/store";
@@ -22,10 +23,36 @@ const dataEntries = entries(
   </ul>,
 );
 
-for (const [key, value] of dataEntries) {
-  store.set(key, value);
+for (const [keyPath, values] of dataEntries) {
+  store.set(keyPath, values);
 }
+
+// Later...
+
+import { path } from "@cutout/jsx/projections";
+
+const dataQuery = path(
+  <div id="users">
+    <span key={123}></span>
+  </div>,
+);
+
+console.log(
+  store.get(dataQuery),
+  // => Generator that returns...
+  // PropertyToken<"username">,
+  // StringToken<"bobadams">,
+  // PropertyToken<"displayname">,
+  // StringToken<"Bob Adams">
+);
 ```
+
+## Open Design Decisions
+
+- Should set/get be async? Or there's a later "async" store?
+  - That implies the existence of an async token?
+- Should the store be initialized with a projection, so it also _takes_
+  generators? Or is this more practical?
 
 ---
 

@@ -37,15 +37,15 @@ Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
   store.set(keyPath2, valueList2);
 
   assert(store.has(keyPath1));
-  assertArrayIncludes(store.get(keyPath1)!, valueList1);
+  assertArrayIncludes([...store.get(keyPath1)![1]()], valueList1);
 
   assert(store.has(keyPath2));
-  assertArrayIncludes(store.get(keyPath2)!, valueList2);
+  assertArrayIncludes([...store.get(keyPath2)![1]()], valueList2);
 
   assert(store.delete(keyPath1));
   assertFalse(store.has(keyPath1));
   assert(store.has(keyPath2));
-  assertFalse(store.get(keyPath1));
+  assertFalse([...store.get(keyPath1)![1]()][0]);
 });
 
 Deno.test(`${TEST_GROUP} - MemoryStore, escape`, () => {
@@ -60,5 +60,5 @@ Deno.test(`${TEST_GROUP} - MemoryStore, escape`, () => {
   ].map(tokenizeStoreValue);
 
   store.set(keyPath, valueList);
-  assertArrayIncludes(store.get(keyPath)!, valueList);
+  assertArrayIncludes([...store.get(keyPath)![1]()], valueList);
 });
