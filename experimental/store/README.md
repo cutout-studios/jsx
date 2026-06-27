@@ -1,15 +1,17 @@
 # `@cutout/store`
 
-**The Idea**: Store and retrieve the JSX IR across various backends. Something
-like this:
+**The Idea**: Store and retrieve JSX across various backends. Something like
+this:
 
 ```tsx
-import { CutoutMemoryStore } from "@cutout/store";
-import { entries } from "@cutout/store/projections";
+import { CutoutDocumentStore } from "@cutout/store";
+import { MemoryBackend } from "@cutout/store/backends";
 
-const store = new CutoutMemoryStore();
+const store = CutoutDocumentStore.with(
+  new MemoryBackend(),
+);
 
-const dataEntries = entries(
+store.upsert(
   <>
     {/* Use whatever markup you want, even HTML. */}
     <user id={123}>
@@ -24,26 +26,16 @@ const dataEntries = entries(
   </>,
 );
 
-// The "Store" interface intentionally mirrors JS' "Map".
-for (const [keyPath, values] of dataEntries) {
-  store.set(keyPath, values);
-}
-
 // Later...
-import { rawText } from "@cutout/jsx/projections";
-import { query } from "@cutout/store/projections";
-
-const userQuery = (userId) => query(<user id={userId}></user>);
+const getUser = (userId) => <user id={userId}></user>;
 
 console.log(
   // => raw text of the stored IR subtree
-  rawText(store.get(userQuery(123)),
+  rawText(
+    store.query(getUser(123)),
+  ),
 );
 ```
-
-> [!NOTE]
-> The store in the above example does not handle the subtree nesting; the
-> `entries` projection instead generates all key-value permutations.
 
 ---
 
