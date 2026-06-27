@@ -49,10 +49,10 @@ console.log(
 
 ## Open Design Decisions
 
-- Should set/get be async? Or there's a later "async" store?
-  - That implies the existence of an async token?
+- Should set/get be async? Or there's a later "async" store? Maybe store is just generic.
+  - That implies the existence of an async token that JSX passes along to the projection?
 - Should the store be initialized with a projection, so it also _takes_
-  generators? Or is this more practical?
+  generators? Or is this more practical? Again, store might just be generic, and we can the implement different stores based on need.
 
 ---
 
