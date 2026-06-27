@@ -33,13 +33,11 @@ for (const [keyPath, values] of dataEntries) {
 import { rawText } from "@cutout/jsx/projections";
 import { query } from "@cutout/store/projections";
 
-const dataQuery = query(
-  <user id={123}></user>,
-);
+const userQuery = (userId) => query(<user id={userId}></user>);
 
 console.log(
   // => raw text of the stored IR subtree
-  rawText(store.get(dataQuery)),
+  rawText(store.get(userQuery(123)),
 );
 ```
 
