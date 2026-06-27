@@ -23,6 +23,7 @@ export type {
   SyntaxToken as CutoutSyntaxToken,
   SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
+  UnknownToken, // We don't even know if it's a "Cutout" token.
 } from "./types.ts";
 
 export { tokenizeValue } from "./tokenizeValue.ts";
