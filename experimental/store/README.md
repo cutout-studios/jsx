@@ -5,7 +5,7 @@ like this:
 
 ```tsx
 import { CutoutMemoryStore } from "@cutout/store";
-import { entries } from "@cutout/jsx/projections";
+import { entries } from "@cutout/store/projections";
 
 const store = new CutoutMemoryStore();
 
@@ -30,7 +30,7 @@ for (const [keyPath, values] of dataEntries) {
 }
 
 // Later...
-import { query, rawText } from "@cutout/jsx/projections";
+import { query, rawText } from "@cutout/store/projections";
 
 const dataQuery = query(
   <user id={123}></user>,
