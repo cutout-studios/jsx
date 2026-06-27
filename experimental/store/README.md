@@ -27,12 +27,13 @@ store.upsert(
 );
 
 // Later...
+import { rawText } from "@cutout/jsx/projections";
+
 const getUser = (userId) => <user id={userId}></user>;
 
 console.log(
-  // => raw text of the stored IR subtree
-  rawText(
-    store.query(getUser(123)),
+  rawText( // => "<username>bobadams</username><displayname>Bob Adams</displayname>"
+    store.query(getUser(123)), // get the stored IR subtree
   ),
 );
 ```
