@@ -30,6 +30,10 @@ export type AnyToken<
 // System Tokens
 // -----------------------------------------------------------------------------
 
+/**
+ * A `System Token` is reserved for the JSX system; manipulating these
+ * tokens directly should generally be avoided (unless you know what you're doing).
+ */
 export type SystemToken =
   | UnknownToken
   | GeneratorToken;
@@ -59,6 +63,10 @@ export type GeneratorToken = AnyToken<
 // Primitive Tokens
 // -----------------------------------------------------------------------------
 
+/**
+ * A `Primitive Token` points to a -direct- value in the current stack frame
+ * (as opposed to a reference to something stored elsewhere).
+ */
 export type PrimitiveToken =
   | NullToken
   | UndefinedToken
@@ -113,9 +121,13 @@ export type SymbolToken = AnyToken<
 >;
 
 // -----------------------------------------------------------------------------
-// References
+// Reference Tokens
 // -----------------------------------------------------------------------------
 
+/**
+ * A `Reference Token` contains a reference to a more complex object
+ * stored in the memory heap.
+ */
 export type ReferenceToken =
   | ArrayToken
   | ObjectToken
@@ -154,6 +166,10 @@ export type FunctionToken = AnyToken<
 // Syntax
 // -----------------------------------------------------------------------------
 
+/**
+ * `Syntax Token`s govern the actual structure of the JSX:
+ * Elements, attributes, and the like.
+ */
 export type SyntaxToken =
   | ElementOpenToken
   | ElementCloseToken
