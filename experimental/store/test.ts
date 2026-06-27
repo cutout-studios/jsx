@@ -1,37 +1,36 @@
 import { tokenizeValue } from "@cutout/jsx/tokens";
 import { assert, assertArrayIncludes, assertFalse } from "@std/assert";
-import { MemoryStore } from "./memory.ts";
-import type { ValidStoreToken } from "./types.ts";
+import { MemoryStore, type MemoryStoreToken } from "./memory.ts";
 
 const TEST_GROUP = "store";
 
-const tokenizeStoreValue = (value: string | number): ValidStoreToken => {
-  return tokenizeValue(value) as ValidStoreToken;
+const tokenizeMemoryValue = (value: string | number): MemoryStoreToken => {
+  return tokenizeValue(value) as MemoryStoreToken;
 };
 
 Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
   const store = new MemoryStore();
 
-  const keyPath1: ValidStoreToken[] = [
+  const keyPath1: MemoryStoreToken[] = [
     "users",
     123,
     "name",
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
-  const valueList1: ValidStoreToken[] = [
+  const valueList1: MemoryStoreToken[] = [
     "bobadams",
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
-  const keyPath2: ValidStoreToken[] = [
+  const keyPath2: MemoryStoreToken[] = [
     "users",
     123,
     "address",
     "zip",
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
-  const valueList2: ValidStoreToken[] = [
+  const valueList2: MemoryStoreToken[] = [
     12345,
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
   store.set(keyPath1, valueList1);
   store.set(keyPath2, valueList2);
@@ -51,13 +50,13 @@ Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
 Deno.test(`${TEST_GROUP} - MemoryStore, escape`, () => {
   const store = new MemoryStore();
 
-  const keyPath: ValidStoreToken[] = [
+  const keyPath: MemoryStoreToken[] = [
     '"test";',
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
-  const valueList: ValidStoreToken[] = [
+  const valueList: MemoryStoreToken[] = [
     '"cool:guy";',
-  ].map(tokenizeStoreValue);
+  ].map(tokenizeMemoryValue);
 
   store.set(keyPath, valueList);
   assertArrayIncludes([...store.get(keyPath)![1]()], valueList);

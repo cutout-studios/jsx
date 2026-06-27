@@ -1,16 +1,8 @@
-import type {
-  CutoutGeneratorToken,
-  CutoutPrimitiveToken,
-  CutoutSyntaxToken,
-} from "@cutout/jsx/tokens";
+import type { AnyCutoutToken } from "@cutout/jsx/tokens";
 
-export type ValidStoreToken =
-  | CutoutPrimitiveToken
-  | CutoutSyntaxToken;
-
-export interface Store {
-  has(key: ValidStoreToken[]): boolean;
-  get(key: ValidStoreToken[]): CutoutGeneratorToken;
-  set(key: ValidStoreToken[], value: ValidStoreToken[]): void;
-  delete(key: ValidStoreToken[]): boolean;
+export interface Store<K = AnyCutoutToken, V = K, O = V> {
+  has(key: K[]): boolean;
+  get(key: K[]): O;
+  set(key: K[], value: V[]): void;
+  delete(key: K[]): boolean;
 }

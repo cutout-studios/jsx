@@ -10,49 +10,41 @@ import { entries } from "@cutout/jsx/projections";
 const store = new CutoutMemoryStore();
 
 const dataEntries = entries(
-  <ul id="users">
-    <li key={123}>
-      <span name="username">bobadams</span>
-      <span name="displayname">Bob Adams</span>
-    </li>
+  <>
+    {/* Use whatever markup you want, even HTML. */}
+    <user id={123}>
+      <username>bobadams</username>
+      <displayname>Bob Adams</displayname>
+    </user>
 
-    <li key={456}>
-      <span name="username">denathor345</span>
-      <span name="displayname">Denathor Roxx</span>
-    </li>
-  </ul>,
+    <user id={456}>
+      <username>denathor345</username>
+      <displayname>Denathor Roxx</displayname>
+    </user>
+  </>,
 );
 
+// The "Store" interface intentionally mirrors JS' "Map".
 for (const [keyPath, values] of dataEntries) {
   store.set(keyPath, values);
 }
 
 // Later...
+import { query, rawText } from "@cutout/jsx/projections";
 
-import { path } from "@cutout/jsx/projections";
-
-const dataQuery = path(
-  <div id="users">
-    <span key={123}></span>
-  </div>,
+const dataQuery = query(
+  <user id={123}></user>,
 );
 
 console.log(
-  store.get(dataQuery),
-  // => Generator that returns...
-  // PropertyToken<"username">,
-  // StringToken<"bobadams">,
-  // PropertyToken<"displayname">,
-  // StringToken<"Bob Adams">
+  // => raw text of the stored IR subtree
+  rawText(store.get(dataQuery)),
 );
 ```
 
-## Open Design Decisions
-
-- Should set/get be async? Or there's a later "async" store? Maybe store is just generic.
-  - That implies the existence of an async token that JSX passes along to the projection?
-- Should the store be initialized with a projection, so it also _takes_
-  generators? Or is this more practical? Again, store might just be generic, and we can the implement different stores based on need.
+> [!NOTE]
+> The store in the above example does not handle the subtree nesting; the
+> `entries` projection instead generates all key-value permutations.
 
 ---
 

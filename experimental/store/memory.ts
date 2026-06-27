@@ -1,10 +1,35 @@
-import { type CutoutGeneratorToken, CutoutTokenType } from "@cutout/jsx/tokens";
-import type { Store, ValidStoreToken } from "./types.ts";
+import {
+  type CutoutGeneratorToken,
+  type CutoutPrimitiveToken,
+  type CutoutSyntaxToken,
+  CutoutTokenType,
+} from "@cutout/jsx/tokens";
+import type { Store } from "./types.ts";
 
-export class MemoryStore implements Store {
+export type MemoryStoreToken =
+  | CutoutPrimitiveToken
+  | CutoutSyntaxToken;
+
+const ESCAPE_MAP = new Map([
+  [",", "&#44;"],
+  ['"', "&#34;"],
+  [":", "&#58;"],
+]);
+
+const ESCAPE_REGEX = new RegExp(
+  `[${Array.from(ESCAPE_MAP.keys()).join("")}]`,
+  "g",
+);
+
+const UNESCAPE_MAP = new Map(
+  ESCAPE_MAP.entries().map(([from, to]) => [to, from]),
+);
+
+export class MemoryStore
+  implements Store<MemoryStoreToken, MemoryStoreToken, CutoutGeneratorToken> {
   #map: Map<string, string> = new Map();
 
-  get(key: ValidStoreToken[]): CutoutGeneratorToken {
+  get(key: MemoryStoreToken[]): CutoutGeneratorToken {
     const raw = this.#map.get(this.#stringifyTokenList(key));
     const result = raw ? this.#parseTokenList(raw) : null;
     return [
@@ -19,22 +44,22 @@ export class MemoryStore implements Store {
     ];
   }
 
-  set(key: ValidStoreToken[], value: ValidStoreToken[]) {
+  set(key: MemoryStoreToken[], value: MemoryStoreToken[]) {
     this.#map.set(
       this.#stringifyTokenList(key),
       this.#stringifyTokenList(value),
     );
   }
 
-  has(key: ValidStoreToken[]): boolean {
+  has(key: MemoryStoreToken[]): boolean {
     return this.#map.has(this.#stringifyTokenList(key));
   }
 
-  delete(key: ValidStoreToken[]): boolean {
+  delete(key: MemoryStoreToken[]): boolean {
     return this.#map.delete(this.#stringifyTokenList(key));
   }
 
-  #stringifyTokenList(path: ValidStoreToken[]): string {
+  #stringifyTokenList(path: MemoryStoreToken[]): string {
     return path.reduce(
       (result, [type, value]) =>
         result + `${String(type)}:"${this.#escape(String(value))}",`,
@@ -42,7 +67,7 @@ export class MemoryStore implements Store {
     );
   }
 
-  #parseTokenList(path: string): ValidStoreToken[] {
+  #parseTokenList(path: string): MemoryStoreToken[] {
     const result = [];
 
     for (
@@ -55,7 +80,7 @@ export class MemoryStore implements Store {
       const value = this.#unescape(groups.value);
       const type = Number(groups.type);
 
-      let token: ValidStoreToken;
+      let token: MemoryStoreToken;
       switch (type) {
         case CutoutTokenType.NUMBER:
           token = [CutoutTokenType.NUMBER, Number(value)];
@@ -76,30 +101,15 @@ export class MemoryStore implements Store {
 
   #escape(value: string): string {
     return value.replaceAll(
-      this.#escapeMapRegex,
-      (char) => this.#escapeMap.get(char) ?? "",
+      ESCAPE_REGEX,
+      (char) => ESCAPE_MAP.get(char) ?? "",
     );
   }
-
-  #escapeMap = new Map([
-    [",", "&#44;"],
-    ['"', "&#34;"],
-    [":", "&#58;"],
-  ]);
-
-  #escapeMapRegex = new RegExp(
-    `[${Array.from(this.#escapeMap.keys()).join("")}]`,
-    "g",
-  );
 
   #unescape(value: string): string {
     return value.replaceAll(
       /&#\d\d;/g,
-      (code) => this.#unescapeMap.get(code) ?? "",
+      (code) => UNESCAPE_MAP.get(code) ?? "",
     );
   }
-
-  #unescapeMap = new Map(
-    this.#escapeMap.entries().map(([from, to]) => [to, from]),
-  );
 }
