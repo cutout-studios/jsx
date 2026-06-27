@@ -2,5 +2,6 @@
   "name": "@cutout/store",
   "imports": {
     "@std/assert": "jsr:@std/assert"
-  }
+  },
+  "exports": "./module.ts"
 }

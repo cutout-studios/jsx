@@ -1,9 +1,13 @@
 import { tokenizeValue } from "@cutout/jsx/tokens";
 import { assert, assertArrayIncludes, assertFalse } from "@std/assert";
 import { MemoryStore } from "./memory.ts";
-import { ValidStoreToken } from "./types.ts";
+import type { ValidStoreToken } from "./types.ts";
 
 const TEST_GROUP = "store";
+
+const tokenizeStoreValue = (value: string | number): ValidStoreToken => {
+  return tokenizeValue(value) as ValidStoreToken;
+};
 
 Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
   const store = new MemoryStore();
@@ -12,22 +16,22 @@ Deno.test(`${TEST_GROUP} - MemoryStore`, () => {
     "users",
     123,
     "name",
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   const valueList1: ValidStoreToken[] = [
     "bobadams",
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   const keyPath2: ValidStoreToken[] = [
     "users",
     123,
     "address",
     "zip",
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   const valueList2: ValidStoreToken[] = [
     12345,
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   store.set(keyPath1, valueList1);
   store.set(keyPath2, valueList2);
@@ -49,11 +53,11 @@ Deno.test(`${TEST_GROUP} - MemoryStore, escape`, () => {
 
   const keyPath: ValidStoreToken[] = [
     '"test";',
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   const valueList: ValidStoreToken[] = [
     '"cool:guy";',
-  ].map(tokenizeValue);
+  ].map(tokenizeStoreValue);
 
   store.set(keyPath, valueList);
   assertArrayIncludes(store.get(keyPath)!, valueList);

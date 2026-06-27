@@ -1,5 +1,5 @@
 import { CutoutTokenType } from "@cutout/jsx/tokens";
-import { Store, ValidStoreToken } from "./types.ts";
+import type { Store, ValidStoreToken } from "./types.ts";
 
 export class MemoryStore implements Store {
   #map: Map<string, string> = new Map();
@@ -30,7 +30,7 @@ export class MemoryStore implements Store {
   #stringifyTokenList(path: ValidStoreToken[]): string {
     return path.reduce(
       (result, [type, value]) =>
-        result + `${type}:"${this.#escape(String(value))}";`,
+        result + `${String(type)}:"${this.#escape(String(value))}",`,
       "",
     );
   }
@@ -40,14 +40,16 @@ export class MemoryStore implements Store {
 
     for (
       const { groups } of path.matchAll(
-        /(?<type>.*):"(?<value>.*)",/,
+        /(?<type>.*):"(?<value>.*)",/g,
       )
     ) {
-      let { type, value } = groups!;
-      value = this.#unescape(value);
+      if (!groups) continue;
+
+      const value = this.#unescape(groups.value);
+      const type = Number(groups.type);
 
       let token: ValidStoreToken;
-      switch (type as unknown as CutoutTokenType) { // ?
+      switch (type) {
         case CutoutTokenType.NUMBER:
           token = [CutoutTokenType.NUMBER, Number(value)];
           break;
@@ -65,16 +67,6 @@ export class MemoryStore implements Store {
     return result;
   }
 
-  #escapeMap = new Map([
-    [",", "&#44;"],
-    ['"', "&#34;"],
-    [":", "&#58;"],
-  ]);
-
-  #escapeMapRegex = new RegExp(
-    `[${Array.from(this.#escapeMap.values()).join("")}]`,
-  );
-
   #escape(value: string): string {
     return value.replaceAll(
       this.#escapeMapRegex,
@@ -82,11 +74,16 @@ export class MemoryStore implements Store {
     );
   }
 
-  #unescapeMap = new Map([
-    ["&#44;", ","],
-    ["&#34;", '"'],
-    ["&#58;", ":"],
+  #escapeMap = new Map([
+    [",", "&#44;"],
+    ['"', "&#34;"],
+    [":", "&#58;"],
   ]);
+
+  #escapeMapRegex = new RegExp(
+    `[${Array.from(this.#escapeMap.keys()).join("")}]`,
+    "g",
+  );
 
   #unescape(value: string): string {
     return value.replaceAll(
@@ -94,4 +91,8 @@ export class MemoryStore implements Store {
       (code) => this.#unescapeMap.get(code) ?? "",
     );
   }
+
+  #unescapeMap = new Map(
+    this.#escapeMap.entries().map(([from, to]) => [to, from]),
+  );
 }
