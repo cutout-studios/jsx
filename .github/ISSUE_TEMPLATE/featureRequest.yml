@@ -24,6 +24,6 @@ body:
     attributes:
       label: "Feature Description"
       description: "Please describe the feature in detail. What use case does it address, and why is the current system insufficient?"
-      placeholder: "e.g. Currently when I ask Bott to summarize the current conversation, they go over the entire history of the channel."
+      placeholder: "e.g. Currently when I ask the agent to summarize the current conversation, they go over our entire chat history."
     validations:
       required: true

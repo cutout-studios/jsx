@@ -2,23 +2,47 @@
 
 import { rawText } from "@cutout/jsx/projections";
 
-import description from "./description.md" with { type: "text" };
+export const name = "quickSearch";
 
-export const definition = {
-  type: "function",
-  function: {
-    name: "quickSearch",
-    description,
-    parameters: {
-      type: "object",
-      properties: {
-        query: {
-          type: "string",
-          description: "The query to search for, e.g. 'alphabet soup'.",
-        },
-      },
-      required: ["query"],
-    },
+export const description = rawText(
+  <article>
+    <section>
+      <h1>DuckDuckGo Quick Search</h1>
+    </section>
+    <section>
+      <h2>Overview</h2>
+      <p>
+        Look up a quick factual summary or definition of a topic via DuckDuckGo
+        Instant Answers. Returns an HTML document containing an overview,
+        results, and related topics with linsk.
+      </p>
+    </section>
+    <section>
+      <h2>Best Practices</h2>
+      <ul>
+        <li>
+          Faster and lighter than other search methods. Prefer this tool for
+          shallow reference checks and disambiguation.
+        </li>
+        <li>
+          Queries are case-sensitive. Use title case when relevent, like to
+          refer to a proper noun.
+        </li>
+        <li>
+          Does NOT support common search operators. Provied a more specific
+          query (e.g. "alphabetic writing system" versus just "alphabet") to
+          ensure relevant results.
+        </li>
+      </ul>
+    </section>
+  </article>,
+);
+
+export const parameters = {
+  query: {
+    type: "string",
+    description: "The query to search for, e.g. 'alphabet soup'.",
+    required: true,
   },
 };
 

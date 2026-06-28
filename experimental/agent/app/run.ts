@@ -1,124 +1,112 @@
+import {
+  LanguageModel,
+  type LanguageModelMessage,
+  LanguageModelRole,
+} from "@cutout/agent/processes";
+import { QuickSearch } from "@cutout/agent/tools";
 import { Spinner } from "@std/cli/spinner";
 
-import { LLM } from "../libraries/services/module.ts";
-import { QuickSearch } from "../libraries/tools/module.ts";
-import systemPrompt from "./SYSTEM.md" with { type: "text" };
+import { CHAT_MODEL, SCORE_MODEL } from "../constants.env.ts";
 
-type ChatLog = {
-  role: string;
-  content: string;
-  tool_call_id?: number;
-}[];
+// TODO: detect system requirements (ram, apple silicon)
 
-const llmDependencies = await LLM.getRequiredDependencies();
-if (llmDependencies) {
+const modelDependencies = await LanguageModel.getRequiredDependencies();
+if (modelDependencies) {
   console.error(
-    `Agent requires the following dependencies: "${llmDependencies}". Aborting.`,
+    `Agent requires the following dependencies: "${modelDependencies}". Aborting.`,
   );
   Deno.exit(1);
 }
 
-const llmService = LLM.createService();
+// Chat
+const chatLog: LanguageModelMessage[] = [];
+const chatProcess = LanguageModel.createProcess({
+  model: CHAT_MODEL,
+  tools: [QuickSearch], // TODO: fix. "createTool" or something.
+});
 
-llmService.start();
+chatProcess.start();
 
-const chatLog: ChatLog = [{
-  role: "system",
-  content: systemPrompt,
-}];
+// Score
+const scoreProcess = LanguageModel.createProcess({
+  model: SCORE_MODEL,
+  monitoring: {
+    logFileName: "score.log",
+  },
+  generation: {
+    temperature: 1
+  }
+});
+
+scoreProcess.start();
 
 while (true) {
   const input = prompt("[input]>");
 
   if (input === null) break;
 
-  chatLog.push({ role: "user", content: input });
+  // TODO: get scores, determine valid tasks
 
-  let hasToolCalls = false;
+  chatLog.push({ role: LanguageModelRole.USER, content: input.trim() });
 
-  do {
-    const spinner = new Spinner({ message: "Thinking…", color: "gray" });
-    spinner.start();
-
-    let seconds = 1;
-    const thinkingInterval = setInterval(() => {
-      spinner.message = `Thinking… (${seconds++}s)`;
-    }, 1000);
-
-    const response: Response = await fetch(
-      llmService.apiRoot + "chat/completions",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          model: llmService.model,
-          messages: chatLog,
-          tools: [
-            QuickSearch.definition,
-          ],
-
-          // TODO: per-model/QDT setting
-          temperature: 0.7,
-          top_p: 0.95, // note to self: don't consider the options making up <5%
-          top_k: 20, // note to self: keep the top 20 options
-          min_p: 0.0,
-          presence_penalty: 1.5,
-        }),
-      },
+  let toolCalls;
+  do { // TODO: handle error
+    const chatMessage = await callWithSpinner(
+      "Thinking",
+      () => chatProcess.fetch(chatLog),
     );
 
-    const { choices: [{ message, finish_reason: finishReason }] } =
-      await response.json();
-
-    spinner.stop();
-    clearInterval(thinkingInterval);
-    console.log(
-      `%cThought for ${seconds}s.`,
-      "color: gray;",
-    );
-
-    chatLog.push(message);
-    if (message.content && message.content.trim().length) {
-      console.log("[output]> " + message.content.trim());
+    chatLog.push(chatMessage);
+    if (chatMessage.content && chatMessage.content.length) {
+      console.log("[output]> " + chatMessage.content);
     }
 
-    hasToolCalls = finishReason === "tool_calls";
-    for (
-      const { id, function: { name, arguments: _arguments } }
-        of message.tool_calls ?? []
-    ) {
-      let content, toolSpinner, toolStart;
-      try {
-        switch (name) {
-          case QuickSearch.definition.function.name: {
-            toolStart = performance.now();
-            toolSpinner = new Spinner({
-              message: `Calling: quickSearch(${_arguments})…`,
-              color: "gray",
-            });
+    ({ toolCalls } = chatMessage);
 
-            toolSpinner.start();
-            content = await QuickSearch.call(JSON.parse(_arguments));
+    if (!toolCalls) continue;
 
-            toolSpinner.stop();
-            console.log(
-              `%cCalled quickSearch(${_arguments}) for ${
-                Math.floor(performance.now() - toolStart)
-              }ms.`,
-              "color: gray;",
-            );
-            break;
-          }
-          default:
-            content = `Unknown Tool: ${name}`;
-        }
-      } catch (error) {
-        content = `Error: ${(error as Error).message}`;
-      } finally {
-        toolSpinner?.stop();
-      }
-      chatLog.push({ role: "tool", tool_call_id: id, content });
+    for (const call of toolCalls) {
+      chatLog.push({
+        role: LanguageModelRole.TOOL,
+        toolCallID: call.id,
+        content: await callWithSpinner(call.name, call),
+      });
     }
-  } while (hasToolCalls);
+  } while (toolCalls);
 }
 
-llmService.stop();
+chatProcess.stop();
+scoreProcess.stop();
+
+// ---
+const MS_IN_SECOND = 1000;
+function callWithSpinner<T>(
+  name: string,
+  fn: () => T,
+  color = "gray",
+): T | Error {
+  const spinner = new Spinner({ message: `${name}…`, color });
+
+  let seconds = 1;
+  const spinnerInterval = setInterval(() => {
+    spinner.message = `${name}… (${seconds++}s)`;
+  }, MS_IN_SECOND);
+
+  spinner.start();
+  try {
+    return fn();
+  } catch (error) {
+    if (error instanceof Error) {
+      return error;
+    }
+
+    return new Error(String(error));
+  } finally {
+    spinner.stop();
+    clearInterval(spinnerInterval);
+    console.log(
+      `%${name} for ${seconds}s.`,
+      `color: ${color};`,
+    );
+  }
+}
