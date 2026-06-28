@@ -1,6 +1,8 @@
 import type { Tool } from "@cutout/agent/tools";
 import { mergeReadableStreams } from "@std/streams";
 
+import { LOG_LEVEL } from "../../constants.env.ts";
+
 import {
   LOG_ROOT,
   MODEL_GENERATION_DEFAULT_OPTION_LIMIT,
@@ -23,7 +25,7 @@ type LocalModelProcessOptions = {
   };
   generation?: {
     systemPrompt?: string;
-    maxResponseLength?: number;
+    responseLimit?: number;
     temperature?: number;
     presencePenalty?: number;
     choiceConstraints?: {
@@ -31,15 +33,16 @@ type LocalModelProcessOptions = {
       optionLimit?: number;
     };
   };
-  monitoring?: {
-    logFileName?: string;
+  logging?: {
+    level?: string;
+    file?: string;
   };
   tools?: Tool[];
 };
 
 type LocalModelProcess = {
   process?: Deno.ChildProcess;
-  start: () => Deno.ChildProcess;
+  start: () => void;
   fetch: (messages: Message[]) => Promise<Message>;
   stop: () => void;
 };
@@ -65,7 +68,8 @@ export const createProcess = (
     tools = [],
     generation: {
       systemPrompt,
-      maxResponseLength = MODEL_GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT,
+      responseLimit: maxResponseLength =
+        MODEL_GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT,
       temperature = MODEL_GENERATION_DEFAULT_TEMPERATURE,
       presencePenalty = MODEL_GENERATION_DEFAULT_PRESENCE_PENALTY,
       choiceConstraints: {
@@ -73,8 +77,9 @@ export const createProcess = (
         optionLimit = MODEL_GENERATION_DEFAULT_OPTION_LIMIT,
       } = {},
     } = {},
-    monitoring: {
-      logFileName = "model.process.log",
+    logging: {
+      level = LOG_LEVEL,
+      file = "model.process.log",
     } = {},
   }: LocalModelProcessOptions,
 ): LocalModelProcess => {
@@ -89,7 +94,7 @@ export const createProcess = (
       "--model",
       model,
       "--log-level",
-      "DEBUG",
+      level,
     ],
     env: {
       PYTHONUNBUFFERED: "1",
@@ -103,7 +108,7 @@ export const createProcess = (
   const apiRoot = `http://${host}:${port}/v1/`;
 
   return {
-    start() {
+    start() { // TODO: inform user that the model is downloading
       console.info(
         `%cServing "modelID:${model}" @ ${apiRoot}`,
         "color: gray;",
@@ -113,7 +118,7 @@ export const createProcess = (
 
       Deno.mkdirSync(LOG_ROOT, { recursive: true });
 
-      const logFile = Deno.openSync(LOG_ROOT + logFileName, {
+      const logFile = Deno.openSync(LOG_ROOT + file, {
         create: true,
         append: true,
         write: true,
@@ -130,9 +135,7 @@ export const createProcess = (
           close: () => logFile.close(),
           abort: () => logFile.close(),
         }),
-      ).catch(() => {}); // TODO: ?
-
-      return this.process;
+      );
     },
     async fetch(messages: Message[]): Promise<Message> {
       const response = await fetch(

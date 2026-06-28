@@ -1,3 +1,3 @@
 export type Task = {
-  // TODO
-}
+  // TODO: task shape
+};

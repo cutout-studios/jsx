@@ -6,36 +6,35 @@ import {
 import { QuickSearch } from "@cutout/agent/tools";
 import { Spinner } from "@std/cli/spinner";
 
-import { CHAT_MODEL, SCORE_MODEL } from "../constants.env.ts";
+import { MODEL_CHAT, MODEL_SCORE } from "../constants.env.ts";
+import { systemChecks } from "./checks.ts";
 
-// TODO: detect system requirements (ram, apple silicon)
+try {
+  await systemChecks();
+} catch (error) {
+  console.error(`%c${String(error)}`, "color: red;");
 
-const modelDependencies = await LanguageModel.getRequiredDependencies();
-if (modelDependencies) {
-  console.error(
-    `Agent requires the following dependencies: "${modelDependencies}". Aborting.`,
-  );
   Deno.exit(1);
 }
 
 // Chat
 const chatLog: LanguageModelMessage[] = [];
 const chatProcess = LanguageModel.createProcess({
-  model: CHAT_MODEL,
-  tools: [QuickSearch], // TODO: fix. "createTool" or something.
+  model: MODEL_CHAT,
+  tools: [QuickSearch], // TODO: "createTool" or something.
 });
 
 chatProcess.start();
 
 // Score
 const scoreProcess = LanguageModel.createProcess({
-  model: SCORE_MODEL,
-  monitoring: {
-    logFileName: "score.log",
+  model: MODEL_SCORE,
+  logging: {
+    file: "score.log",
   },
   generation: {
-    temperature: 1
-  }
+    temperature: 1,
+  },
 });
 
 scoreProcess.start();
@@ -45,16 +44,24 @@ while (true) {
 
   if (input === null) break;
 
-  // TODO: get scores, determine valid tasks
+  // TODO: actual scoring system
 
   chatLog.push({ role: LanguageModelRole.USER, content: input.trim() });
 
   let toolCalls;
-  do { // TODO: handle error
+  do {
     const chatMessage = await callWithSpinner(
       "Thinking",
       () => chatProcess.fetch(chatLog),
     );
+
+    if (chatMessage instanceof Error) {
+      console.error(
+        `%cAn Error occured while processing your request: ${chatMessage.message}`,
+        "color: red;",
+      );
+      continue;
+    }
 
     chatLog.push(chatMessage);
     if (chatMessage.content && chatMessage.content.length) {
@@ -66,17 +73,30 @@ while (true) {
     if (!toolCalls) continue;
 
     for (const call of toolCalls) {
+      const content = await callWithSpinner(call.name, call);
+
+      if (content instanceof Error) {
+        console.error(
+          `%cAn Error occured while invoking the tool: ${content.message}`,
+          "color: red;",
+        );
+        continue;
+      }
+
+      // TODO: "createTool" or something.
       chatLog.push({
         role: LanguageModelRole.TOOL,
         toolCallID: call.id,
-        content: await callWithSpinner(call.name, call),
+        content,
       });
     }
   } while (toolCalls);
 }
 
-chatProcess.stop();
-scoreProcess.stop();
+Deno.addSignalListener("SIGTERM", () => {
+  chatProcess.stop();
+  scoreProcess.stop();
+});
 
 // ---
 const MS_IN_SECOND = 1000;
