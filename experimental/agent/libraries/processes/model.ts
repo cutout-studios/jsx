@@ -15,7 +15,7 @@ import {
   ModelRole,
   REQUIRED_COMMANDS,
 } from "./constants.ts";
-import type { Message } from "./types.ts";
+import type { Message, ToolCall } from "./types.ts";
 
 type LocalModelProcessOptions = {
   model: string;
@@ -37,7 +37,7 @@ type LocalModelProcessOptions = {
     level?: string;
     file?: string;
   };
-  tools?: Tool[];
+  tools?: Tool<unknown, unknown>[];
 };
 
 type LocalModelProcess = {
@@ -108,7 +108,7 @@ export const createProcess = (
   const apiRoot = `http://${host}:${port}/v1/`;
 
   return {
-    start() { // TODO: inform user that the model is downloading
+    start() { // TODO: inform user that the model is downloading (NTH)
       console.info(
         `%cServing "modelID:${model}" @ ${apiRoot}`,
         "color: gray;",
@@ -150,7 +150,7 @@ export const createProcess = (
                 ...messages,
               ]
               : messages,
-            tools,
+            tools, // TODO: needs to be transformed into JSON Schema
             temperature,
             top_p: probabilityCutoff,
             top_k: optionLimit,
@@ -159,14 +159,29 @@ export const createProcess = (
         },
       );
 
+      // TODO: type the json returning from the api
       const { choices: [{ message }] } = await response.json();
+
+      const toolCalls = message.tool_calls.reduce((validCalls, callJSON) => {
+        const foundTool = tools.find(({ name }) => callJSON.name === name);
+
+        if (!foundTool) return validCalls;
+
+        const vaildParameters = JSON.parse(callJSON.function.arguments);
+
+        return [
+          ...validCalls,
+          Object.assign(() => foundTool(vaildParameters), {
+            id: callJSON.id,
+            name: callJSON.function.name,
+          }),
+        ];
+      }, [] as ToolCall[]);
 
       return {
         role: ModelRole.MODEL,
         content: message.content.trim(),
-        toolCalls: message.tool_calls.map(() => {
-          // TODO: create tool call functions
-        }),
+        toolCalls,
       };
     },
     stop() {

@@ -1,3 +1,1 @@
-export type Task = {
-  // TODO: task shape
-};
+// TODO: actual scoring system

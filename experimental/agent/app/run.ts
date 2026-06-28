@@ -21,7 +21,7 @@ try {
 const chatLog: LanguageModelMessage[] = [];
 const chatProcess = LanguageModel.createProcess({
   model: MODEL_CHAT,
-  tools: [QuickSearch], // TODO: "createTool" or something.
+  tools: [QuickSearch],
 });
 
 chatProcess.start();
@@ -83,7 +83,6 @@ while (true) {
         continue;
       }
 
-      // TODO: "createTool" or something.
       chatLog.push({
         role: LanguageModelRole.TOOL,
         toolCallID: call.id,
