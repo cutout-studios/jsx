@@ -1,9 +1,9 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { rawText } from "@cutout/jsx/projections";
-import { createTool } from "./create.ts";
+import { create } from "./create.ts";
 
-export const QuickSearch = createTool({
+export const QuickSearch = create({
   name: "QuickSearch",
   parameters: [{
     name: "query",

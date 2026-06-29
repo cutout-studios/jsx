@@ -33,7 +33,7 @@ export const systemChecks = async () => {
     );
   }
 
-  const modelDependencies = await LanguageModel.getRequiredDependencies();
+  const modelDependencies = await LanguageModel.getMissingDependencies();
   if (modelDependencies) {
     throw new Error(
       `Agent requires the following dependencies: "${modelDependencies}". Aborting.`,

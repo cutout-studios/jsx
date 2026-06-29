@@ -1,7 +1,10 @@
-export * as LanguageModel from "./model.ts";
+import { Role } from "./model/constants.ts";
+import { create } from "./model/create.ts";
+import { getMissingDependencies } from "./model/getMissingDependencies.ts";
+export type { Message as LanguageModelMessage } from "./model/types.ts";
 
-export type {
-  Message as LanguageModelMessage,
-  ToolCall as LanguageModelToolCall,
-} from "./types.ts";
-export { ModelRole as LanguageModelRole } from "./constants.ts";
+export const LanguageModel = {
+  Role,
+  create,
+  getMissingDependencies,
+};

@@ -1,7 +1,14 @@
-export type Tool<I, O> = ((parameters: I) => O) & {
+export type Tool<I = Record<string, unknown>, O = unknown> =
+  & ((parameters: I) => O)
+  & {
+    name: string;
+    description: string;
+    parameters: ToolParameter[];
+  };
+
+export type ToolCall<O = unknown> = (() => O) & {
+  id: number;
   name: string;
-  description: string;
-  parameters: ToolParameter[];
 };
 
 export type ToolParameter = {

@@ -1,7 +1,6 @@
 import {
   LanguageModel,
   type LanguageModelMessage,
-  LanguageModelRole,
 } from "@cutout/agent/processes";
 import { QuickSearch } from "@cutout/agent/tools";
 import { Spinner } from "@std/cli/spinner";
@@ -19,7 +18,7 @@ try {
 
 // Chat
 const chatLog: LanguageModelMessage[] = [];
-const chatProcess = LanguageModel.createProcess({
+const chatProcess = LanguageModel.create({
   model: MODEL_CHAT,
   tools: [QuickSearch],
 });
@@ -27,7 +26,7 @@ const chatProcess = LanguageModel.createProcess({
 chatProcess.start();
 
 // Score
-const scoreProcess = LanguageModel.createProcess({
+const scoreProcess = LanguageModel.create({
   model: MODEL_SCORE,
   logging: {
     file: "score.log",
@@ -46,7 +45,7 @@ while (true) {
 
   // TODO: actual scoring system
 
-  chatLog.push({ role: LanguageModelRole.USER, content: input.trim() });
+  chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
 
   let toolCalls;
   do {
@@ -84,9 +83,9 @@ while (true) {
       }
 
       chatLog.push({
-        role: LanguageModelRole.TOOL,
+        role: LanguageModel.Role.TOOL,
         toolCallID: call.id,
-        content,
+        content: String(content),
       });
     }
   } while (toolCalls);
