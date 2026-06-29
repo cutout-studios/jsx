@@ -1,4 +1,4 @@
-import { type Tool, type ToolCall, createToolCall } from "@cutout/agent/tools";
+import { createToolCall, type Tool, type ToolCall } from "@cutout/agent/tools";
 import { GENERATION_ENDPOINT, Role } from "./constants.ts";
 import type { Message } from "./types.ts";
 
@@ -110,7 +110,7 @@ export function fetchFactory(
 
       return [
         ...validCalls,
-        createToolCall(foundTool, vaildParameters, callJSON.id)
+        createToolCall(foundTool, vaildParameters, callJSON.id),
       ];
     }, [] as ToolCall[]);
 
