@@ -23,7 +23,7 @@ const chatProcess = LanguageModel.create({
   tools: [QuickSearch],
 });
 
-chatProcess.start();
+await chatProcess.start();
 
 // Score
 const scoreProcess = LanguageModel.create({
@@ -36,7 +36,7 @@ const scoreProcess = LanguageModel.create({
   },
 });
 
-scoreProcess.start();
+await scoreProcess.start();
 
 while (true) {
   const input = prompt("[input]>");

@@ -10,6 +10,7 @@ import {
   GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT,
   GENERATION_DEFAULT_TEMPERATURE,
   PROCESS_COMMAND,
+  REGISTRY_COMMAND,
 } from "./constants.ts";
 import { fetchFactory } from "./fetchFactory.ts";
 import { getFreePort } from "./getFreePort.ts";
@@ -35,7 +36,7 @@ type Options = {
     level?: string;
     file?: string;
   };
-  tools?: Tool<any, any>[]; // TODO: any?
+  tools?: Tool[];
 };
 
 type Process = {
@@ -70,7 +71,20 @@ export const create = (
     } = {},
   }: Options,
 ): Process => {
-  const command = new Deno.Command(PROCESS_COMMAND, {
+  const apiRoot = `http://${host}:${port}/v1/`;
+
+  const env = {
+    PYTHONUNBUFFERED: "1",
+    PYTHONWARNINGS: "ignore",
+    HF_HUB_DISABLE_PROGRESS_BARS: "1",
+  };
+
+  const modelDownload = new Deno.Command(REGISTRY_COMMAND, {
+    args: ["download", model],
+    env,
+  });
+
+  const modelServer = new Deno.Command(PROCESS_COMMAND, {
     args: [
       "--host",
       host,
@@ -83,25 +97,28 @@ export const create = (
       "--log-level",
       level,
     ],
-    env: {
-      PYTHONUNBUFFERED: "1",
-      PYTHONWARNINGS: "ignore",
-      HF_HUB_DISABLE_PROGRESS_BARS: "1",
-    },
+    env,
     stdout: "piped",
     stderr: "piped",
   });
 
-  const apiRoot = `http://${host}:${port}/v1/`;
-
   return {
-    start() { // TODO: inform user that the model is downloading (NTH)
+    async start() {
+      console.info(
+        `%cEnsuring "modelID:${model}" is on your system…`,
+        "color: gray;",
+      );
+
+      const modelDownloadProcess = modelDownload.spawn();
+
+      await modelDownloadProcess.status;
+
       console.info(
         `%cServing "modelID:${model}" @ ${apiRoot}`,
         "color: gray;",
       );
 
-      this.process = command.spawn();
+      this.process = modelServer.spawn();
 
       Deno.mkdirSync(LOG_ROOT, { recursive: true });
 

@@ -1,0 +1,1 @@
+export const BYTES_TO_GB = 1024 ** 3;

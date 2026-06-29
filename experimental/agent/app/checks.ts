@@ -5,8 +5,7 @@ import {
   MEMORY_TOLERANCE,
   MEMORY_WARNING,
 } from "../constants.env.ts";
-
-const BYTES_TO_GB = 1024 ** 3;
+import { BYTES_TO_GB } from "./constants.ts";
 
 export const systemChecks = async () => {
   if (Deno.build.target !== "aarch64-apple-darwin") {
@@ -15,6 +14,7 @@ export const systemChecks = async () => {
     );
   }
 
+  // TODO: set models based on available memory
   let { total: availableMemory } = Deno.systemMemoryInfo();
 
   availableMemory /= BYTES_TO_GB;
@@ -22,7 +22,7 @@ export const systemChecks = async () => {
 
   if (availableMemory < MEMORY_LIMIT) {
     throw new Error(
-      "Your system RAM is too low to run the \`@cutout/agent\` - you must have at least ${MEMORY_LIMIT}GB available. Aborting.",
+      `Your system RAM is too low to run the \`@cutout/agent\` - you must have at least ${MEMORY_LIMIT}GB available. Aborting.`,
     );
   }
 

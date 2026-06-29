@@ -5,8 +5,9 @@ export enum Role {
   USER = "user",
 }
 
+export const REGISTRY_COMMAND = "hf";
 export const PROCESS_COMMAND = "mlx_lm.server";
-export const REQUIRED_COMMANDS = [PROCESS_COMMAND];
+export const REQUIRED_COMMANDS = [REGISTRY_COMMAND, PROCESS_COMMAND];
 
 export const GENERATION_ENDPOINT = "chat/completions";
 export const GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT = 16384;

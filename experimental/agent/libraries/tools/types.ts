@@ -1,5 +1,5 @@
-export type Tool<I = Record<string, unknown>, O = unknown> =
-  & ((parameters: I) => O)
+export type Tool =
+  & ((parameters: Record<string, unknown>) => unknown)
   & {
     name: string;
     description: string;
