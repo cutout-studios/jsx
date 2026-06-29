@@ -1,18 +1,19 @@
+import type { AnyShape } from "@cutout/internal";
 import type { Tool, ToolCall, ToolParameter } from "./types.ts";
 
-type Options<I, O> = {
+type Options = {
   name: string;
   description: string;
   parameters: ToolParameter[];
-  handler: (parameters: I) => O;
+  handler: (parameters: AnyShape) => Promise<string>;
 };
 
-export function create<I, O>({
+export function create({
   name,
   description,
   parameters,
   handler,
-}: Options<I, O>): Tool<I, O> {
+}: Options): Tool {
   return Object.assign(handler, {
     name,
     description,
@@ -20,13 +21,13 @@ export function create<I, O>({
   });
 }
 
-export function createCall<I, O>(
-  tool: Tool<I, O>,
-  parameters: I,
+export function createCall(
+  tool: Tool,
+  parameters: AnyShape,
   id: number,
-): ToolCall<O> {
+): ToolCall {
   return Object.assign(() => tool(parameters), {
     id,
-    name: tool.name,
+    name: `${tool.name}(${JSON.stringify(parameters)})`,
   });
 }

@@ -1,4 +1,4 @@
-export async function commandExists(cmd: string): Promise<boolean> {
+export async function hasCommand(cmd: string): Promise<boolean> {
   try {
     await new Deno.Command(cmd, {
       args: ["--help"],

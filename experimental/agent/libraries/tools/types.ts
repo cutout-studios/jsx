@@ -1,12 +1,12 @@
 export type Tool =
-  & ((parameters: Record<string, unknown>) => unknown)
+  & ((parameters: Record<string, unknown>) => Promise<string>)
   & {
     name: string;
     description: string;
     parameters: ToolParameter[];
   };
 
-export type ToolCall<O = unknown> = (() => O) & {
+export type ToolCall = (() => Promise<string>) & {
   id: number;
   name: string;
 };

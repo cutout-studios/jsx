@@ -3,41 +3,44 @@ import {
   type LanguageModelMessage,
 } from "@cutout/agent/processes";
 import { QuickSearch } from "@cutout/agent/tools";
-import { Spinner } from "@std/cli/spinner";
 
-import { MODEL_CHAT, MODEL_SCORE } from "../constants.env.ts";
-import { systemChecks } from "./checks.ts";
+import { callWithSpinner } from "./callWithSpinner.ts";
+import { evaluateSystem } from "./evaluateSystem.ts";
 
+// Evaluate System
+let agentModel, judgeModel;
 try {
-  await systemChecks();
+  ({ agentModel, judgeModel } = await evaluateSystem());
 } catch (error) {
   console.error(`%c${String(error)}`, "color: red;");
-
   Deno.exit(1);
 }
 
-// Chat
+// Initialize Model Runners
 const chatLog: LanguageModelMessage[] = [];
-const chatProcess = LanguageModel.create({
-  model: MODEL_CHAT,
+const agent = LanguageModel.create({
+  model: agentModel,
+  logging: {
+    file: "agent.log",
+  },
   tools: [QuickSearch],
 });
 
-await chatProcess.start();
+await agent.start();
 
-// Score
-const scoreProcess = LanguageModel.create({
-  model: MODEL_SCORE,
+const judge = LanguageModel.create({
+  model: judgeModel,
   logging: {
-    file: "score.log",
+    file: "judge.log",
   },
   generation: {
     temperature: 1,
   },
 });
 
-await scoreProcess.start();
+await judge.start();
 
+// Chat Loop
 while (true) {
   const input = prompt("[input]>");
 
@@ -51,7 +54,7 @@ while (true) {
   do {
     const chatMessage = await callWithSpinner(
       "Thinking",
-      () => chatProcess.fetch(chatLog),
+      () => agent.fetch(chatLog),
     );
 
     if (chatMessage instanceof Error) {
@@ -91,40 +94,8 @@ while (true) {
   } while (toolCalls);
 }
 
+// Graceful Shutdown
 Deno.addSignalListener("SIGTERM", () => {
-  chatProcess.stop();
-  scoreProcess.stop();
+  agent.stop();
+  judge.stop();
 });
-
-// ---
-const MS_IN_SECOND = 1000;
-function callWithSpinner<T>(
-  name: string,
-  fn: () => T,
-  color = "gray",
-): T | Error {
-  const spinner = new Spinner({ message: `${name}…`, color });
-
-  let seconds = 1;
-  const spinnerInterval = setInterval(() => {
-    spinner.message = `${name}… (${seconds++}s)`;
-  }, MS_IN_SECOND);
-
-  spinner.start();
-  try {
-    return fn();
-  } catch (error) {
-    if (error instanceof Error) {
-      return error;
-    }
-
-    return new Error(String(error));
-  } finally {
-    spinner.stop();
-    clearInterval(spinnerInterval);
-    console.log(
-      `%${name} for ${seconds}s.`,
-      `color: ${color};`,
-    );
-  }
-}

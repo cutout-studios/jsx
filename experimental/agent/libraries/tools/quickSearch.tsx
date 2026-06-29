@@ -44,7 +44,11 @@ export const QuickSearch = create({
       </section>
     </article>,
   ),
-  async handler({ query }: { query: string }): Promise<string> {
+  async handler({ query }): Promise<string> {
+    if (typeof query !== "string") {
+      return "Invaild Tool Call: `query` is not a string.";
+    }
+
     const cleanQuery = query.trim().replaceAll(/\s+/g, "+");
 
     const results = await fetch(

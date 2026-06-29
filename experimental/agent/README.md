@@ -4,7 +4,8 @@
 [QDT-compliant](https://cutoutstudios.com/llm-use/) local agent.
 
 > [!WARNING]
-> This is an Apple Silicon-only agent.
+> This is an Apple Silicon-only agent. You also need at least 32GB of RAM to run
+> it, preferably more.
 
 ```sh
 deno task --cwd=experimental/agent setup
