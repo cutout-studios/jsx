@@ -2,6 +2,12 @@ import {
   LanguageModel,
   type LanguageModelMessage,
 } from "@cutout/agent/processes";
+import {
+  filterTasks,
+  messageRubric,
+  renderRubricPrompt,
+  renderTaskPrompt,
+} from "@cutout/agent/tasks";
 import { QuickSearch } from "@cutout/agent/tools";
 
 import { callWithSpinner } from "./callWithSpinner.ts";
@@ -46,15 +52,38 @@ while (true) {
 
   if (input === null) break;
 
-  // TODO: actual scoring system
-
   chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
+
+  const rubricEntriesOrError = await callWithSpinner(
+    "Evaluating",
+    () => {
+      const judgeCalls: Promise<[string, number]>[] = [];
+      for (const [name, definition] of Object.entries(messageRubric)) {
+        const promise = new Promise<[string, number]>((resolve) => {
+          judge.fetch([], renderRubricPrompt(name, definition)).then((result) =>
+            resolve([name, Number(result.content?.split("[RESULT]")[1])])
+          );
+        });
+
+        judgeCalls.push(promise);
+      }
+
+      return Promise.all(judgeCalls);
+    },
+  );
+
+  if (rubricEntriesOrError instanceof Error) {
+    console.error("");
+    continue;
+  }
+
+  const rubric = Object.fromEntries(rubricEntriesOrError);
 
   let toolCalls;
   do {
     const chatMessage = await callWithSpinner(
       "Thinking",
-      () => agent.fetch(chatLog),
+      () => agent.fetch(chatLog, renderTaskPrompt(rubric)),
     );
 
     if (chatMessage instanceof Error) {
@@ -67,7 +96,10 @@ while (true) {
 
     chatLog.push(chatMessage);
     if (chatMessage.content && chatMessage.content.length) {
-      console.log("[output]> " + chatMessage.content);
+      console.log(
+        "[output]> " + `(${filterTasks(rubric).join(", ")})` +
+          chatMessage.content,
+      );
     }
 
     ({ toolCalls } = chatMessage);

@@ -47,9 +47,12 @@ export function fetchFactory(
     presencePenalty,
   }: Options,
 ) {
-  return async (systemMessages: Message[]): Promise<Message> => {
+  return async (
+    systemMessages: Message[],
+    systemPromptOverride?: string,
+  ): Promise<Message> => {
     const jsonMessages: MessageJSON[] = systemPrompt
-      ? [{ role: Role.SYSTEM, content: systemPrompt }]
+      ? [{ role: Role.SYSTEM, content: systemPromptOverride ?? systemPrompt }]
       : [];
 
     for (const message of systemMessages) {

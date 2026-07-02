@@ -159,7 +159,7 @@ function* _forwardTokens(value: unknown, debug = false) {
     yield token;
   }
 
-  // TODO(#47): implement jsxDEV to exercise the `debug` option.
+  // ISSUE(#47): implement jsxDEV to exercise the `debug` option.
   if (token[TOKEN_TYPE_INDEX] === TokenType.UNKNOWN && debug) {
     let unknownValue;
 

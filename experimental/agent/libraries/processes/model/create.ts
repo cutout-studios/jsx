@@ -42,7 +42,7 @@ type Options = {
 type Process = {
   process?: Deno.ChildProcess;
   start: () => void;
-  fetch: (messages: Message[]) => Promise<Message>;
+  fetch: (messages: Message[], systemPrompt?: string) => Promise<Message>;
   stop: () => void;
 };
 
