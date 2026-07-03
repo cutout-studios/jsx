@@ -4,7 +4,7 @@ import type { QualifyingDevelopmentTask } from "./types.ts";
 
 const displayName = "Gather Information";
 
-export const informationGathering: QualifyingDevelopmentTask = {
+export const gatherInformation: QualifyingDevelopmentTask = {
   displayName,
   prompt(scores) {
     if (

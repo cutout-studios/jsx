@@ -7,7 +7,10 @@ import { thoughtStream } from "./rubric/thoughtStream.ts";
 export { render as renderRubricPrompt } from "./rubric/render.tsx";
 
 export { render as renderTaskPrompt } from "./render.tsx";
-export { filter as filterTasks } from "./filter.ts";
+export { filterNames as filterTaskNames } from "./filterNames.ts";
+
+export { gatherInformation } from "./gatherInformation.tsx";
+export { brainstorm } from "./brainstorm.tsx";
 
 export * from "./types.ts";
 

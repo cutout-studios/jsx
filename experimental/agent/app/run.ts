@@ -3,7 +3,7 @@ import {
   type LanguageModelMessage,
 } from "@cutout/agent/processes";
 import {
-  filterTasks,
+  filterTaskNames,
   messageRubric,
   renderRubricPrompt,
   renderTaskPrompt,
@@ -11,6 +11,7 @@ import {
 import { QuickSearch } from "@cutout/agent/tools";
 
 import { callWithSpinner } from "./callWithSpinner.ts";
+import { SUPPORTED_TASKS } from "./constants.ts";
 import { evaluateSystem } from "./evaluateSystem.ts";
 
 // Evaluate System
@@ -60,9 +61,15 @@ while (true) {
       const judgeCalls: Promise<[string, number]>[] = [];
       for (const [name, definition] of Object.entries(messageRubric)) {
         const promise = new Promise<[string, number]>((resolve) => {
-          judge.fetch([], renderRubricPrompt(name, definition)).then((result) =>
-            resolve([name, Number(result.content?.split("[RESULT]")[1])])
-          );
+          judge.fetch([], renderRubricPrompt(definition, input)).then((
+            { content },
+          ) => {
+            const [reasoning, score] = content?.split("[RESULT]") ?? [];
+
+            console.debug({ score, reasoning });
+
+            resolve([name, Number(score)]);
+          });
         });
 
         judgeCalls.push(promise);
@@ -83,7 +90,11 @@ while (true) {
   do {
     const chatMessage = await callWithSpinner(
       "Thinking",
-      () => agent.fetch(chatLog, renderTaskPrompt(rubric)),
+      () =>
+        agent.fetch(
+          chatLog,
+          renderTaskPrompt(SUPPORTED_TASKS, rubric),
+        ),
     );
 
     if (chatMessage instanceof Error) {
@@ -97,7 +108,8 @@ while (true) {
     chatLog.push(chatMessage);
     if (chatMessage.content && chatMessage.content.length) {
       console.log(
-        "[output]> " + `(${filterTasks(rubric).join(", ")})` +
+        "[output]> " +
+          `(${filterTaskNames(SUPPORTED_TASKS, rubric).join(", ")})` +
           chatMessage.content,
       );
     }
