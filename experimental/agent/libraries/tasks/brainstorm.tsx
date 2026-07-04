@@ -2,12 +2,12 @@
 
 import type { QualifyingDevelopmentTask } from "./types.ts";
 
-const displayName = "Brainstorm";
+const displayName = "Brainstorming";
 
 export const brainstorm: QualifyingDevelopmentTask = {
   displayName,
   prompt(scores) {
-    if (scores.thoughtStream < 3 && scores.needsDetail < 3) {
+    if (scores.discursiveness < 3 && scores.specifity > 3) {
       return null;
     }
 
@@ -15,7 +15,16 @@ export const brainstorm: QualifyingDevelopmentTask = {
       return null;
     }
 
-    const flavorAside = null; // TODO
+    const troubleshootingAside = scores.frustration > 3
+      ? (
+        <aside>
+          CAUTION: The system has flagged this user as frustrated, meaning they
+          likely have an issue that requires troubleshooting. Focus on helping
+          the user solve their specific problem first. If that problem is
+          unclear, request clarification.
+        </aside>
+      )
+      : null;
 
     return (
       <article>
@@ -23,10 +32,12 @@ export const brainstorm: QualifyingDevelopmentTask = {
           <h1>Goal: {displayName}</h1>
           <h2>Description</h2>
           <p>
-            TODO
+            Provide targeted inspiration to the user, helping them to generate
+            new concepts: be it via your available tools, rubber-ducking or
+            improvisational techniques.
           </p>
         </section>
-        {flavorAside}
+        {troubleshootingAside}
       </article>
     );
   },
