@@ -9,6 +9,7 @@ import {
   renderTaskPrompt,
 } from "@cutout/agent/tasks";
 import { QuickSearch } from "@cutout/agent/tools";
+import { rawText } from "@cutout/jsx/projections";
 
 import { callWithSpinner } from "./callWithSpinner.ts";
 import { SUPPORTED_TASKS } from "./constants.ts";
@@ -61,7 +62,7 @@ while (true) {
       const judgeCalls: Promise<[string, number]>[] = [];
       for (const [name, definition] of Object.entries(messageRubric)) {
         const promise = new Promise<[string, number]>((resolve) => {
-          judge.fetch([], renderRubricPrompt(definition, input)).then((
+          judge.fetch([], rawText(renderRubricPrompt(definition, input))).then((
             { content },
           ) => {
             const [reasoning, score] = content?.split("[RESULT]") ?? [];
@@ -93,7 +94,7 @@ while (true) {
       () =>
         agent.fetch(
           chatLog,
-          renderTaskPrompt(SUPPORTED_TASKS, rubric),
+          rawText(renderTaskPrompt(SUPPORTED_TASKS, rubric)),
         ),
     );
 

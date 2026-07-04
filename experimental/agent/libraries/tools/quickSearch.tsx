@@ -2,8 +2,9 @@
 
 import { rawText } from "@cutout/jsx/projections";
 import { create } from "./create.ts";
+import type { Tool } from "./types.ts";
 
-export const QuickSearch = create({
+export const QuickSearch: Tool = create({
   name: "QuickSearch",
   parameters: [{
     name: "query",

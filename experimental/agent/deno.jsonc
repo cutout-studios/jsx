@@ -6,7 +6,8 @@
   "exports": {
     ".": "./app/run.ts",
     "./tools": "./libraries/tools/module.ts",
-    "./services": "./libraries/services/module.ts"
+    "./tasks": "./libraries/tasks/module.ts",
+    "./processes": "./libraries/processes/module.ts"
   },
   "imports": {
     "@std/cli/spinner": "jsr:@std/cli/unstable-spinner",

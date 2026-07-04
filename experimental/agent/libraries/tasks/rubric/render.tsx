@@ -1,8 +1,12 @@
 /** @jsxImportSource @cutout/jsx */
 
+import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Rubric } from "../types.ts";
 
-export const render = (rubric: Rubric, response: string) => (
+export const render = (
+  rubric: Rubric,
+  response: string,
+): CutoutGeneratorToken => (
   <article>
     <header>
       You are a fair judge assistant tasked with providing clear, objective
