@@ -20,7 +20,7 @@ import type { Projection } from "./types.ts";
  * rawText(<div></div>); // => "<div></div>"
  * ```
  */
-export const rawText: Projection<string> = ([, generator]): string => {
+export const rawText: Projection<string> = (jsx): string => {
   const state: _FormatState = {
     result: "",
     context: {
@@ -29,7 +29,7 @@ export const rawText: Projection<string> = ([, generator]): string => {
     },
   };
 
-  for (const [type, value] of generator()) {
+  for (const [type, value] of jsx[1]()) {
     switch (type) {
       case CutoutTokenType.ELEMENT_OPEN:
         _openElement(state, value);

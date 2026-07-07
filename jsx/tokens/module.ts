@@ -12,6 +12,7 @@ export type {
   ElementOpenToken as CutoutElementOpenToken,
   FunctionToken as CutoutFunctionToken,
   GeneratorToken as CutoutGeneratorToken,
+  JSX as CutoutJSX,
   NullToken as CutoutNullToken,
   NumberToken as CutoutNumberToken,
   ObjectToken as CutoutObjectToken,
