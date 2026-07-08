@@ -3,7 +3,7 @@
 import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 import type { Rubric } from "../types.ts";
 
-// NOTE: 
+// NOTE:
 //  The current judge model (Prometheus) was specifically trained on odd-sounding langugage
 //  and deviating from that too much causes the model to break down. Adjust the following
 //  prompt carefully.
