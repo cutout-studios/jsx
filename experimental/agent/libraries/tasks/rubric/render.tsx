@@ -5,57 +5,57 @@ import type { Rubric } from "../types.ts";
 
 export const render = (
   rubric: Rubric,
-  response: string,
+  statement: string,
 ): CutoutGeneratorToken => (
   <article>
     <header>
-      You are a fair judge assistant tasked with providing clear, objective
-      feedback based on specific criteria, ensuring each assessment reflects the
-      absolute standards set for performance.
+      You are a fair judge assistant tasked with providing a clear, objective
+      evaluation based on specific criteria. Ensure your evaluation of the
+      included `Statement to Evaluate` reflects the `Scoring Rubric`.
     </header>
     <section>
       <h3>Task Description:</h3>
-      <p>
-        An instruction (might include an Input inside it), a response to
-        evaluate, a reference answer that gets a score of 5, and a score rubric
-        representing a evaluation criteria are given.
-      </p>
       <ol>
         <li>
-          Write a detailed feedback that assess the quality of the response
-          strictly based on the given score rubric, not evaluating in general.
+          Author a specific evaluation that assesses the degree to which the
+          provided `Statement to Evaluate` adheres to the given `Scoring
+          Rubric`. Do not provide a general evaluation.
         </li>
         <li>
-          After writing a feedback, write a score that is an integer between 1
-          and 5. You should refer to the score rubric.
+          Based on your evaluation, assign a score that is an integer from 1 to
+          5. Again, refer to the `Scoring Rubric` below.
         </li>
         <li>
-          The output format should look as follows: "Feedback: (write a feedback
-          for criteria) [RESULT] (an integer number between 1 and 5)"
+          Your output should follow this template: "Evaluation: (your evaluation
+          based on the criteria) [RESULT] (your assigned score)"
         </li>
         <li>
-          Please do not generate any other opening, closing, and explanations.
+          Please do not generate any other opening, closing, and/or explanatory
+          text.
         </li>
       </ol>
     </section>
     <section>
-      <h3>The instruction to evaluate:</h3>
-      <p>{rubric.description}</p>
+      <h3>Scoring Rubric</h3>
+      <p>{rubric.name}: {rubric.description}</p>
+      <ol>
+        {Object.entries(rubric.scores).map(
+          ([score, { description }]) => {
+            return (
+              <li>
+                <b>Score {score}:</b> {description}
+              </li>
+            );
+          },
+        )}
+      </ol>
     </section>
     <section>
-      <h3>Response to evaluate:</h3>
-      <p>{response}</p>
+      <h3>The Statement to Evaluate:</h3>
+      <p>{statement}</p>
     </section>
-    {Object.entries(rubric.examples).flatMap(([score, examples]) => {
-      return examples.map((example) => (
-        <section>
-          <h3>Reference Answer (Score {score})</h3>
-          <p>{example}</p>
-        </section>
-      ));
-    })}
     <section>
-      <h3>Feedback:</h3>
+      <h3>Evaluation:</h3>
     </section>
   </article>
 );

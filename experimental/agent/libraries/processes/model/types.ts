@@ -8,3 +8,29 @@ export type Message = {
   toolCalls?: ToolCall[];
   toolCallID?: number;
 };
+
+export type GenerationOptions = {
+  limit?: number;
+  sampling?: {
+    temperature?: number;
+    probability?: {
+      top?: number;
+      min?: number;
+    };
+    count?: {
+      top?: number;
+    };
+  };
+  repetition?: {
+    penalty?: number;
+    size?: number;
+  };
+  presence?: {
+    penalty?: number;
+    size?: number;
+  };
+  frequency?: {
+    penalty?: number;
+    size?: number;
+  };
+};

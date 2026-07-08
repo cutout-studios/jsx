@@ -3,18 +3,10 @@ import { mergeReadableStreams } from "@std/streams";
 
 import { LOG_LEVEL } from "../../../constants.env.ts";
 import { LOG_ROOT } from "../constants.ts";
-import {
-  GENERATION_DEFAULT_OPTION_LIMIT,
-  GENERATION_DEFAULT_PRESENCE_PENALTY,
-  GENERATION_DEFAULT_PROBABILITY_CUTOFF,
-  GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT,
-  GENERATION_DEFAULT_TEMPERATURE,
-  PROCESS_COMMAND,
-  REGISTRY_COMMAND,
-} from "./constants.ts";
+import { PROCESS_COMMAND, REGISTRY_COMMAND } from "./constants.ts";
 import { fetchFactory } from "./fetchFactory.ts";
 import { getFreePort } from "./getFreePort.ts";
-import type { Message } from "./types.ts";
+import type { GenerationOptions, Message } from "./types.ts";
 
 type Options = {
   model: string;
@@ -22,16 +14,8 @@ type Options = {
     host?: string;
     port?: number;
   };
-  generation?: {
-    systemPrompt?: string;
-    responseLimit?: number;
-    temperature?: number;
-    presencePenalty?: number;
-    choiceConstraints?: {
-      probabilityCutoff?: number;
-      optionLimit?: number;
-    };
-  };
+  systemPrompt?: string;
+  generation?: GenerationOptions;
   logging?: {
     level?: string;
     file?: string;
@@ -54,17 +38,8 @@ export const create = (
       port = getFreePort(),
     } = {},
     tools = [],
-    generation: {
-      systemPrompt,
-      responseLimit: maxResponseLength =
-        GENERATION_DEFAULT_RESPONSE_LENGTH_LIMIT,
-      temperature = GENERATION_DEFAULT_TEMPERATURE,
-      presencePenalty = GENERATION_DEFAULT_PRESENCE_PENALTY,
-      choiceConstraints: {
-        probabilityCutoff = GENERATION_DEFAULT_PROBABILITY_CUTOFF,
-        optionLimit = GENERATION_DEFAULT_OPTION_LIMIT,
-      } = {},
-    } = {},
+    systemPrompt,
+    generation,
     logging: {
       level = LOG_LEVEL,
       file = "model.process.log",
@@ -90,8 +65,6 @@ export const create = (
       host,
       "--port",
       String(port),
-      "--max-tokens",
-      String(maxResponseLength),
       "--model",
       model,
       "--log-level",
@@ -146,10 +119,7 @@ export const create = (
       apiRoot,
       tools,
       systemPrompt,
-      temperature,
-      presencePenalty,
-      probabilityCutoff,
-      optionLimit,
+      generation,
     }),
     stop() {
       this.process?.kill();

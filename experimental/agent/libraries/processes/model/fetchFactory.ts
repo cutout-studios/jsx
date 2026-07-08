@@ -1,16 +1,27 @@
 import { createToolCall, type Tool, type ToolCall } from "@cutout/agent/tools";
 import { GENERATION_ENDPOINT, Role } from "./constants.ts";
-import type { Message } from "./types.ts";
+import type { GenerationOptions, Message } from "./types.ts";
 
 type Options = {
-  systemPrompt?: string;
   apiRoot: string;
+  generation?: GenerationOptions;
   model: string;
+  systemPrompt?: string;
   tools: Tool[];
-  temperature: number;
-  probabilityCutoff: number;
-  optionLimit: number;
-  presencePenalty: number;
+};
+
+type GenerationJSON = {
+  frequency_context_size?: number;
+  frequency_penalty?: number;
+  max_tokens?: number;
+  min_p?: number;
+  presence_context_size?: number;
+  presence_penalty?: number;
+  repetition_context_size?: number;
+  repetition_penalty?: number;
+  temperature?: number;
+  top_k?: number;
+  top_p?: number;
 };
 
 type MessageJSON = {
@@ -41,10 +52,7 @@ export function fetchFactory(
     apiRoot,
     model,
     tools,
-    temperature,
-    probabilityCutoff,
-    optionLimit,
-    presencePenalty,
+    generation,
   }: Options,
 ) {
   return async (
@@ -92,10 +100,7 @@ export function fetchFactory(
               },
             },
           })),
-          temperature,
-          top_p: probabilityCutoff,
-          top_k: optionLimit,
-          presence_penalty: presencePenalty,
+          ...generationOptionsToJSON(generation),
         }),
       },
     );
@@ -130,3 +135,55 @@ export function fetchFactory(
     };
   };
 }
+
+const generationOptionsToJSON = (
+  generation?: GenerationOptions,
+): GenerationJSON => {
+  if (!generation) return {};
+
+  const { limit, sampling, presence, repetition, frequency } = generation;
+
+  let result: GenerationJSON = {};
+
+  if (limit) {
+    result.max_tokens = limit;
+  }
+
+  if (sampling) {
+    const { temperature, probability, count } = sampling;
+
+    result = {
+      ...result,
+      temperature,
+      min_p: probability?.min,
+      top_p: probability?.top,
+      top_k: count?.top,
+    };
+  }
+
+  if (presence) {
+    result = {
+      ...result,
+      presence_penalty: presence?.penalty,
+      presence_context_size: presence?.size,
+    };
+  }
+
+  if (frequency) {
+    result = {
+      ...result,
+      frequency_penalty: frequency?.penalty,
+      frequency_context_size: frequency?.size,
+    };
+  }
+
+  if (repetition) {
+    result = {
+      ...result,
+      repetition_penalty: repetition?.penalty,
+      repetition_context_size: repetition?.size,
+    };
+  }
+
+  return result;
+};

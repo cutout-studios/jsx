@@ -3,13 +3,29 @@ import type { CutoutGeneratorToken } from "@cutout/jsx/tokens";
 type NonEmptyArray<T> = [T, ...Array<T>];
 
 export type Rubric = {
+  name: string;
   description: string;
-  examples: {
-    1: NonEmptyArray<string>;
-    2?: NonEmptyArray<string>;
-    3?: NonEmptyArray<string>;
-    4?: NonEmptyArray<string>;
-    5: NonEmptyArray<string>;
+  scores: {
+    1: {
+      description: string;
+      examples: NonEmptyArray<string>;
+    };
+    2?: {
+      description: string;
+      examples: NonEmptyArray<string>;
+    };
+    3?: {
+      description: string;
+      examples: NonEmptyArray<string>;
+    };
+    4?: {
+      description: string;
+      examples: NonEmptyArray<string>;
+    };
+    5: {
+      description: string;
+      examples: NonEmptyArray<string>;
+    };
   };
 };
 

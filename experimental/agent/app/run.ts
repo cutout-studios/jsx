@@ -32,6 +32,24 @@ const agent = LanguageModel.create({
     file: "agent.log",
   },
   tools: [QuickSearch],
+  generation: {
+    limit: 16384,
+    sampling: {
+      temperature: 0.7,
+      probability: {
+        top: 0.95,
+      },
+      count: {
+        top: 20,
+      },
+    },
+    presence: {
+      penalty: 1.5,
+    },
+    repetition: {
+      penalty: 1.3,
+    },
+  },
 });
 
 await agent.start();
@@ -42,7 +60,9 @@ const judge = LanguageModel.create({
     file: "judge.log",
   },
   generation: {
-    temperature: 1,
+    sampling: {
+      temperature: 1,
+    },
   },
 });
 
