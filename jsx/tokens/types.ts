@@ -222,3 +222,8 @@ export type OutputToken =
 export type ValidToken =
   | OutputToken
   | GeneratorToken;
+
+/**
+ * Alias for DX purposes.
+ */
+export type JSX = GeneratorToken;
