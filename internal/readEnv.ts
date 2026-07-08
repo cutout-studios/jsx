@@ -1,3 +1,7 @@
+import { load } from "@std/dotenv";
+
+await load({ export: true });
+
 export function readEnv<T>(key: string, defaultValue: T): T {
   const value = Deno.env.get(key);
 

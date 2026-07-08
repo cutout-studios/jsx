@@ -1,7 +1,4 @@
 import { readEnv } from "@cutout/internal";
-import { load } from "@std/dotenv";
-
-await load({ export: true });
 
 const AGENT_TAG = "XO_AGENT";
 

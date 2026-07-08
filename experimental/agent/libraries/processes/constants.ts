@@ -1,1 +1,1 @@
-export const LOG_ROOT = "./.output/processes/";
+export const LOG_ROOT = "./.output/agent/processes/";

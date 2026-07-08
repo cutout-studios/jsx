@@ -12,7 +12,6 @@
   "imports": {
     "@std/cli/spinner": "jsr:@std/cli/unstable-spinner",
     "@std/streams": "jsr:@std/streams",
-    "@std/dotenv": "jsr:@std/dotenv",
 
     // To ensure "internal" stays so, we alias it here.
     "@cutout/internal": "../../internal/module.ts",
