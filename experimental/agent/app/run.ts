@@ -67,7 +67,7 @@ while (true) {
           ) => {
             const [reasoning, score] = content?.split("[RESULT]") ?? [];
 
-            console.debug({ score, reasoning });
+            console.debug("\n", { name, score: Number(score), reasoning });
 
             resolve([name, Number(score)]);
           });
@@ -78,10 +78,11 @@ while (true) {
 
       return Promise.all(judgeCalls);
     },
+    { pastTenseLabel: "Evaluated" },
   );
 
   if (rubricEntriesOrError instanceof Error) {
-    console.error("");
+    console.error(rubricEntriesOrError);
     continue;
   }
 
@@ -96,21 +97,22 @@ while (true) {
           chatLog,
           rawText(renderTaskPrompt(SUPPORTED_TASKS, rubric)),
         ),
+      { pastTenseLabel: "Thought" },
     );
 
     if (chatMessage instanceof Error) {
       console.error(
-        `%cAn Error occured while processing your request: ${chatMessage.message}`,
+        `%cAn error occured while processing your request: ${chatMessage.message}`,
         "color: red;",
       );
-      continue;
+      break;
     }
 
     chatLog.push(chatMessage);
     if (chatMessage.content && chatMessage.content.length) {
       console.log(
         "[output]> " +
-          `(${filterTaskNames(SUPPORTED_TASKS, rubric).join(", ")})` +
+          `(${filterTaskNames(SUPPORTED_TASKS, rubric).join(", ")}) ` +
           chatMessage.content,
       );
     }
@@ -124,7 +126,7 @@ while (true) {
 
       if (content instanceof Error) {
         console.error(
-          `%cAn Error occured while invoking the tool: ${content.message}`,
+          `%cAn error occured while invoking the tool: ${content.message}`,
           "color: red;",
         );
         continue;
@@ -140,7 +142,10 @@ while (true) {
 }
 
 // Graceful Shutdown
-Deno.addSignalListener("SIGTERM", () => {
+const cleanup = () => {
   agent.stop();
   judge.stop();
-});
+};
+
+Deno.addSignalListener("SIGINT", cleanup);
+Deno.addSignalListener("SIGTERM", cleanup);

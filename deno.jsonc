@@ -1,4 +1,25 @@
 {
+  "permissions": {
+    "default": {
+      "env": [
+        "XO_AGENT_MODEL__AGENT",
+        "XO_AGENT_MODEL__JUDGE",
+        "XO_AGENT_MEMORY__BREAKPOINTS",
+        "LOG_LEVEL"
+      ],
+      "net": true,
+      "sys": [
+        "systemMemoryInfo"
+      ],
+      "run": [
+        "hf",
+        "mlx_lm.server"
+      ],
+      "write": [
+        "./.output"
+      ]
+    }
+  },
   "fmt": {
     "indentWidth": 2,
     "lineWidth": 80,

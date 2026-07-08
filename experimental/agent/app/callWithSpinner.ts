@@ -2,21 +2,24 @@ import { Spinner } from "@std/cli/spinner";
 
 import { MS_IO_SECOND } from "./constants.ts";
 
-export function callWithSpinner<T>(
-  name: string,
-  fn: () => T,
-  color = "gray",
-): T | Error {
-  const spinner = new Spinner({ message: `${name}…`, color });
+export async function callWithSpinner<T>(
+  label: string,
+  func: () => T,
+  {
+    pastTenseLabel = label,
+    color = "gray",
+  } = {},
+): Promise<T | Error> {
+  const spinner = new Spinner({ message: `${label}…`, color });
 
   let seconds = 1;
   const spinnerInterval = setInterval(() => {
-    spinner.message = `${name}… (${seconds++}s)`;
+    spinner.message = `${label}… (${seconds++}s)`;
   }, MS_IO_SECOND);
 
   spinner.start();
   try {
-    return fn();
+    return await func();
   } catch (error) {
     if (error instanceof Error) {
       return error;
@@ -27,7 +30,9 @@ export function callWithSpinner<T>(
     spinner.stop();
     clearInterval(spinnerInterval);
     console.log(
-      `%${name} for ${seconds}s.`,
+      seconds === 1
+        ? `%c${pastTenseLabel}`
+        : `%c${pastTenseLabel} for ${seconds}s.`,
       `color: ${color};`,
     );
   }

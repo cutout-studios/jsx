@@ -51,7 +51,7 @@ export function fetchFactory(
     systemMessages: Message[],
     systemPromptOverride?: string,
   ): Promise<Message> => {
-    const jsonMessages: MessageJSON[] = systemPrompt
+    const jsonMessages: MessageJSON[] = systemPromptOverride || systemPrompt
       ? [{ role: Role.SYSTEM, content: systemPromptOverride ?? systemPrompt }]
       : [];
 
@@ -100,7 +100,13 @@ export function fetchFactory(
       },
     );
 
-    const { choices: [{ message }] } = (await response.json()) as ResponseJSON;
+    const responseJSON = await response.json();
+
+    if (responseJSON.error) {
+      throw new Error(responseJSON.error);
+    }
+
+    const { choices: [{ message }] } = responseJSON as ResponseJSON;
 
     const toolCalls = message.tool_calls?.reduce((validCalls, callJSON) => {
       const foundTool = tools.find(({ name }) =>
@@ -109,11 +115,11 @@ export function fetchFactory(
 
       if (!foundTool) return validCalls;
 
-      const vaildParameters = JSON.parse(callJSON.function.arguments);
+      const validParameters = JSON.parse(callJSON.function.arguments);
 
       return [
         ...validCalls,
-        createToolCall(foundTool, vaildParameters, callJSON.id),
+        createToolCall(foundTool, validParameters, callJSON.id),
       ];
     }, [] as ToolCall[]);
 

@@ -14,11 +14,10 @@ export function create({
   parameters,
   handler,
 }: Options): Tool {
-  return Object.assign(handler, {
-    name,
-    description,
-    parameters,
-  });
+  Object.defineProperty(handler, "name", { value: name });
+  Object.assign(handler, { description, parameters });
+
+  return handler as Tool;
 }
 
 export function createCall(
@@ -26,8 +25,12 @@ export function createCall(
   parameters: AnyShape,
   id: number,
 ): ToolCall {
-  return Object.assign(() => tool(parameters), {
-    id,
-    name: `${tool.name}(${JSON.stringify(parameters)})`,
+  const toolCall = () => tool(parameters);
+
+  Object.defineProperty(toolCall, "name", {
+    value: `${tool.name}(${JSON.stringify(parameters)})`,
   });
+  Object.assign(toolCall, { id });
+
+  return toolCall as ToolCall;
 }

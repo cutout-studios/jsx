@@ -29,6 +29,11 @@ export const QuickSearch: Tool = create({
         <h2>Best Practices</h2>
         <ul>
           <li>
+            Quick Search will only return results on an exact match. Long
+            queries will likely come back empty. Ideally stick to single proper
+            nouns.
+          </li>
+          <li>
             Faster and lighter than other search methods. Prefer this tool for
             shallow reference checks and disambiguation.
           </li>
@@ -58,6 +63,18 @@ export const QuickSearch: Tool = create({
 
     const { Heading, AbstractText, Infobox, RelatedTopics, Results } =
       await results.json();
+
+    if (
+      !Heading && !AbstractText && !Infobox && !RelatedTopics.length &&
+      !Results.length
+    ) {
+      return rawText(
+        <article>
+          DuckDuckGo returned an empty response. Try a shorter query: ideally a
+          single proper noun.
+        </article>,
+      );
+    }
 
     const renderInfobox = () => {
       if (!Infobox || !Infobox.content?.length) return;
