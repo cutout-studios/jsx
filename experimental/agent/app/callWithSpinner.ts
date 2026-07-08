@@ -2,13 +2,19 @@ import { Spinner } from "@std/cli/spinner";
 
 import { MS_IO_SECOND } from "./constants.ts";
 
+type Options = {
+  runningLabel: string;
+  completionLabel?: string;
+  color?: string;
+};
+
 export async function callWithSpinner<T>(
-  label: string,
   func: () => T,
   {
-    pastTenseLabel = label,
+    runningLabel: label,
+    completionLabel: pastTenseLabel = label,
     color = "gray",
-  } = {},
+  }: Options,
 ): Promise<T | Error> {
   const spinner = new Spinner({ message: `${label}…`, color });
 

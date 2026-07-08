@@ -2,19 +2,16 @@ import {
   LanguageModel,
   type LanguageModelMessage,
 } from "@cutout/agent/processes";
-import {
-  filterTaskNames,
-  messageRubric,
-  renderRubricPrompt,
-  renderTaskPrompt,
-} from "@cutout/agent/tasks";
+import { messageRubric, renderRubricPrompt } from "@cutout/agent/tasks";
 import { QuickSearch } from "@cutout/agent/tools";
 import { rawText } from "@cutout/jsx/projections";
+import type { CutoutJSX } from "@cutout/jsx/tokens";
 
 import { LOG_LEVEL } from "../constants.env.ts";
 import { callWithSpinner } from "./callWithSpinner.ts";
 import { JUDGE_RESULT_TAG, SUPPORTED_TASKS } from "./constants.ts";
 import { evaluateSystem } from "./evaluateSystem.ts";
+import { renderAgentSystemPrompt } from "./renderAgentSystemPrompt.tsx";
 
 // Evaluate System
 let agentModel, judgeModel;
@@ -87,10 +84,7 @@ while (true) {
     Deno.exit();
   }
 
-  chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
-
   const rubricEntriesOrError = await callWithSpinner(
-    "Evaluating",
     () => {
       const judgeCalls: Promise<[string, number, string]>[] = [];
       for (const [name, definition] of Object.entries(messageRubric)) {
@@ -109,7 +103,7 @@ while (true) {
 
       return Promise.all(judgeCalls);
     },
-    { pastTenseLabel: "Evaluated" },
+    { runningLabel: "Evaluating", completionLabel: "Evaluated" },
   );
 
   if (rubricEntriesOrError instanceof Error) {
@@ -123,16 +117,33 @@ while (true) {
 
   const rubric = Object.fromEntries(rubricEntriesOrError);
 
+  const taskPrompts: CutoutJSX[] = [];
+  const taskNames = [];
+  for (const potentialTask of SUPPORTED_TASKS) {
+    const renderedPrompt = potentialTask.prompt(rubric);
+    if (renderedPrompt) {
+      taskPrompts.push(renderedPrompt);
+      taskNames.push(potentialTask.displayName);
+    }
+  }
+
+  if (!taskNames.length) {
+    console.log(
+      "%cYour request was not deemed a valid QDT. Please try again.",
+      "color: red;",
+    );
+    continue;
+  }
+
+  console.log(`%cSelected QDT(s): ${taskNames.join(", ")}`, "color: gray;");
+
+  chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
+
   let toolCalls;
   do {
     const chatMessage = await callWithSpinner(
-      "Thinking",
-      () =>
-        agent.fetch(
-          chatLog,
-          rawText(renderTaskPrompt(SUPPORTED_TASKS, rubric)),
-        ),
-      { pastTenseLabel: "Thought" },
+      () => agent.fetch(chatLog, rawText(renderAgentSystemPrompt(taskPrompts))),
+      { runningLabel: "Thinking", completionLabel: "Thought" },
     );
 
     if (chatMessage instanceof Error) {
@@ -146,9 +157,7 @@ while (true) {
     chatLog.push(chatMessage);
     if (chatMessage.content && chatMessage.content.length) {
       console.log(
-        "[output]> " +
-          `(${filterTaskNames(SUPPORTED_TASKS, rubric).join(", ")}) ` +
-          chatMessage.content,
+        "[output]> " + chatMessage.content,
       );
     }
 
@@ -157,7 +166,7 @@ while (true) {
     if (!toolCalls) continue;
 
     for (const call of toolCalls) {
-      const content = await callWithSpinner(call.name, call);
+      const content = await callWithSpinner(call, { runningLabel: call.name });
 
       if (content instanceof Error) {
         console.error(
