@@ -33,7 +33,7 @@ const agent = LanguageModel.create({
   generation: {
     limit: 16384,
     sampling: {
-      temperature: 0.7,
+      temperature: 0.3,
       probability: {
         top: 0.95,
       },
@@ -58,50 +58,50 @@ const judge = LanguageModel.create({
     file: "judge.log",
   },
   generation: {
-    sampling: {
-      temperature: 1,
+    repetition: {
+      penalty: 1.5,
     },
   },
 });
 
 await judge.start();
 
-// Graceful Shutdown
-const cleanup = () => {
+const gracefulShutdown = () => {
   agent.stop();
   judge.stop();
+  Deno.exit();
 };
 
-Deno.addSignalListener("SIGINT", cleanup);
-Deno.addSignalListener("SIGTERM", cleanup);
+Deno.addSignalListener("SIGINT", gracefulShutdown);
+Deno.addSignalListener("SIGTERM", gracefulShutdown);
 
 // Chat Loop
 while (true) {
   const input = prompt("[input]>");
 
   if (input === null) {
-    cleanup();
-    Deno.exit();
+    gracefulShutdown();
+    break;
   }
 
   const rubricEntriesOrError = await callWithSpinner(
-    () => {
-      const judgeCalls: Promise<[string, number, string]>[] = [];
+    async () => {
+      const judgeCalls = [];
       for (const [name, definition] of Object.entries(messageRubric)) {
-        const promise = new Promise<[string, number, string]>((resolve) => {
-          judge.fetch([], rawText(renderRubricPrompt(definition, input))).then((
-            { content },
-          ) => {
-            const [evaluation, score] = content?.split(JUDGE_RESULT_TAG) ?? [];
+        const { content } = await judge.fetch(
+          [],
+          rawText(renderRubricPrompt(definition, input)),
+        );
+        const [evaluation, score] = content?.split(JUDGE_RESULT_TAG) ?? [];
 
-            resolve([name, Number(score), evaluation]);
-          });
-        });
-
-        judgeCalls.push(promise);
+        if (isNaN(Number(score))) {
+          judgeCalls.push([name, 0, evaluation]);
+        } else {
+          judgeCalls.push([name, Number(score), evaluation]);
+        }
       }
 
-      return Promise.all(judgeCalls);
+      return judgeCalls;
     },
     { runningLabel: "Evaluating", completionLabel: "Evaluated" },
   );
@@ -112,7 +112,7 @@ while (true) {
   }
 
   if (LOG_LEVEL === "DEBUG") {
-    console.table(rubricEntriesOrError);
+    console.debug(rubricEntriesOrError);
   }
 
   const rubric = Object.fromEntries(rubricEntriesOrError);
@@ -135,7 +135,7 @@ while (true) {
     continue;
   }
 
-  console.log(`%cSelected QDT(s): ${taskNames.join(", ")}`, "color: gray;");
+  console.log(`%cSelected QDT(s): ${taskNames.join(", ")}.`, "color: gray;");
 
   chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
 

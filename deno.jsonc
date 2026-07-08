@@ -1,7 +1,7 @@
 {
   "permissions": {
     "default": {
-      "read": [".env"],
+      "read": ["./.env"],
       "env": [
         "XO_AGENT_MODEL__AGENT",
         "XO_AGENT_MODEL__JUDGE",
