@@ -28,6 +28,7 @@
       "experimental/agent": {
         "dependencies": [
           "jsr:@std/cli@*",
+          "jsr:@std/dotenv@*",
           "jsr:@std/streams@*"
         ]
       },

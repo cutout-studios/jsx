@@ -1,4 +1,7 @@
 import { readEnv } from "@cutout/internal";
+import { load } from "@std/dotenv";
+
+await load();
 
 const AGENT_TAG = "XO_AGENT";
 
@@ -29,7 +32,7 @@ export const MEMORY_BREAKPOINTS = readEnv(
   [128, 64, 32],
 );
 
-export const LOG_LEVEL = readEnv(
+export const LOG_LEVEL = readEnv<string>(
   "LOG_LEVEL",
-  "DEBUG",
+  "INFO",
 );

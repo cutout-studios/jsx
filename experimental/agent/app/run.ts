@@ -11,8 +11,9 @@ import {
 import { QuickSearch } from "@cutout/agent/tools";
 import { rawText } from "@cutout/jsx/projections";
 
+import { LOG_LEVEL } from "../constants.env.ts";
 import { callWithSpinner } from "./callWithSpinner.ts";
-import { SUPPORTED_TASKS } from "./constants.ts";
+import { JUDGE_RESULT_TAG, SUPPORTED_TASKS } from "./constants.ts";
 import { evaluateSystem } from "./evaluateSystem.ts";
 
 // Evaluate System
@@ -91,17 +92,15 @@ while (true) {
   const rubricEntriesOrError = await callWithSpinner(
     "Evaluating",
     () => {
-      const judgeCalls: Promise<[string, number]>[] = [];
+      const judgeCalls: Promise<[string, number, string]>[] = [];
       for (const [name, definition] of Object.entries(messageRubric)) {
-        const promise = new Promise<[string, number]>((resolve) => {
+        const promise = new Promise<[string, number, string]>((resolve) => {
           judge.fetch([], rawText(renderRubricPrompt(definition, input))).then((
             { content },
           ) => {
-            const [reasoning, score] = content?.split("[RESULT]") ?? [];
+            const [evaluation, score] = content?.split(JUDGE_RESULT_TAG) ?? [];
 
-            console.debug("\n", { name, score: Number(score), reasoning });
-
-            resolve([name, Number(score)]);
+            resolve([name, Number(score), evaluation]);
           });
         });
 
@@ -116,6 +115,10 @@ while (true) {
   if (rubricEntriesOrError instanceof Error) {
     console.error(rubricEntriesOrError);
     continue;
+  }
+
+  if (LOG_LEVEL === "DEBUG") {
+    console.table(rubricEntriesOrError);
   }
 
   const rubric = Object.fromEntries(rubricEntriesOrError);

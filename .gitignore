@@ -2,3 +2,4 @@
 coverage
 v8.log
 .output
+.env
