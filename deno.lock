@@ -84,7 +84,8 @@
       "jsr:@cutout/internal": {
         "dependencies": [
           "jsr:@std/assert@*",
-          "jsr:@std/data-structures@*"
+          "jsr:@std/data-structures@*",
+          "jsr:@std/dotenv@*"
         ]
       }
     }

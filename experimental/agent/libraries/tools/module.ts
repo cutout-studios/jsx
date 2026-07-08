@@ -1,8 +1,3 @@
-import quickSearch, {
-  definition as quickSearchDefinition,
-} from "./quickSearch/tool.tsx";
-
-export const QuickSearch = {
-  call: quickSearch,
-  definition: quickSearchDefinition,
-};
+export { QuickSearch } from "./quickSearch.tsx";
+export { createCall as createToolCall } from "./create.ts";
+export * from "./types.ts";

@@ -25,6 +25,7 @@ import type {
   ElementCloseToken,
   ElementOpenToken,
   GeneratorToken,
+  OutputToken,
 } from "./tokens/types.ts";
 
 /**
@@ -142,7 +143,15 @@ export const jsxs: typeof jsx = jsx;
  */
 export const Fragment: string = FRAGMENT_LABEL;
 
-function* _forwardTokens(value: unknown, debug = false) {
+function* _forwardTokens(
+  value: unknown,
+  debug = false,
+): Generator<OutputToken> {
+  if (Array.isArray(value) && !isValidToken(value)) {
+    for (const item of value) yield* _forwardTokens(item);
+    return;
+  }
+
   if (isGeneratorToken(value)) {
     yield* value[TOKEN_VALUE_INDEX]();
     return;
@@ -159,7 +168,7 @@ function* _forwardTokens(value: unknown, debug = false) {
     yield token;
   }
 
-  // TODO(#47): implement jsxDEV to exercise the `debug` option.
+  // ISSUE(#47): implement jsxDEV to exercise the `debug` option.
   if (token[TOKEN_TYPE_INDEX] === TokenType.UNKNOWN && debug) {
     let unknownValue;
 

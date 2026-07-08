@@ -1,124 +1,186 @@
-import { Spinner } from "@std/cli/spinner";
+import {
+  LanguageModel,
+  type LanguageModelMessage,
+} from "@cutout/agent/processes";
+import { messageRubric, renderRubricPrompt } from "@cutout/agent/tasks";
+import { QuickSearch } from "@cutout/agent/tools";
+import { rawText } from "@cutout/jsx/projections";
+import type { CutoutJSX } from "@cutout/jsx/tokens";
 
-import { LLM } from "../libraries/services/module.ts";
-import { QuickSearch } from "../libraries/tools/module.ts";
-import systemPrompt from "./SYSTEM.md" with { type: "text" };
+import { LOG_LEVEL } from "../constants.env.ts";
+import { callWithSpinner } from "./callWithSpinner.ts";
+import { JUDGE_RESULT_TAG, SUPPORTED_TASKS } from "./constants.ts";
+import { evaluateSystem } from "./evaluateSystem.ts";
+import { renderAgentSystemPrompt } from "./renderAgentSystemPrompt.tsx";
 
-type ChatLog = {
-  role: string;
-  content: string;
-  tool_call_id?: number;
-}[];
-
-const llmDependencies = await LLM.getRequiredDependencies();
-if (llmDependencies) {
-  console.error(
-    `Agent requires the following dependencies: "${llmDependencies}". Aborting.`,
-  );
+// Evaluate System
+let agentModel, judgeModel;
+try {
+  ({ agentModel, judgeModel } = await evaluateSystem());
+} catch (error) {
+  console.error(`%c${String(error)}`, "color: red;");
   Deno.exit(1);
 }
 
-const llmService = LLM.createService();
+// Initialize Model Runners
+const chatLog: LanguageModelMessage[] = [];
+const agent = LanguageModel.create({
+  model: agentModel,
+  logging: {
+    file: "agent.log",
+  },
+  tools: [QuickSearch],
+  generation: {
+    limit: 16384,
+    sampling: {
+      temperature: 0.3,
+      probability: {
+        top: 0.95,
+      },
+      count: {
+        top: 20,
+      },
+    },
+    presence: {
+      penalty: 1.5,
+    },
+    repetition: {
+      penalty: 1.3,
+    },
+  },
+});
 
-llmService.start();
+await agent.start();
 
-const chatLog: ChatLog = [{
-  role: "system",
-  content: systemPrompt,
-}];
+const judge = LanguageModel.create({
+  model: judgeModel,
+  logging: {
+    file: "judge.log",
+  },
+  generation: {
+    repetition: {
+      penalty: 1.5,
+    },
+  },
+});
 
+await judge.start();
+
+const gracefulShutdown = () => {
+  agent.stop();
+  judge.stop();
+  Deno.exit();
+};
+
+Deno.addSignalListener("SIGINT", gracefulShutdown);
+Deno.addSignalListener("SIGTERM", gracefulShutdown);
+
+// Chat Loop
 while (true) {
   const input = prompt("[input]>");
 
-  if (input === null) break;
+  if (input === null) {
+    gracefulShutdown();
+    break;
+  }
 
-  chatLog.push({ role: "user", content: input });
+  const rubricEntriesOrError = await callWithSpinner(
+    async () => {
+      const judgeCalls = [];
+      for (const [name, definition] of Object.entries(messageRubric)) {
+        const { content } = await judge.fetch(
+          [],
+          rawText(renderRubricPrompt(definition, input)),
+        );
+        const [evaluation, score] = content?.split(JUDGE_RESULT_TAG) ?? [];
 
-  let hasToolCalls = false;
-
-  do {
-    const spinner = new Spinner({ message: "Thinking…", color: "gray" });
-    spinner.start();
-
-    let seconds = 1;
-    const thinkingInterval = setInterval(() => {
-      spinner.message = `Thinking… (${seconds++}s)`;
-    }, 1000);
-
-    const response: Response = await fetch(
-      llmService.apiRoot + "chat/completions",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          model: llmService.model,
-          messages: chatLog,
-          tools: [
-            QuickSearch.definition,
-          ],
-
-          // TODO: per-model/QDT setting
-          temperature: 0.7,
-          top_p: 0.95, // note to self: don't consider the options making up <5%
-          top_k: 20, // note to self: keep the top 20 options
-          min_p: 0.0,
-          presence_penalty: 1.5,
-        }),
-      },
-    );
-
-    const { choices: [{ message, finish_reason: finishReason }] } =
-      await response.json();
-
-    spinner.stop();
-    clearInterval(thinkingInterval);
-    console.log(
-      `%cThought for ${seconds}s.`,
-      "color: gray;",
-    );
-
-    chatLog.push(message);
-    if (message.content && message.content.trim().length) {
-      console.log("[output]> " + message.content.trim());
-    }
-
-    hasToolCalls = finishReason === "tool_calls";
-    for (
-      const { id, function: { name, arguments: _arguments } }
-        of message.tool_calls ?? []
-    ) {
-      let content, toolSpinner, toolStart;
-      try {
-        switch (name) {
-          case QuickSearch.definition.function.name: {
-            toolStart = performance.now();
-            toolSpinner = new Spinner({
-              message: `Calling: quickSearch(${_arguments})…`,
-              color: "gray",
-            });
-
-            toolSpinner.start();
-            content = await QuickSearch.call(JSON.parse(_arguments));
-
-            toolSpinner.stop();
-            console.log(
-              `%cCalled quickSearch(${_arguments}) for ${
-                Math.floor(performance.now() - toolStart)
-              }ms.`,
-              "color: gray;",
-            );
-            break;
-          }
-          default:
-            content = `Unknown Tool: ${name}`;
+        if (isNaN(Number(score))) {
+          judgeCalls.push([name, 0, evaluation]);
+        } else {
+          judgeCalls.push([name, Number(score), evaluation]);
         }
-      } catch (error) {
-        content = `Error: ${(error as Error).message}`;
-      } finally {
-        toolSpinner?.stop();
       }
-      chatLog.push({ role: "tool", tool_call_id: id, content });
-    }
-  } while (hasToolCalls);
-}
 
-llmService.stop();
+      return judgeCalls;
+    },
+    { runningLabel: "Evaluating", completionLabel: "Evaluated" },
+  );
+
+  if (rubricEntriesOrError instanceof Error) {
+    console.error(rubricEntriesOrError);
+    continue;
+  }
+
+  if (LOG_LEVEL === "DEBUG") {
+    console.debug(rubricEntriesOrError);
+  }
+
+  const rubric = Object.fromEntries(rubricEntriesOrError);
+
+  const taskPrompts: CutoutJSX[] = [];
+  const taskNames = [];
+  for (const potentialTask of SUPPORTED_TASKS) {
+    const renderedPrompt = potentialTask.prompt(rubric);
+    if (renderedPrompt) {
+      taskPrompts.push(renderedPrompt);
+      taskNames.push(potentialTask.displayName);
+    }
+  }
+
+  if (!taskNames.length) {
+    console.log(
+      "%cYour request was not deemed a valid QDT. Please try again.",
+      "color: red;",
+    );
+    continue;
+  }
+
+  console.log(`%cSelected QDT(s): ${taskNames.join(", ")}.`, "color: gray;");
+
+  chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
+
+  let toolCalls;
+  do {
+    const chatMessage = await callWithSpinner(
+      () => agent.fetch(chatLog, rawText(renderAgentSystemPrompt(taskPrompts))),
+      { runningLabel: "Thinking", completionLabel: "Thought" },
+    );
+
+    if (chatMessage instanceof Error) {
+      console.error(
+        `%cAn error occured while processing your request: ${chatMessage.message}`,
+        "color: red;",
+      );
+      break;
+    }
+
+    chatLog.push(chatMessage);
+    if (chatMessage.content && chatMessage.content.length) {
+      console.log(
+        "[output]> " + chatMessage.content,
+      );
+    }
+
+    ({ toolCalls } = chatMessage);
+
+    if (!toolCalls) continue;
+
+    for (const call of toolCalls) {
+      const content = await callWithSpinner(call, { runningLabel: call.name });
+
+      if (content instanceof Error) {
+        console.error(
+          `%cAn error occured while invoking the tool: ${content.message}`,
+          "color: red;",
+        );
+        continue;
+      }
+
+      chatLog.push({
+        role: LanguageModel.Role.TOOL,
+        toolCallID: call.id,
+        content: String(content),
+      });
+    }
+  } while (toolCalls);
+}
