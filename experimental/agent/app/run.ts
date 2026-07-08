@@ -68,11 +68,23 @@ const judge = LanguageModel.create({
 
 await judge.start();
 
+// Graceful Shutdown
+const cleanup = () => {
+  agent.stop();
+  judge.stop();
+};
+
+Deno.addSignalListener("SIGINT", cleanup);
+Deno.addSignalListener("SIGTERM", cleanup);
+
 // Chat Loop
 while (true) {
   const input = prompt("[input]>");
 
-  if (input === null) break;
+  if (input === null) {
+    cleanup();
+    Deno.exit();
+  }
 
   chatLog.push({ role: LanguageModel.Role.USER, content: input.trim() });
 
@@ -160,12 +172,3 @@ while (true) {
     }
   } while (toolCalls);
 }
-
-// Graceful Shutdown
-const cleanup = () => {
-  agent.stop();
-  judge.stop();
-};
-
-Deno.addSignalListener("SIGINT", cleanup);
-Deno.addSignalListener("SIGTERM", cleanup);
