@@ -7,6 +7,7 @@ export type GetterOptions = {
 
 export interface Backend {
   get(path: Path, options: GetterOptions): Path[];
-  set(path: Path, value: PathSegment): boolean;
+  add(path: Path): void;
+  clear(path: Path): void;
   delete(path: Path): boolean;
 }

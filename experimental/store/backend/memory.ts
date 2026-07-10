@@ -5,14 +5,14 @@ type PathTrie = Map<PathSegment, PathTrie>;
 export class MemoryBackend implements Backend {
   constructor(paths: Path[]) {
     for (const path of paths) {
-      this.set(path);
+      this.add(path);
     }
   }
 
   get(path: Path, { limit = 1 }: GetterOptions): Path[] {
     const options = { limit };
 
-    const cacheKey = JSON.stringify(options) + "::" + path.join();
+    const cacheKey = JSON.stringify([options, path]);
 
     if (this.#flatCache.has(cacheKey)) {
       return this.#flatCache.get(cacheKey);
@@ -29,7 +29,7 @@ export class MemoryBackend implements Backend {
     return result;
   }
 
-  set(path: Path): boolean {
+  add(path: Path): void {
     this.#flatCache.clear();
 
     let pointer = this.#pathTrie;
@@ -40,14 +40,19 @@ export class MemoryBackend implements Backend {
 
       pointer = pointer.get(segment) as PathTrie;
     }
+  }
 
-    return true;
+  clear(path: Path): void {
+    const subtrie = this.#resolvePath(path);
+    if (!subtrie) return;
+    subtrie.clear();
+    this.#flatCache.clear();
   }
 
   delete(path: Path): boolean {
     const [rootPath, terminalValue] = [path.slice(0, -1), path.at(-1)];
 
-    if (!terminalValue) return false;
+    if (!rootPath.length || !terminalValue) return false;
 
     const deleteRoot = this.#resolvePath(rootPath);
 
@@ -82,7 +87,9 @@ export class MemoryBackend implements Backend {
 
     const stack: [PathSegment[], PathTrie][] = [[[], root]];
     while (stack.length) {
-      const [currentKeyPath, currentSubtrie] = stack.pop()!;
+      const [currentKeyPath, currentSubtrie] = stack.pop() ?? [];
+
+      if (!currentKeyPath || !currentSubtrie) continue;
 
       for (const [key, value] of currentSubtrie.entries()) {
         if (value.size) {
