@@ -1,7 +1,9 @@
 {
   "name": "@cutout/store",
   "imports": {
-    "@std/assert": "jsr:@std/assert"
+    "@std/assert": "jsr:@std/assert",
+
+    "@cutout/internal": "../../internal/module.ts"
   },
   "exports": {
     "./backend": "./backend/module.ts"
