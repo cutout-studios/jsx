@@ -8,6 +8,7 @@
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing",
 
+    "@cutout/jsx/tokens": "./tokens/module.ts",
     // To ensure "internal" stays so, we alias it here.
     "@cutout/internal": "../internal/module.ts"
   },
@@ -15,5 +16,5 @@
     "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts ./projections/module.ts"
   },
   "name": "@cutout/jsx",
-  "version": "0.0.3"
+  "version": "0.0.4"
 }

@@ -85,7 +85,7 @@
         "dependencies": [
           "jsr:@std/assert@*",
           "jsr:@std/data-structures@*",
-          "jsr:@std/dotenv@*"
+          "jsr:@std/dotenv@~0.225.7"
         ]
       }
     }
