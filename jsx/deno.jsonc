@@ -15,5 +15,5 @@
     "docs:lint": "deno doc --lint ./module.ts ./tokens/module.ts ./projections/module.ts"
   },
   "name": "@cutout/jsx",
-  "version": "0.0.3"
+  "version": "0.0.4"
 }
