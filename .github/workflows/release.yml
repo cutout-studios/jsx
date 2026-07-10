@@ -43,6 +43,10 @@ jobs:
           NEW_VERSION="$(deno bump-version 2>/dev/null | tail -n1)"
           echo "tag_name=${DIRECTORY}/${NEW_VERSION}" >> "$GITHUB_OUTPUT"
 
+      - name: Test Publish
+        working-directory: ${{ inputs.directory }}
+        run: deno publish --dry-run --allow-dirty
+
       - name: Commit Version
         uses: planetscale/ghcommit-action@v0.2.19
         with:
