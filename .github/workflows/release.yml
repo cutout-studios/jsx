@@ -1,5 +1,4 @@
 name: Create Draft Release
-
 on:
   workflow_dispatch:
     inputs:
@@ -33,7 +32,7 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Bump Version & Tag
+      - name: Bump Version
         id: version
         working-directory: ${{ inputs.directory }}
         env:
@@ -42,20 +41,24 @@ jobs:
         run: |
           deno bump-version "${INCREMENT}" >/dev/null 2>&1
           NEW_VERSION="$(deno bump-version 2>/dev/null | tail -n1)"
-          TAG_NAME="${DIRECTORY}/${NEW_VERSION}"
+          echo "tag_name=${DIRECTORY}/${NEW_VERSION}" >> "$GITHUB_OUTPUT"
 
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config commit.gpgsign true
-          git config tag.gpgsign true
+      - name: Commit Version
+        uses: planetscale/ghcommit-action@v0.2.19
+        with:
+          commit_message: ${{ steps.version.outputs.tag_name }}
+          repo: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: $ secrets.GITHUB_TOKEN
 
-          git add -A
-          git commit -m "${TAG_NAME}"
-          git tag "${TAG_NAME}"
-          git push origin HEAD
-          git push origin "${TAG_NAME}"
-
-          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+      - name: Tag Version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+        run: |
+          SHA="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${GITHUB_REF_NAME}" --jq .object.sha)"
+          gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/${TAG_NAME}" -f sha="${SHA}"
 
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
