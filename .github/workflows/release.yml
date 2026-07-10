@@ -46,8 +46,8 @@ jobs:
 
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config commit.gpgsign false
-          git config tag.gpgsign false
+          git config commit.gpgsign true
+          git config tag.gpgsign true
 
           git add -A
           git commit -m "${TAG_NAME}"
