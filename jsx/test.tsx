@@ -5,7 +5,7 @@ import type { GeneratorToken } from "./tokens/types.ts";
 
 const TEST_GROUP = "jsx";
 
-Deno.test(`${TEST_GROUP} - simple case`, assertCutoutJsxSnapshot(<div></div>));
+Deno.test(`${TEST_GROUP}`, assertCutoutJsxSnapshot(<div></div>));
 
 Deno.test(
   `${TEST_GROUP} - attributes`,

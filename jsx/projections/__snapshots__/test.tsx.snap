@@ -1,6 +1,6 @@
 export const snapshot = {};
 
-snapshot[`jsx/projections - rawText, simple case 1`] = `"<div></div>"`;
+snapshot[`jsx/projections - rawText 1`] = `"<div></div>"`;
 
 snapshot[`jsx/projections - rawText, attributes 1`] = `'<div style="color:red;" id="my-cool-div"></div>'`;
 
@@ -12,8 +12,8 @@ snapshot[`jsx/projections - rawText, children + attributes 1`] = `'<ul id="main"
 
 snapshot[`jsx/projections - rawText, nested children 1`] = `'<ul id="main"><li class="selected">Child #1</li><li>Child #2</li><li><button type="button" disabled="true">Child #3</button></li></ul>'`;
 
-snapshot[`jsx/projections - rawText, nested children 2`] = `"<div><div><div><div><div>Hello, World!</div></div></div></div></div>"`;
+snapshot[`jsx/projections - rawText, deeply nested children 1`] = `"<div><div><div><div><div>Hello, World!</div></div></div></div></div>"`;
 
-snapshot[`jsx/projections - rawText, nested children + attributes 1`] = `'<div id="1"><div id="2"><div id="3"><div id="4"><div id="5">Hello, World!</div></div></div></div></div>'`;
+snapshot[`jsx/projections - rawText, deeply nested children + attributes 1`] = `'<div id="1"><div id="2"><div id="3"><div id="4"><div id="5">Hello, World!</div></div></div></div></div>'`;
 
 snapshot[`jsx/projections - rawText, fragment 1`] = `"<span>Hello #1</span><span>Hello #2</span>"`;
