@@ -9,7 +9,7 @@ export class MemoryBackend implements Backend {
     }
   }
 
-  get(path: Path, { limit = 1 }: GetterOptions): Path[] {
+  get(path: Path, { limit = 1 }: GetterOptions = {}): Path[] {
     const options = { limit };
 
     const cacheKey = JSON.stringify([options, path]);
@@ -40,13 +40,6 @@ export class MemoryBackend implements Backend {
 
       pointer = pointer.get(segment) as PathTrie;
     }
-  }
-
-  clear(path: Path): void {
-    const subtrie = this.#resolvePath(path);
-    if (!subtrie) return;
-    subtrie.clear();
-    this.#flatCache.clear();
   }
 
   delete(path: Path): boolean {
