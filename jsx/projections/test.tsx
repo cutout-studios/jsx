@@ -5,7 +5,7 @@ import { rawText } from "./rawText.ts";
 
 const TEST_GROUP = "jsx/projections";
 
-Deno.test(`${TEST_GROUP} - rawText, simple case`, (test) =>
+Deno.test(`${TEST_GROUP} - rawText`, (test) =>
   assertSnapshot(test, rawText(<div></div>)));
 
 Deno.test(
@@ -80,7 +80,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - rawText, nested children`,
+  `${TEST_GROUP} - rawText, deeply nested children`,
   (test) =>
     assertSnapshot(
       test,
@@ -101,7 +101,7 @@ Deno.test(
 );
 
 Deno.test(
-  `${TEST_GROUP} - rawText, nested children + attributes`,
+  `${TEST_GROUP} - rawText, deeply nested children + attributes`,
   (test) =>
     assertSnapshot(
       test,
