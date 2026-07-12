@@ -36,7 +36,7 @@ export const isOutputToken = (
   switch (value[TOKEN_TYPE_INDEX]) {
     case TokenType.NUMBER:
       return typeof value[TOKEN_VALUE_INDEX] === "number" ||
-        typeof value[1] === "bigint";
+        typeof value[TOKEN_VALUE_INDEX] === "bigint";
     case TokenType.ARRAY:
       return Array.isArray(value[TOKEN_VALUE_INDEX]);
     case TokenType.BOOLEAN:
