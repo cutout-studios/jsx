@@ -1,2 +1,1 @@
-export { DocumentStore as CutoutDocumentStore } from "./document.tsx";
-export { CSSSelector } from "./cssSelector.ts";
+export { create as createStore } from "./create.tsx";
