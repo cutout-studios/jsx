@@ -6,6 +6,7 @@
     "@cutout/internal": "../../internal/module.ts"
   },
   "exports": {
+    ".": "./module.ts",
     "./backend": "./backend/module.ts"
   }
 }
