@@ -17,6 +17,7 @@ export type {
   ObjectToken as CutoutObjectToken,
   OutputToken as CutoutOutputToken,
   PrimitiveToken as CutoutPrimitiveToken,
+  PromiseToken as CutoutPromiseToken,
   ReferenceToken as CutoutReferenceToken,
   StringToken as CutoutStringToken,
   SymbolToken as CutoutSymbolToken,

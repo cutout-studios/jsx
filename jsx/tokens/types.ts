@@ -164,9 +164,9 @@ export type FunctionToken = AnyToken<
 >;
 
 /**
- * A token wrapping an async operation.
+ * A token wrapping a Promise for more token(s).
  *
- * Reserved for TODO
+ * This could be an individual token, or, another JSX token stream.
  */
 export type PromiseToken = AnyToken<TokenType.PROMISE, Promise<ValidToken>>;
 
