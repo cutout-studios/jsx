@@ -1,6 +1,15 @@
-import type { Combinator } from "./constants.ts";
-import type { Selector } from "./types.ts";
+import {
+  ATTRIBUTE_BLOCK_REGEX,
+  ATTRIBUTE_SELECTOR_REGEX,
+  AttributeOperator,
+  CLASS_REGEX,
+  Combinator,
+  ID_REGEX,
+  TAG_REGEX,
+} from "./constants.ts";
+import type { AttributeSelector, Selector } from "./types.ts";
 
+// TODO: CutoutError? :(
 export const parse = (query: string): Selector[] => {
   if (query.includes(":")) {
     throw new Error(
@@ -15,7 +24,9 @@ export const parse = (query: string): Selector[] => {
   }
 
   let rawQuery;
-  const listRegex = new RegExp("TODO");
+  const listRegex = new RegExp(
+    `([^${Combinator.LIST}]+)(?:${Combinator.LIST}|$)`,
+  );
   const selectors: Selector[] = [];
   while ((rawQuery = listRegex.exec(query))) {
     let rawSubquery;
@@ -44,11 +55,6 @@ export const parse = (query: string): Selector[] => {
   return selectors;
 };
 
-const TAG_REGEX = /TODO/;
-const ID_REGEX = /TODO/;
-const CLASS_REGEX = /TODO/;
-const ATTRIBUTE_REGEX = /TODO/;
-
 function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   if (!groups) {
     throw new Error("TODO");
@@ -63,20 +69,18 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   const [rawClassNames] = subquery.match(CLASS_REGEX) ?? [];
 
   if (rawClassNames) {
-    // TODO
+    result.classNames = new Set(rawClassNames.split(/\s+/));
   }
 
-  const [rawAttributeText] = subquery.match(ATTRIBUTE_REGEX) ?? [];
-
-  if (rawAttributeText) {
-    // TODO
-  }
+  result.attribute = _parseAttribute(
+    subquery.match(ATTRIBUTE_BLOCK_REGEX) ?? [],
+  );
 
   if (!Object.keys(result).length) {
     throw new Error("TODO");
   }
 
-  if (isCombinator(combinator)) {
+  if (_isCombinator(combinator)) {
     result.combinator = combinator;
   } else if (combinator) {
     throw new Error("TODO");
@@ -85,7 +89,53 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   return result as Selector;
 }
 
-// TODO
-function isCombinator(value: unknown): value is Combinator {
+function _parseAttribute(
+  [rawAttributeText]: RegExpMatchArray | [],
+): AttributeSelector | undefined {
+  if (!rawAttributeText) return;
+
+  const attributeMatch = rawAttributeText.match(ATTRIBUTE_SELECTOR_REGEX);
+
+  if (!attributeMatch?.groups) return;
+
+  const { key, value, operator } = attributeMatch.groups;
+
+  if (!key) return;
+
+  const result: AttributeSelector = { key, value };
+
+  if (_isAttributeOperator(operator)) {
+    result.operator = operator;
+  }
+
+  return result;
+}
+
+// TODO: generic enum guard?
+function _isCombinator(value: unknown): value is Combinator {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  for (const combinatorValue of Object.values(Combinator)) {
+    if (value === combinatorValue) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function _isAttributeOperator(value: unknown): value is AttributeOperator {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  for (const operatorValue of Object.values(AttributeOperator)) {
+    if (value === operatorValue) {
+      return true;
+    }
+  }
+
   return true;
 }
