@@ -25,6 +25,7 @@ export type {
   SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
   UnknownToken, // We don't even know if it's a "Cutout" token.
+  ValidToken as ValidCutoutToken,
 } from "./types.ts";
 
 export { tokenizeValue } from "./tokenizeValue.ts";
