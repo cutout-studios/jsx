@@ -1,3 +1,5 @@
+type Awaitable<T> = T | Promise<T>;
+
 export type PathSegment = string | number | symbol;
 export type Path = PathSegment[];
 
@@ -6,10 +8,7 @@ export type GetterOptions = {
 };
 
 export interface Backend {
-  get(path: Path, options?: GetterOptions): Path[];
-  add(path: Path): void;
-  delete(path: Path): boolean;
-  clear?(path: Path): void;
-  has?(path: Path): boolean;
-  move?(pathFrom: Path, pathTo: Path): boolean;
+  get(path: Path, options?: GetterOptions): Awaitable<Path[]>;
+  add(path: Path): Awaitable<void>;
+  delete(path: Path): Awaitable<boolean>;
 }

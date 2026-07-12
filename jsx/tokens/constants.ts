@@ -39,14 +39,16 @@ export enum TokenType {
   OBJECT = 0x09,
   /** An element function, class, event listener, etc. */
   FUNCTION = 0x0A,
+  /** An async operation */
+  PROMISE = 0x0B,
 
   // --- JSX Structure ---
   /** Marks the start of a JSX tag (e.g., `<div`). */
-  ELEMENT_OPEN = 0x0B,
+  ELEMENT_OPEN = 0x0C,
   /** Marks the end of a JSX tag (e.g., `</div>`). */
-  ELEMENT_CLOSE = 0x0C,
+  ELEMENT_CLOSE = 0x0D,
   /** A JSX element attribute (e.g. `class=`). */
-  ATTRIBUTE = 0x0D,
+  ATTRIBUTE = 0x0E,
 }
 
 // ------------------------------------------------------------

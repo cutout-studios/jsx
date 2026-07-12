@@ -11,13 +11,13 @@ export type {
   ElementCloseToken as CutoutElementCloseToken,
   ElementOpenToken as CutoutElementOpenToken,
   FunctionToken as CutoutFunctionToken,
-  GeneratorToken as CutoutGeneratorToken,
-  JSX as CutoutJSX,
+  JSXGeneratorToken as CutoutJSXToken,
   NullToken as CutoutNullToken,
   NumberToken as CutoutNumberToken,
   ObjectToken as CutoutObjectToken,
   OutputToken as CutoutOutputToken,
   PrimitiveToken as CutoutPrimitiveToken,
+  PromiseToken as CutoutPromiseToken,
   ReferenceToken as CutoutReferenceToken,
   StringToken as CutoutStringToken,
   SymbolToken as CutoutSymbolToken,
@@ -25,6 +25,7 @@ export type {
   SystemToken as CutoutSystemToken,
   UndefinedToken as UndefinedCutoutToken,
   UnknownToken, // We don't even know if it's a "Cutout" token.
+  ValidToken as ValidCutoutToken,
 } from "./types.ts";
 
 export { tokenizeValue } from "./tokenizeValue.ts";

@@ -24,7 +24,7 @@ import type {
   AttributeToken,
   ElementCloseToken,
   ElementOpenToken,
-  GeneratorToken,
+  JSXGeneratorToken,
   OutputToken,
 } from "./tokens/types.ts";
 
@@ -61,7 +61,7 @@ export namespace JSX {
  */
 export type CutoutElementFunction<A = Record<string, unknown>> = (
   attributes: A,
-) => GeneratorToken;
+) => JSXGeneratorToken;
 
 /**
  * The core transformation function for `@cutout/jsx`.
@@ -82,7 +82,7 @@ export const jsx = (
   element: CutoutElementFunction | string,
   _elementAttributes: { [key: string]: unknown },
   ..._elementChildren: unknown[]
-): GeneratorToken => {
+): JSXGeneratorToken => {
   const _generator = function* () {
     // 1. Normalize children across "react" and "react-jsx" pragma types.
     //    We separate children from the rest of the attributes to handle them separately.

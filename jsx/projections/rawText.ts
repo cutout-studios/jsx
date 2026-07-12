@@ -51,6 +51,7 @@ export const rawText: Projection<string> = (jsx): string => {
         break;
       case CutoutTokenType.NULL:
       case CutoutTokenType.UNDEFINED:
+      case CutoutTokenType.PROMISE:
       default:
         break;
     }
