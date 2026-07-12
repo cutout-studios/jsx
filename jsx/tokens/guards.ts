@@ -4,8 +4,13 @@
  * These type guards allows `@cutout/jsx` to guarantee robust runtime data type consistency.
  */
 
-import { TOKEN_LENGTH, TokenType } from "./constants.ts";
-import type { GeneratorToken, OutputToken, ValidToken } from "./types.ts";
+import {
+  TOKEN_LENGTH,
+  TOKEN_TYPE_INDEX,
+  TOKEN_VALUE_INDEX,
+  TokenType,
+} from "./constants.ts";
+import type { JSXGeneratorToken, OutputToken, ValidToken } from "./types.ts";
 
 /**
  * A TypeScript guard for vaild (not unknown) Cutout Tokens.
@@ -28,28 +33,31 @@ export const isOutputToken = (
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 
-  switch (value[0]) {
+  switch (value[TOKEN_TYPE_INDEX]) {
     case TokenType.NUMBER:
-      return typeof value[1] === "number" || typeof value[1] === "bigint";
+      return typeof value[TOKEN_VALUE_INDEX] === "number" ||
+        typeof value[1] === "bigint";
     case TokenType.ARRAY:
-      return Array.isArray(value[1]);
+      return Array.isArray(value[TOKEN_VALUE_INDEX]);
     case TokenType.BOOLEAN:
-      return typeof value[1] === "boolean";
+      return typeof value[TOKEN_VALUE_INDEX] === "boolean";
     case TokenType.NULL:
-      return value[1] === null;
+      return value[TOKEN_VALUE_INDEX] === null;
     case TokenType.OBJECT:
-      return typeof value[1] === "object";
+      return typeof value[TOKEN_VALUE_INDEX] === "object";
     case TokenType.FUNCTION:
-      return typeof value[1] === "function";
+      return typeof value[TOKEN_VALUE_INDEX] === "function";
+    case TokenType.PROMISE:
+      return value[TOKEN_VALUE_INDEX] instanceof Promise;
     case TokenType.ATTRIBUTE:
     case TokenType.ELEMENT_OPEN:
     case TokenType.ELEMENT_CLOSE:
     case TokenType.STRING:
-      return typeof value[1] === "string";
+      return typeof value[TOKEN_VALUE_INDEX] === "string";
     case TokenType.SYMBOL:
-      return typeof value[1] === "symbol";
+      return typeof value[TOKEN_VALUE_INDEX] === "symbol";
     case TokenType.UNDEFINED:
-      return value[1] === undefined;
+      return value[TOKEN_VALUE_INDEX] === undefined;
     case TokenType.UNKNOWN:
       return true;
   }
@@ -64,7 +72,7 @@ export const isOutputToken = (
  */
 export const isGeneratorToken = (
   value: unknown,
-): value is GeneratorToken => {
+): value is JSXGeneratorToken => {
   if (!Array.isArray(value)) return false;
   if (value.length !== TOKEN_LENGTH) return false;
 

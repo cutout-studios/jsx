@@ -43,6 +43,8 @@ export const tokenizeValue = (
         return [TokenType.NULL, null];
       } else if (Array.isArray(value)) {
         return [TokenType.ARRAY, value];
+      } else if (value instanceof Promise) {
+        return [TokenType.PROMISE, value];
       }
 
       return [TokenType.OBJECT, value];

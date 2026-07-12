@@ -36,7 +36,7 @@ export type AnyToken<
  */
 export type SystemToken =
   | UnknownToken
-  | GeneratorToken;
+  | JSXGeneratorToken;
 
 /**
  * A token where we genuinely don't know the type or value yet.
@@ -48,13 +48,13 @@ export type UnknownToken = AnyToken<
 >;
 
 /**
- * A token representing a generator.
+ * A token representing a JSX generator.
  *
- * Generators are allow us to yield tokens
+ * JSX Generators are allow us to yield tokens
  * dynamically, which is great for streaming SSR or lazy evaluation.
  * It yields OutputCutoutTokens on demand.
  */
-export type GeneratorToken = AnyToken<
+export type JSXGeneratorToken = AnyToken<
   TokenType.GENERATOR,
   () => Generator<OutputToken>
 >;
@@ -131,7 +131,8 @@ export type SymbolToken = AnyToken<
 export type ReferenceToken =
   | ArrayToken
   | ObjectToken
-  | FunctionToken;
+  | FunctionToken
+  | PromiseToken;
 
 /**
  * A token wrapping an object.
@@ -161,6 +162,13 @@ export type FunctionToken = AnyToken<
   TokenType.FUNCTION,
   AnyFunction
 >;
+
+/**
+ * A token wrapping an async operation.
+ *
+ * Reserved for TODO
+ */
+export type PromiseToken = AnyToken<TokenType.PROMISE, Promise<ValidToken>>;
 
 // -----------------------------------------------------------------------------
 // Syntax
@@ -221,9 +229,4 @@ export type OutputToken =
  */
 export type ValidToken =
   | OutputToken
-  | GeneratorToken;
-
-/**
- * Alias for DX purposes.
- */
-export type JSX = GeneratorToken;
+  | JSXGeneratorToken;
