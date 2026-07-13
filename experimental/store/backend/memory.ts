@@ -1,4 +1,4 @@
-import type { Backend, GetterOptions, Path, PathSegment } from "./types.ts";
+import type { Backend, Path, PathSegment, ScanOptions } from "./types.ts";
 
 type PathTrie = Map<PathSegment, PathTrie>;
 
@@ -8,29 +8,42 @@ export class MemoryBackend implements Backend {
       this.add(path);
     }
   }
-
-  get(path: Path, { limit = 1 }: GetterOptions = {}): Path[] {
-    const options = { limit };
-
-    const cacheKey = JSON.stringify([options, path]);
-
-    if (this.#flatCache.has(cacheKey)) {
-      return this.#flatCache.get(cacheKey);
-    }
-
+  get(path: Path): PathSegment | undefined {
     const getRoot = this.#resolvePath(path);
 
-    if (!getRoot) return [];
+    if (getRoot?.size !== 1) return;
 
-    const result = this.#flatten(getRoot, options);
+    const [[value, valueTerminal]] = getRoot.entries().toArray();
 
-    this.#flatCache.set(cacheKey, result);
+    if (valueTerminal.size !== 0) return;
 
-    return result;
+    return value;
+  }
+
+  scan(prefix: Path, { limit = 1 }: ScanOptions = {}): Generator<Path> {
+    const options = { limit };
+
+    const cacheKey = JSON.stringify([options, prefix]);
+
+    if (this.#scanCache.has(cacheKey)) {
+      return this.#scanCache.get(cacheKey);
+    }
+
+    const scanRoot = this.#resolvePath(prefix);
+
+    if (!scanRoot) return (function* () {})() as Generator<Path>;
+
+    const result = this.#flatten(scanRoot, options);
+
+    this.#scanCache.set(cacheKey, result);
+
+    return (function* () {
+      for (const path of result) yield path;
+    })();
   }
 
   add(path: Path): void {
-    this.#flatCache.clear();
+    this.#scanCache.clear();
 
     let pointer = this.#pathTrie;
     for (const segment of path) {
@@ -54,7 +67,7 @@ export class MemoryBackend implements Backend {
     const deleteResult = deleteRoot.delete(terminalValue);
 
     if (deleteResult) {
-      this.#flatCache.clear();
+      this.#scanCache.clear();
     }
 
     return deleteResult;
@@ -74,7 +87,7 @@ export class MemoryBackend implements Backend {
     return pointer;
   }
 
-  #flatCache = new Map();
+  #scanCache = new Map();
   #flatten(root: PathTrie, { limit }: { limit: number }): Path[] {
     const result: Path[] = [];
 
