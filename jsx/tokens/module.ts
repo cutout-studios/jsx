@@ -1,7 +1,10 @@
 export {
   CHILDREN_LABEL as CUTOUT_CHILDREN_LABEL,
   FRAGMENT_LABEL as CUTOUT_FRAGMENT_LABEL,
+  TOKEN_TYPE_INDEX as CUTOUT_TOKEN_TYPE_INDEX,
+  TOKEN_VALUE_INDEX as CUTOUT_TOKEN_VALUE_INDEX,
   TokenType as CutoutTokenType,
+  UNSERIALIZABLE_LABEL as CUTOUT_UNSERIALIZABLE_LABEL,
 } from "./constants.ts";
 export type {
   AnyToken as AnyCutoutToken,
@@ -27,5 +30,11 @@ export type {
   UnknownToken, // We don't even know if it's a "Cutout" token.
   ValidToken as ValidCutoutToken,
 } from "./types.ts";
+
+export {
+  isGeneratorToken as isJSXToken,
+  isOutputToken,
+  isValidToken,
+} from "./guards.ts";
 
 export { tokenizeValue } from "./tokenizeValue.ts";

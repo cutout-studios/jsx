@@ -9,14 +9,13 @@ export const ATTRIBUTE_BLOCK_REGEX = /\[(.+)\]/;
 export const ATTRIBUTE_SELECTOR_REGEX =
   /(?<key>\w+)(?<operator>[$~*^]?=)?(?<value>\w+)?/;
 
-
 export enum Combinator {
   LIST = ",",
   DESCENDANT = " ",
   CHILD = ">",
   NEXT = "+",
   SUBSEQUENT = "~",
-  COLUMN = "||"
+  COLUMN = "||",
 }
 
 export enum AttributeOperator {
@@ -24,5 +23,5 @@ export enum AttributeOperator {
   IN_LIST = "~=",
   IN_TEXT = "*=",
   STARTS_WITH = "^=",
-  ENDS_WITH = "$="
+  ENDS_WITH = "$=",
 }

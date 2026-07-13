@@ -1,4 +1,10 @@
 import {
+  CutoutError,
+  CutoutErrorCode,
+  enumGuardFactory,
+} from "@cutout/internal";
+
+import {
   ATTRIBUTE_BLOCK_REGEX,
   ATTRIBUTE_SELECTOR_REGEX,
   AttributeOperator,
@@ -9,17 +15,16 @@ import {
 } from "./constants.ts";
 import type { AttributeSelector, Selector } from "./types.ts";
 
-// TODO: CutoutError? :(
 export const parse = (query: string): Selector[] => {
   if (query.includes(":")) {
-    throw new Error(
-      "TODO(error message text): psuedo/relative selectors are are either unsupproted or not relevant.",
+    throw new CutoutError(
+      CutoutErrorCode.OPERATION_UNSUPPORTED, // TODO(error message text): psuedo/relative selectors are are either unsupproted or not relevant."
     );
   }
 
   if (query.includes("@")) {
-    throw new Error(
-      "TODO(error message text): at rules (media queries, et al) are either not supported or not relevant.",
+    throw new CutoutError(
+      CutoutErrorCode.OPERATION_UNSUPPORTED, // TODO(error message text): at rules (media queries, et al) are either not supported or not relevant."
     );
   }
 
@@ -46,7 +51,7 @@ export const parse = (query: string): Selector[] => {
     }
 
     if (!root) {
-      throw new Error("TODO");
+      throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
     }
 
     selectors.push(root);
@@ -55,9 +60,10 @@ export const parse = (query: string): Selector[] => {
   return selectors;
 };
 
+const _isCombinator = enumGuardFactory(Combinator);
 function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   if (!groups) {
-    throw new Error("TODO");
+    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
   }
 
   const result: Partial<Selector> = {};
@@ -77,18 +83,19 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   );
 
   if (!Object.keys(result).length) {
-    throw new Error("TODO");
+    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
   }
 
   if (_isCombinator(combinator)) {
     result.combinator = combinator;
   } else if (combinator) {
-    throw new Error("TODO");
+    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
   }
 
   return result as Selector;
 }
 
+const _isAttributeOperator = enumGuardFactory(AttributeOperator);
 function _parseAttribute(
   [rawAttributeText]: RegExpMatchArray | [],
 ): AttributeSelector | undefined {
@@ -109,33 +116,4 @@ function _parseAttribute(
   }
 
   return result;
-}
-
-// TODO: generic enum guard?
-function _isCombinator(value: unknown): value is Combinator {
-  if (typeof value !== "string") {
-    return false;
-  }
-
-  for (const combinatorValue of Object.values(Combinator)) {
-    if (value === combinatorValue) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function _isAttributeOperator(value: unknown): value is AttributeOperator {
-  if (typeof value !== "string") {
-    return false;
-  }
-
-  for (const operatorValue of Object.values(AttributeOperator)) {
-    if (value === operatorValue) {
-      return true;
-    }
-  }
-
-  return true;
 }
