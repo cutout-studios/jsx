@@ -17,15 +17,11 @@ import type { AttributeSelector, Selector } from "./types.ts";
 
 export const parse = (query: string): Selector[] => {
   if (query.includes(":")) {
-    throw new CutoutError(
-      CutoutErrorCode.OPERATION_UNSUPPORTED, // TODO(error message text): psuedo/relative selectors are are either unsupproted or not relevant."
-    );
+    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
   }
 
   if (query.includes("@")) {
-    throw new CutoutError(
-      CutoutErrorCode.OPERATION_UNSUPPORTED, // TODO(error message text): at rules (media queries, et al) are either not supported or not relevant."
-    );
+    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
   }
 
   let rawQuery;
@@ -37,8 +33,14 @@ export const parse = (query: string): Selector[] => {
     let rawSubquery;
     let root: Selector | undefined;
     let pointer: Selector | undefined;
-    const combinatorRegex = new RegExp("TODO");
-    while ((rawSubquery = combinatorRegex.exec(rawQuery[0]))) {
+    const combinatorRegex = new RegExp(
+      `(?<subquery>\\w+)(?<combinator>${
+        Object.values(Combinator).join("|").replaceAll(" ", "\\s") // TODO: needs refinement
+      }|$)`,
+    );
+    while (
+      (rawSubquery = combinatorRegex.exec(rawQuery[0].replaceAll(/\s+/, " ")))
+    ) {
       const result = _parseSubqueryMatch(rawSubquery);
 
       if (!root && !pointer) {
@@ -105,11 +107,15 @@ function _parseAttribute(
 
   if (!attributeMatch?.groups) return;
 
-  const { key, value, operator } = attributeMatch.groups;
+  const { key, value, operator, casing } = attributeMatch.groups;
 
   if (!key) return;
 
-  const result: AttributeSelector = { key, value };
+  const result: AttributeSelector = {
+    key,
+    value,
+    caseSensitive: casing === "s",
+  };
 
   if (_isAttributeOperator(operator)) {
     result.operator = operator;
