@@ -27,19 +27,22 @@ export const parse = (query: string): Selector[] => {
   let rawQuery;
   const listRegex = new RegExp(
     `([^${Combinator.LIST}]+)(?:${Combinator.LIST}|$)`,
+    "g",
   );
   const selectors: Selector[] = [];
-  while ((rawQuery = listRegex.exec(query))) {
+  while ((rawQuery = listRegex.exec(query)) !== null) {
     let rawSubquery;
     let root: Selector | undefined;
     let pointer: Selector | undefined;
+    const selectorStatement = rawQuery[0].replaceAll(/\s+/g, " ");
     const combinatorRegex = new RegExp(
       `(?<subquery>\\w+)(?<combinator>${
-        Object.values(Combinator).join("|").replaceAll(" ", "\\s") // TODO: needs refinement
+        Object.values(Combinator).map(RegExp.escape).join("|")
       }|$)`,
+      "g",
     );
     while (
-      (rawSubquery = combinatorRegex.exec(rawQuery[0].replaceAll(/\s+/, " ")))
+      (rawSubquery = combinatorRegex.exec(selectorStatement)) !== null
     ) {
       const result = _parseSubqueryMatch(rawSubquery);
 
@@ -71,8 +74,17 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   const result: Partial<Selector> = {};
   const { combinator, subquery } = groups;
 
-  [result.tag] = subquery.match(TAG_REGEX) ?? [];
-  [result.id] = subquery.match(ID_REGEX) ?? [];
+  const [tagMatch] = subquery.match(TAG_REGEX) ?? [];
+
+  if (tagMatch) {
+    result.tag = tagMatch;
+  }
+
+  const [idMatch] = subquery.match(ID_REGEX) ?? [];
+
+  if (idMatch) {
+    result.id = idMatch;
+  }
 
   const [rawClassNames] = subquery.match(CLASS_REGEX) ?? [];
 
@@ -80,9 +92,13 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
     result.classNames = new Set(rawClassNames.split(/\s+/));
   }
 
-  result.attribute = _parseAttribute(
+  const parsedAttribute = _parseAttribute(
     subquery.match(ATTRIBUTE_BLOCK_REGEX) ?? [],
   );
+
+  if (parsedAttribute) {
+    result.attribute = parsedAttribute;
+  }
 
   if (!Object.keys(result).length) {
     throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);

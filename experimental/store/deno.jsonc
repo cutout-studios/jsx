@@ -1,13 +1,13 @@
 {
-  "name": "@cutout/store",
-  "imports": {
-    "@std/assert": "jsr:@std/assert",
-
-    "@cutout/internal": "../../internal/module.ts"
-  },
   "exports": {
     ".": "./module.ts",
-    "./selector": "./selector/module.ts",
-    "./backend": "./backend/module.ts"
-  }
+    "./backend": "./backend/module.ts",
+    "./selector": "./selector/module.ts"
+  },
+  "imports": {
+    "@cutout/internal": "../../internal/module.ts",
+    "@std/assert": "jsr:@std/assert",
+    "@std/testing": "jsr:@std/testing"
+  },
+  "name": "@cutout/store"
 }

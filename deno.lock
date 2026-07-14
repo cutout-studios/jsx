@@ -75,7 +75,8 @@
       },
       "experimental/store": {
         "dependencies": [
-          "jsr:@std/assert@*"
+          "jsr:@std/assert@*",
+          "jsr:@std/testing@*"
         ]
       },
       "jsx": {

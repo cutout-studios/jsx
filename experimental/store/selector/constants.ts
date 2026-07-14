@@ -5,7 +5,6 @@ export const ID_REGEX = /\#[-\w]+/;
 export const CLASS_REGEX = /\.[-\w]+/;
 export const ATTRIBUTE_BLOCK_REGEX = /\[(.+)\]/;
 
-// TODO: needs refinement
 export const ATTRIBUTE_SELECTOR_REGEX =
   /(?<key>\w+)(?<operator>[$~*^]?=)?(?<value>\w+)?(?<casing>\s[si])?/;
 

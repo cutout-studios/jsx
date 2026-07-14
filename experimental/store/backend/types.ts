@@ -1,5 +1,5 @@
 import type {
-CutoutBooleanToken,
+  CutoutBooleanToken,
   CutoutNullToken,
   CutoutPrimitiveToken,
   CutoutPromiseToken,

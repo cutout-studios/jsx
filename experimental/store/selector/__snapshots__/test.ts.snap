@@ -1,0 +1,400 @@
+export const snapshot = {};
+
+snapshot[`store/selector - parse 1`] = `
+[
+  {
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse 2`] = `
+[
+  {
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse 3`] = `
+[
+  {
+    classNames: Set(1) {
+      "className",
+    },
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse 4`] = `
+[
+  {
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse 5`] = `
+[
+  {
+    classNames: Set(1) {
+      "className",
+    },
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 1`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+    },
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 2`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+    },
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 3`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+    },
+    classNames: Set(1) {
+      "className",
+    },
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 4`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+      operator: "=",
+      value: "bar",
+    },
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 5`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+      operator: "~=",
+      value: "bar",
+    },
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 6`] = `
+[
+  {
+    attribute: {
+      caseSensitive: true,
+      key: "foo",
+      operator: "~=",
+      value: "bar",
+    },
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 7`] = `
+[
+  {
+    attribute: {
+      caseSensitive: false,
+      key: "foo",
+      operator: "~=",
+      value: "bar",
+    },
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 8`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+    },
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 9`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+    },
+    classNames: Set(1) {
+      "className",
+    },
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 10`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+      operator: "=",
+      value: "bar",
+    },
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, attributes 11`] = `
+[
+  {
+    attribute: {
+      key: "foo",
+      operator: "=",
+      value: "bar",
+    },
+    classNames: Set(1) {
+      "className",
+    },
+    id: "id",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, list 1`] = `
+[
+  {
+    tag: "div",
+  },
+  {
+    tag: "span",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, list 2`] = `
+[
+  {
+    id: "id",
+    tag: "div",
+  },
+  {
+    classNames: Set(1) {
+      "className",
+    },
+    tag: "span",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, list 3`] = `
+[
+  {
+    tag: "h1",
+  },
+  {
+    tag: "h2",
+  },
+  {
+    tag: "h3",
+  },
+  {
+    tag: "h4",
+  },
+  {
+    tag: "h5",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, list 4`] = `
+[
+  {
+    child: {
+      tag: "span",
+    },
+    combinator: ">",
+    tag: "div",
+  },
+  {
+    child: {
+      tag: "li",
+    },
+    combinator: "+",
+    tag: "span",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 1`] = `
+[
+  {
+    child: {
+      tag: "span",
+    },
+    combinator: " ",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 2`] = `
+[
+  {
+    child: {
+      tag: "span",
+    },
+    combinator: ">",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 3`] = `
+[
+  {
+    child: {
+      tag: "span",
+    },
+    combinator: ">",
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 4`] = `
+[
+  {
+    child: {
+      classNames: Set(1) {
+        "className",
+      },
+      tag: "span",
+    },
+    combinator: ">",
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 5`] = `
+[
+  {
+    child: {
+      child: {
+        id: "id",
+      },
+      combinator: ">",
+      tag: "span",
+    },
+    combinator: "+",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 6`] = `
+[
+  {
+    child: {
+      child: {
+        id: "id",
+      },
+      combinator: ">",
+      tag: "span",
+    },
+    combinator: "+",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 7`] = `
+[
+  {
+    child: {
+      child: {
+        id: "id",
+      },
+      combinator: ">",
+      tag: "span",
+    },
+    combinator: "+",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 8`] = `
+[
+  {
+    child: {
+      child: {
+        tag: "a",
+      },
+      classNames: Set(1) {
+        "className",
+      },
+      combinator: ">",
+      tag: "span",
+    },
+    combinator: "+",
+    id: "id",
+    tag: "div",
+  },
+]
+`;
+
+snapshot[`store/selector - parse, combinators 9`] = `
+[
+  {
+    child: {
+      child: {
+        attribute: {
+          key: "foo",
+          operator: "=",
+          value: "bar",
+        },
+        tag: "a",
+      },
+      classNames: Set(1) {
+        "className",
+      },
+      combinator: ">",
+      tag: "span",
+    },
+    combinator: "+",
+    id: "id",
+    tag: "div",
+  },
+]
+`;

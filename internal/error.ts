@@ -58,7 +58,7 @@ export class CutoutError extends Error {
     let file = this.#callsite.getFileName();
 
     if (file) {
-      // TODO(#62): replace Deno.cwd with root, which will default to Deno.cwd
+      // TODO: replace Deno.cwd with root, which will default to Deno.cwd
       file = relative(Deno.cwd(), file);
     }
 
