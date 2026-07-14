@@ -32,9 +32,7 @@ export const create = ({ backend }: Options): Store => {
 
     query(): CutoutJSXToken {
       // TODO: using indicies, load node id paths
-
       // TODO: convert paths back to jsx node(s)
-
       return <></>;
     },
   };

@@ -1,18 +1,24 @@
+import type {
+CutoutBooleanToken,
+  CutoutNullToken,
+  CutoutPrimitiveToken,
+  CutoutPromiseToken,
+} from "@cutout/jsx/tokens";
+
 type Awaitable<T> = T | Promise<T>;
 
-export type PathSegment = string | number | symbol;
-export type Path = PathSegment[];
+export type TokenSegment = CutoutPrimitiveToken;
+export type TokenPath = TokenSegment[];
 
-export type ScanOptions = {
+export type ListOptions = {
   limit?: number;
 };
 
 export interface Backend {
-  get(path: Path): Awaitable<PathSegment | undefined>;
-  scan(
-    prefix: Path,
-    options?: ScanOptions,
-  ): Awaitable<Generator<Awaitable<Path>>>;
-  add(path: Path): Awaitable<void>;
-  delete(path: Path): Awaitable<boolean>;
+  add(path: TokenPath): CutoutPromiseToken | CutoutNullToken;
+  list(
+    prefix: TokenPath,
+    options?: ListOptions,
+  ): Generator<TokenPath | CutoutPromiseToken> | undefined;
+  delete(path: TokenPath): CutoutPromiseToken | CutoutBooleanToken;
 }

@@ -1,26 +1,40 @@
-import type { Backend, Path, PathSegment, ScanOptions } from "./types.ts";
+import {
+  type CutoutBooleanToken,
+  type CutoutNullToken,
+  CutoutTokenType,
+} from "@cutout/jsx/tokens";
+import type { Backend, ListOptions, TokenPath, TokenSegment } from "./types.ts";
 
-type PathTrie = Map<PathSegment, PathTrie>;
+type SerializedPathTrie = Map<string, SerializedPathTrie>;
 
 export class MemoryBackend implements Backend {
-  constructor(paths: Path[]) {
+  constructor(paths: TokenPath[]) {
     for (const path of paths) {
       this.add(path);
     }
   }
-  get(path: Path): PathSegment | undefined {
-    const getRoot = this.#resolvePath(path);
 
-    if (getRoot?.size !== 1) return;
+  add(path: TokenPath): CutoutNullToken {
+    this.#scanCache.clear();
 
-    const [[value, valueTerminal]] = getRoot.entries().toArray();
+    let pointer = this.#pathTrie;
+    for (const segment of path) {
+      const segmentString = JSON.stringify(segment);
 
-    if (valueTerminal.size !== 0) return;
+      if (!pointer.has(segmentString)) {
+        pointer.set(segmentString, new Map());
+      }
 
-    return value;
+      pointer = pointer.get(segmentString) as SerializedPathTrie;
+    }
+
+    return [CutoutTokenType.NULL, null];
   }
 
-  scan(prefix: Path, { limit = 1 }: ScanOptions = {}): Generator<Path> {
+  list(
+    prefix: TokenPath,
+    { limit = 1 }: ListOptions = {},
+  ): Generator<TokenPath> | undefined {
     const options = { limit };
 
     const cacheKey = JSON.stringify([options, prefix]);
@@ -31,7 +45,7 @@ export class MemoryBackend implements Backend {
 
     const scanRoot = this.#resolvePath(prefix);
 
-    if (!scanRoot) return (function* () {})() as Generator<Path>;
+    if (!scanRoot) return;
 
     const result = this.#flatten(scanRoot, options);
 
@@ -42,44 +56,33 @@ export class MemoryBackend implements Backend {
     })();
   }
 
-  add(path: Path): void {
-    this.#scanCache.clear();
-
-    let pointer = this.#pathTrie;
-    for (const segment of path) {
-      if (!pointer.has(segment)) {
-        pointer.set(segment, new Map());
-      }
-
-      pointer = pointer.get(segment) as PathTrie;
-    }
-  }
-
-  delete(path: Path): boolean {
+  delete(path: TokenPath): CutoutBooleanToken {
     const [rootPath, terminalValue] = [path.slice(0, -1), path.at(-1)];
 
-    if (!rootPath.length || !terminalValue) return false;
+    if (!rootPath.length || !terminalValue) {
+      return [CutoutTokenType.BOOLEAN, false];
+    }
 
     const deleteRoot = this.#resolvePath(rootPath);
 
-    if (!deleteRoot) return false;
+    if (!deleteRoot) return [CutoutTokenType.BOOLEAN, false];
 
-    const deleteResult = deleteRoot.delete(terminalValue);
+    const deleteResult = deleteRoot.delete(JSON.stringify(terminalValue));
 
     if (deleteResult) {
       this.#scanCache.clear();
     }
 
-    return deleteResult;
+    return [CutoutTokenType.BOOLEAN, deleteResult];
   }
 
-  #pathTrie: PathTrie = new Map();
-  #resolvePath(path: Path): PathTrie | undefined {
+  #pathTrie: SerializedPathTrie = new Map();
+  #resolvePath(path: TokenPath): SerializedPathTrie | undefined {
     if (path.length === 0) return this.#pathTrie;
 
-    let pointer: PathTrie | undefined = this.#pathTrie;
+    let pointer: SerializedPathTrie | undefined = this.#pathTrie;
     for (const segment of path) {
-      pointer = pointer.get(segment);
+      pointer = pointer.get(JSON.stringify(segment));
 
       if (pointer === undefined) return;
     }
@@ -88,10 +91,13 @@ export class MemoryBackend implements Backend {
   }
 
   #scanCache = new Map();
-  #flatten(root: PathTrie, { limit }: { limit: number }): Path[] {
-    const result: Path[] = [];
+  #flatten(
+    root: SerializedPathTrie,
+    { limit }: { limit: number },
+  ): TokenPath[] {
+    const result: TokenPath[] = [];
 
-    const stack: [PathSegment[], PathTrie][] = [[[], root]];
+    const stack: [TokenSegment[], SerializedPathTrie][] = [[[], root]];
     while (stack.length) {
       const [currentKeyPath, currentSubtrie] = stack.pop() ?? [];
 
@@ -99,11 +105,11 @@ export class MemoryBackend implements Backend {
 
       for (const [key, value] of currentSubtrie.entries()) {
         if (value.size) {
-          stack.push([[...currentKeyPath, key], value]);
+          stack.push([[...currentKeyPath, JSON.parse(key)], value]);
           continue;
         }
 
-        result.push([...currentKeyPath, key]);
+        result.push([...currentKeyPath, JSON.parse(key)]);
 
         if (result.length === limit) return result;
       }

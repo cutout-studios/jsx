@@ -1,5 +1,5 @@
 export { MemoryBackend as CutoutMemoryBackend } from "./memory.ts";
 export type {
   Backend as CutoutBackend,
-  Path as CutoutBackendPath,
+  TokenPath as CutoutBackendPath,
 } from "./types.ts";
