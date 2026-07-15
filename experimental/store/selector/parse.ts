@@ -36,9 +36,7 @@ export const parse = (query: string): Selector[] => {
     let pointer: Selector | undefined;
     const selectorStatement = rawQuery[0].replaceAll(/\s+/g, " ");
     const combinatorRegex = new RegExp(
-      `(?<subquery>\\w+)(?<combinator>${
-        Object.values(Combinator).map(RegExp.escape).join("|")
-      }|$)`,
+      `(?<subquery>(?:\\[[^\\]]*\\]|[^\\s>+~|])+)\\s?(?<combinator>\\+|>|~|\\|\\||\\s)?\\s?`,
       "g",
     );
     while (
@@ -80,13 +78,13 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
     result.tag = tagMatch;
   }
 
-  const [idMatch] = subquery.match(ID_REGEX) ?? [];
+  const [, idMatch] = subquery.match(ID_REGEX) ?? [];
 
   if (idMatch) {
     result.id = idMatch;
   }
 
-  const [rawClassNames] = subquery.match(CLASS_REGEX) ?? [];
+  const [, rawClassNames] = subquery.match(CLASS_REGEX) ?? [];
 
   if (rawClassNames) {
     result.classNames = new Set(rawClassNames.split(/\s+/));
@@ -103,6 +101,8 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   if (!Object.keys(result).length) {
     throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
   }
+
+  console.log({ combinator });
 
   if (_isCombinator(combinator)) {
     result.combinator = combinator;
@@ -127,11 +127,15 @@ function _parseAttribute(
 
   if (!key) return;
 
-  const result: AttributeSelector = {
-    key,
-    value,
-    caseSensitive: casing === "s",
-  };
+  const result: AttributeSelector = { key };
+
+  if (value) {
+    result.value = value.replace(/^["']|["']$/g, "");
+  }
+
+  if (casing) {
+    result.caseSensitive = casing === "s";
+  }
 
   if (_isAttributeOperator(operator)) {
     result.operator = operator;

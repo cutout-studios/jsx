@@ -1,7 +1,9 @@
+import { readEnv } from "./readEnv.ts";
+
+export const PROJECT_ROOT = readEnv("PROJECT_ROOT", Deno.cwd());
+
 export const CALLSITE_INDEX = 0;
 export const CALLSITE_PARENT_INDEX = 1;
-export const CALLSITE_OVERWRITTEN_MESSAGE =
-  "@cutout.internal: `Error.prepareStackTrace` temporarily overwritten by `V8CallSite`.";
 
 /**
  * Canonical CutoutError error codes.

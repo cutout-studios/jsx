@@ -1,5 +1,4 @@
-import { relative } from "@std/path";
-import { V8CallSite } from "./callsite.ts";
+import type { CallSite } from "./types.ts";
 import {
   ERROR_CODE_MESSAGES,
   ERROR_CONTEXT_MAX_SIZE,
@@ -7,7 +6,9 @@ import {
   ERROR_CONTEXT_TRUNCATION_CHARACTER,
   ERROR_GUIDANCE_MISSING_MESSAGE,
   ErrorCode,
+  PROJECT_ROOT,
 } from "./constants.ts";
+import { captureCallSite } from "./callsite.ts";
 
 /** @internal */
 export type CutoutErrorCallsite = {
@@ -43,7 +44,7 @@ export class CutoutError extends Error {
 
     this.name = "CutoutError";
     this.code = code;
-    this.#callsite = new V8CallSite();
+    this.#callsite = captureCallSite();
     this.#context = context;
     this.#guidance = guidance;
   }
@@ -58,8 +59,9 @@ export class CutoutError extends Error {
     let file = this.#callsite.getFileName();
 
     if (file) {
-      // TODO: replace Deno.cwd with root, which will default to Deno.cwd
-      file = relative(Deno.cwd(), file);
+      file = file.startsWith(PROJECT_ROOT)
+        ? file.slice(PROJECT_ROOT.length + 1)
+        : file;
     }
 
     return {
@@ -97,7 +99,7 @@ export class CutoutError extends Error {
     return this.#guidance?.trim() || ERROR_GUIDANCE_MISSING_MESSAGE;
   }
 
-  #callsite?: V8CallSite;
+  #callsite?: CallSite;
   #context?: unknown;
   #guidance?: string;
 }

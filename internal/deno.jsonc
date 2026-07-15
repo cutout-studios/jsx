@@ -4,9 +4,6 @@
     ".": "./module.ts"
   },
   "imports": {
-    "@std/assert": "jsr:@std/assert",
-    "@std/data-structures": "jsr:@std/data-structures",
-    "@std/dotenv": "jsr:@std/dotenv@^0.225.7",
-    "@std/path": "jsr:@std/path"
+    "@std/assert": "jsr:@std/assert"
   }
 }
