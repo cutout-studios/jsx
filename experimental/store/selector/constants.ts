@@ -1,4 +1,4 @@
-export const TAG_REGEX = /^\w[-\w]+/;
+export const TAG_REGEX = /^\w[-\w]*/;
 
 // ISSUE(#): these can contain CSS.escape()'d characters, technically
 export const ID_REGEX = /\#([-\w]+)/;
