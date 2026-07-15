@@ -18,7 +18,7 @@ Deno.test(`${TEST_MODULE} - parse, attributes`, async (test) => {
   await assertSnapshot(test, parse("[foo='bar']"));
   await assertSnapshot(test, parse("[foo~='bar']"));
   await assertSnapshot(test, parse("[foo~='bar' s]"));
-  await assertSnapshot(test, parse("[foo~='bar' i]"));
+  await assertSnapshot(test, parse("[foo~=bar i]"));
   await assertSnapshot(test, parse("[foo]#id"));
   await assertSnapshot(test, parse("[foo]#id.className"));
   await assertSnapshot(test, parse("[foo='bar']#id"));

@@ -36,7 +36,8 @@ export const parse = (query: string): Selector[] => {
     let pointer: Selector | undefined;
     const selectorStatement = rawQuery[0].replaceAll(/\s+/g, " ");
     const combinatorRegex = new RegExp(
-      `(?<subquery>(?:\\[[^\\]]*\\]|[^\\s>+~|])+)\\s?(?<combinator>\\+|>|~|\\|\\||\\s)?\\s?`,
+      String
+        .raw`(?<subquery>(?:\[[^\]]*\]|[^\s>+~|])+)(?<combinator>\s*(?:\+|>|~|\|\|)\s*|\s+)?`,
       "g",
     );
     while (
@@ -70,7 +71,10 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   }
 
   const result: Partial<Selector> = {};
-  const { combinator, subquery } = groups;
+  const { combinator: rawCombinator, subquery } = groups;
+
+  const combinator = rawCombinator?.trim() ||
+    (rawCombinator ? Combinator.DESCENDANT : undefined);
 
   const [tagMatch] = subquery.match(TAG_REGEX) ?? [];
 
@@ -101,8 +105,6 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   if (!Object.keys(result).length) {
     throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
   }
-
-  console.log({ combinator });
 
   if (_isCombinator(combinator)) {
     result.combinator = combinator;
