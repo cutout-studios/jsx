@@ -4,144 +4,82 @@ import {
   enumGuardFactory,
 } from "@cutout/internal";
 
-import {
-  ATTRIBUTE_BLOCK_REGEX,
-  ATTRIBUTE_SELECTOR_REGEX,
-  AttributeOperator,
-  CLASS_REGEX,
-  Combinator,
-  ID_REGEX,
-  TAG_REGEX,
-} from "./constants.ts";
+import { AttributeOperator, Combinator } from "./constants.ts";
 import type { AttributeSelector, Selector } from "./types.ts";
 
 export const parse = (query: string): Selector[] => {
-  if (query.includes(":")) {
+  if (/[:@]/.test(query)) {
     throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
   }
 
-  if (query.includes("@")) {
-    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
-  }
+  const listRegex = /([^,]+)(?:,|$)/g;
+  const combinatorRegex =
+    /(?<s>(?:\[[^\]]*\]|[^\s>+~|])+)(?<c>\s*(?:\+|>|~|\|\|)\s*|\s+)?/g;
 
-  let rawQuery;
-  const listRegex = new RegExp(
-    `([^${Combinator.LIST}]+)(?:${Combinator.LIST}|$)`,
-    "g",
-  );
   const selectors: Selector[] = [];
+  let rawQuery: RegExpExecArray | null;
+
   while ((rawQuery = listRegex.exec(query)) !== null) {
-    let rawSubquery;
+    const statement = rawQuery[0].replaceAll(/\s+/g, " ");
     let root: Selector | undefined;
     let pointer: Selector | undefined;
-    const selectorStatement = rawQuery[0].replaceAll(/\s+/g, " ");
-    const combinatorRegex = new RegExp(
-      String
-        .raw`(?<subquery>(?:\[[^\]]*\]|[^\s>+~|])+)(?<combinator>\s*(?:\+|>|~|\|\|)\s*|\s+)?`,
-      "g",
-    );
-    while (
-      (rawSubquery = combinatorRegex.exec(selectorStatement)) !== null
-    ) {
+    let rawSubquery: RegExpExecArray | null;
+
+    while ((rawSubquery = combinatorRegex.exec(statement)) !== null) {
       const result = _parseSubqueryMatch(rawSubquery);
-
-      if (!root && !pointer) {
-        root = result;
-        pointer = root;
-      } else {
-        pointer!.child = result;
-        pointer = pointer!.child;
-      }
+      pointer = pointer ? (pointer.child = result) : (root = result);
     }
 
-    if (!root) {
-      throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
-    }
-
+    if (!root) throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
     selectors.push(root);
   }
 
   return selectors;
 };
 
+// ISSUE(#): these can contain CSS.escape()'d characters, technically
 const _isCombinator = enumGuardFactory(Combinator);
 function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
-  if (!groups) {
-    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
-  }
-
-  const result: Partial<Selector> = {};
-  const { combinator: rawCombinator, subquery } = groups;
-
+  const { c: rawCombinator, s: subquery } = groups!;
   const combinator = rawCombinator?.trim() ||
     (rawCombinator ? Combinator.DESCENDANT : undefined);
 
-  const [tagMatch] = subquery.match(TAG_REGEX) ?? [];
+  const result: Partial<Selector> = {};
+  let piece: RegExpExecArray | null;
 
-  if (tagMatch) {
-    result.tag = tagMatch;
+  const subqueryRegex =
+    /(?<t>[a-z][\w-]*)|#(?<i>[\w-]+)|\.(?<c>[\w-]+)|(?<a>\[[^\]]*\])/giy;
+
+  while ((piece = subqueryRegex.exec(subquery)) !== null) {
+    const { t: tag, i: id, c: className, a: attribute } = piece.groups!;
+    if (tag) result.tag = tag;
+    else if (id) result.id = id;
+    else if (className) (result.classNames ??= new Set()).add(className);
+    else if (attribute) {
+      const parsed = _parseAttribute(attribute);
+      if (parsed) result.attribute = parsed;
+    }
   }
 
-  const [, idMatch] = subquery.match(ID_REGEX) ?? [];
-
-  if (idMatch) {
-    result.id = idMatch;
-  }
-
-  const [, rawClassNames] = subquery.match(CLASS_REGEX) ?? [];
-
-  if (rawClassNames) {
-    result.classNames = new Set(rawClassNames.split(/\s+/));
-  }
-
-  const parsedAttribute = _parseAttribute(
-    subquery.match(ATTRIBUTE_BLOCK_REGEX) ?? [],
-  );
-
-  if (parsedAttribute) {
-    result.attribute = parsedAttribute;
-  }
-
-  if (!Object.keys(result).length) {
-    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
-  }
-
-  if (_isCombinator(combinator)) {
-    result.combinator = combinator;
-  } else if (combinator) {
-    throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
-  }
+  if (_isCombinator(combinator)) result.combinator = combinator;
+  else if (combinator) throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
 
   return result as Selector;
 }
 
 const _isAttributeOperator = enumGuardFactory(AttributeOperator);
 function _parseAttribute(
-  [rawAttributeText]: RegExpMatchArray | [],
+  rawAttributeText: string,
 ): AttributeSelector | undefined {
-  if (!rawAttributeText) return;
-
-  const attributeMatch = rawAttributeText.match(ATTRIBUTE_SELECTOR_REGEX);
-
+  const attributeMatch = rawAttributeText.match(
+    /(?<k>[-\w]+)(?<o>[$~*^|]?=)?(?<v>"[^"]*"|'[^']*'|[-\w]+)?(?:\s+(?<c>[si]))?/,
+  );
   if (!attributeMatch?.groups) return;
-
-  const { key, value, operator, casing } = attributeMatch.groups;
-
+  const { k: key, v: value, o: operator, c: casing } = attributeMatch.groups;
   if (!key) return;
-
   const result: AttributeSelector = { key };
-
-  if (value) {
-    result.value = value.replace(/^["']|["']$/g, "");
-  }
-
-  if (casing) {
-    result.caseSensitive = casing === "s";
-  }
-
-  if (_isAttributeOperator(operator)) {
-    result.operator = operator;
-  }
-
+  if (value) result.value = value.replace(/^["']|["']$/g, "");
+  if (casing) result.caseSensitive = casing === "s";
+  if (_isAttributeOperator(operator)) result.operator = operator;
   return result;
 }
