@@ -3,11 +3,10 @@ import type {
   CutoutNullToken,
   CutoutPrimitiveToken,
   CutoutPromiseToken,
+  CutoutSyntaxToken,
 } from "@cutout/jsx/tokens";
 
-type Awaitable<T> = T | Promise<T>;
-
-export type TokenSegment = CutoutPrimitiveToken;
+export type TokenSegment = CutoutPrimitiveToken | CutoutSyntaxToken;
 export type TokenPath = TokenSegment[];
 
 export type ListOptions = {
@@ -21,5 +20,4 @@ export interface Backend {
     options?: ListOptions,
   ): Generator<TokenPath | CutoutPromiseToken> | undefined;
   delete(path: TokenPath): CutoutPromiseToken | CutoutBooleanToken;
-  // commit?();
 }

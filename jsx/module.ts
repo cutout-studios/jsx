@@ -14,7 +14,7 @@ import {
   CUTOUT_UNSERIALIZABLE_LABEL,
   type CutoutAttributeToken,
   type CutoutElementCloseToken,
-  type CutoutElementOpenToken,
+  type CutoutElementToken,
   type CutoutJSXToken,
   type CutoutOutputToken,
   CutoutTokenType,
@@ -100,7 +100,7 @@ export const jsx = (
 
     // 3. Otherwise, we've hit an intrinsic element.
     // => 3.1. Yield the opening tag.
-    yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementOpenToken;
+    yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementToken;
 
     // => 3.2. Yield all non-child attributes.
     for (const key in attributes) {

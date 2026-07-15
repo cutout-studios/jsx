@@ -179,7 +179,7 @@ export type PromiseToken = AnyToken<TokenType.PROMISE, Promise<ValidToken>>;
  * Elements, attributes, and the like.
  */
 export type SyntaxToken =
-  | ElementOpenToken
+  | ElementToken
   | ElementCloseToken
   | AttributeToken;
 
@@ -187,7 +187,7 @@ export type SyntaxToken =
  * A token representing the opening of a JSX element.
  * The value is the tag name (e.g., "div", "MyComponent").
  */
-export type ElementOpenToken = AnyToken<
+export type ElementToken = AnyToken<
   TokenType.ELEMENT_OPEN,
   string
 >;

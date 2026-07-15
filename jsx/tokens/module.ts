@@ -12,7 +12,7 @@ export type {
   AttributeToken as CutoutAttributeToken,
   BooleanToken as CutoutBooleanToken,
   ElementCloseToken as CutoutElementCloseToken,
-  ElementOpenToken as CutoutElementOpenToken,
+  ElementToken as CutoutElementToken,
   FunctionToken as CutoutFunctionToken,
   JSXGeneratorToken as CutoutJSXToken,
   NullToken as CutoutNullToken,
