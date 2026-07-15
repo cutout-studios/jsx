@@ -1,5 +1,5 @@
-import type { CallSite } from "./types.ts";
 import { CALLSITE_INDEX, CALLSITE_PARENT_INDEX } from "./constants.ts";
+import type { CallSite } from "./types.ts";
 
 /**
  * @internal

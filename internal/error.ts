@@ -1,4 +1,4 @@
-import type { CallSite } from "./types.ts";
+import { captureCallSite } from "./callsite.ts";
 import {
   ERROR_CODE_MESSAGES,
   ERROR_CONTEXT_MAX_SIZE,
@@ -8,7 +8,7 @@ import {
   ErrorCode,
   PROJECT_ROOT,
 } from "./constants.ts";
-import { captureCallSite } from "./callsite.ts";
+import type { CallSite } from "./types.ts";
 
 /** @internal */
 export type CutoutErrorCallsite = {
