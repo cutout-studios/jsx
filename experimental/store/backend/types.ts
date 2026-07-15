@@ -21,4 +21,5 @@ export interface Backend {
     options?: ListOptions,
   ): Generator<TokenPath | CutoutPromiseToken> | undefined;
   delete(path: TokenPath): CutoutPromiseToken | CutoutBooleanToken;
+  // commit?();
 }
