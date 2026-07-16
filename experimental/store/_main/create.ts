@@ -12,8 +12,14 @@ import {
   tokenizeValue,
 } from "@cutout/jsx/tokens";
 import type { CutoutBackend } from "@cutout/store/backend";
+import type { CutoutStoreSelector } from "@cutout/store/selector";
 
-import { ROOT_SNAPSHOT_TOKEN } from "./constants.ts";
+import {
+  INDEX_ATTRIBUTES_TOKEN,
+  INDEX_SNAPSHOTS_TOKEN,
+  INDEX_TAGS_TOKEN,
+  ROOT_SNAPSHOT_TOKEN,
+} from "./constants.ts";
 import { getIdentifierTokenFactory } from "./identifier.ts";
 import { addAttributePath, addChildPath, addTagPath } from "./paths.ts";
 import type { Store } from "./types.ts";
@@ -104,9 +110,85 @@ export const create = ({ backend }: Options): Store => {
         }
       }
     },
-    // TODO
-    select() {
-      return <span></span>;
+    select(selectors: CutoutStoreSelector[]): CutoutJSXToken[] {
+      let resultSet = new Set<Uint8Array<ArrayBuffer>>();
+      for (const selector of selectors) {
+        let selectorSet;
+        if (selector.combinator || selector.parent) {
+          throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+        }
+
+        if (selector.attributes) {
+          for (
+            const { key, value, operator, caseSensitive } of selector.attributes
+          ) {
+            if (operator || value || caseSensitive !== undefined) {
+              throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+            }
+
+            const attibuteSet = new Set<Uint8Array<ArrayBuffer>>();
+            for (
+              const path of backend.list([INDEX_ATTRIBUTES_TOKEN, key]) ?? []
+            ) {
+              const [, snapshotId] = path.at(
+                -1,
+              ) as CutoutIdentifierToken;
+
+              attibuteSet.add(snapshotId);
+            }
+            selectorSet = selectorSet
+              ? intersect(selectorSet, attibuteSet)
+              : attibuteSet;
+          }
+        }
+
+        if (selector.tag) {
+          const tagSet = new Set<Uint8Array<ArrayBuffer>>();
+          for (
+            const path of backend.list([INDEX_TAGS_TOKEN, selector.tag]) ?? []
+          ) {
+            const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
+
+            tagSet.add(snapshotId);
+          }
+          selectorSet = selectorSet ? intersect(selectorSet, tagSet) : tagSet;
+        }
+
+        resultSet = selectorSet ? union(resultSet, selectorSet) : resultSet;
+      }
+
+      return Array.from(resultSet).map((snapshotId) => {
+        const nodePaths = backend.list([INDEX_SNAPSHOTS_TOKEN, [
+          CutoutTokenType.IDENTIFIER,
+          snapshotId,
+        ]]);
+
+        return [
+          CutoutTokenType.GENERATOR,
+          function* () {
+            // TODO: generate node paths
+          },
+        ];
+      });
     },
   };
 };
+
+function intersect<T>(left: Set<T>, right: Set<T>): Set<T> {
+  const result = new Set<T>();
+
+  const [smallerSet, largerSet] = left.size < right.size
+    ? [left, right]
+    : [right, left];
+  for (const item of smallerSet) {
+    if (largerSet.has(item)) {
+      result.add(item);
+    }
+  }
+
+  return result;
+}
+
+function union<T>(left: Set<T>, right: Set<T>): Set<T> {
+  return new Set([...left, ...right]);
+}

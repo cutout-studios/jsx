@@ -7,6 +7,7 @@ import {
 import { AttributeOperator, Combinator } from "./constants.ts";
 import type { AttributeSelector, Selector } from "./types.ts";
 
+// TODO: update to return tokens, right-most first
 export const parse = (query: string): Selector[] => {
   if (/[:@]/.test(query)) {
     throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);

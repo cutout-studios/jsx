@@ -5,7 +5,7 @@ import { CutoutMemoryBackend } from "@cutout/store/backend";
 import { parseSelector } from "@cutout/store/selector";
 import { assertSnapshot } from "@std/testing/snapshot";
 
-import { create } from "./create.tsx";
+import { create } from "./create.ts";
 
 const TEST_MODULE = "store";
 
@@ -23,7 +23,7 @@ Deno.test(TEST_MODULE, async (test) => {
     </>,
   );
 
-  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
+  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))[0]));
 
   store.append(
     <user id={1}>
@@ -31,5 +31,5 @@ Deno.test(TEST_MODULE, async (test) => {
     </user>,
   );
 
-  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
+  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))[0]));
 });

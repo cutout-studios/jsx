@@ -1,3 +1,8 @@
+import type {
+  CutoutAttributeToken,
+  CutoutElementToken,
+  CutoutStringToken,
+} from "@cutout/jsx/tokens";
 import type { AttributeOperator, Combinator } from "./constants.ts";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> =
@@ -6,19 +11,17 @@ type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> =
 
 export type Selector =
   & AtLeastOne<{
-    tag: string;
-    id: string;
-    classNames: Set<string>;
-    attribute: AttributeSelector;
+    tag: CutoutElementToken;
+    attributes: AttributeSelector[];
   }>
   & {
     combinator?: Combinator;
-    child?: Selector;
+    parent?: Selector;
   };
 
 export type AttributeSelector = {
-  key: string;
-  value?: string;
+  key: CutoutAttributeToken;
+  value?: CutoutStringToken;
   operator?: AttributeOperator;
   caseSensitive?: boolean;
 };
