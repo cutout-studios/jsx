@@ -22,7 +22,7 @@ import {
 } from "./constants.ts";
 import { getIdentifierTokenFactory } from "./identifier.ts";
 import { addAttributePath, addChildPath, addTagPath } from "./paths.ts";
-import type { Store } from "./types.ts";
+import type { SelectionOptions, Store } from "./types.ts";
 
 type Options = {
   backend: CutoutBackend;
@@ -118,14 +118,19 @@ export const create = ({ backend }: Options): Store => {
         }
       }
     },
-    select(selectors: CutoutStoreSelector[]): CutoutJSXToken[] {
-      let resultSet = new Set<string>();
+    select(
+      selectors: CutoutStoreSelector[],
+      { limit = 1 }: SelectionOptions,
+    ): CutoutJSXToken[] {
+      const [encoder, decoder] = [new TextEncoder(), new TextDecoder()];
+      const resultSet = new Set<string>();
       for (const selector of selectors) {
         let selectorSet;
         if (selector.combinator || selector.child) {
           throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
         }
 
+        // TODO: order from most to least specific
         if (selector.attributes) {
           for (
             const { key, value, operator, caseSensitive } of selector.attributes
@@ -147,8 +152,10 @@ export const create = ({ backend }: Options): Store => {
                 -1,
               ) as CutoutIdentifierToken;
 
-              attibuteSet.add(JSON.stringify(snapshotId));
+              attibuteSet.add(decoder.decode(snapshotId));
             }
+
+            // TODO: 'has' instead of intersect?
             selectorSet = selectorSet
               ? intersect(selectorSet, attibuteSet)
               : attibuteSet;
@@ -162,20 +169,23 @@ export const create = ({ backend }: Options): Store => {
           ) {
             const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
 
-            tagSet.add(JSON.stringify(snapshotId));
+            tagSet.add(decoder.decode(snapshotId));
           }
           selectorSet = selectorSet ? intersect(selectorSet, tagSet) : tagSet;
         }
 
-        resultSet = selectorSet ? union(resultSet, selectorSet) : resultSet;
+        if (selectorSet) {
+          for (const element of selectorSet) {
+            resultSet.add(element);
+          }
+        }
       }
 
-      // Only return the most recent result (e.g. limit is 1 until ISSUE(#98))
-      return Array.from(resultSet).slice(0, 1).map((snapshotId) => {
+      return Array.from(resultSet).slice(limit * -1).map((snapshotId) => {
         // TODO: get the whole tree
         const nodePaths = backend.list([INDEX_SNAPSHOTS_TOKEN, [
           CutoutTokenType.IDENTIFIER,
-          JSON.parse(snapshotId),
+          encoder.encode(snapshotId),
         ]]);
 
         return [
@@ -202,8 +212,4 @@ function intersect<T>(left: Set<T>, right: Set<T>): Set<T> {
   }
 
   return result;
-}
-
-function union<T>(left: Set<T>, right: Set<T>): Set<T> {
-  return new Set([...left, ...right]);
 }

@@ -2,6 +2,7 @@ import {
   type CutoutBooleanToken,
   type CutoutNullToken,
   CutoutTokenType,
+  tokenizeValue,
 } from "@cutout/jsx/tokens";
 import type { Backend, ListOptions, TokenPath, TokenSegment } from "./types.ts";
 
@@ -12,6 +13,12 @@ export class MemoryBackend implements Backend {
     for (const path of paths ?? []) {
       this.add(path);
     }
+  }
+
+  has(path: TokenPath): CutoutBooleanToken {
+    return tokenizeValue(
+      Boolean(this.#resolvePath(path)),
+    ) as CutoutBooleanToken;
   }
 
   add(path: TokenPath): CutoutNullToken {
