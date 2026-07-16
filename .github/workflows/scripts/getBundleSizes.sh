@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+size() { deno bundle --minify "$@" 2>/dev/null | brotli -q 11 -c | wc -c | tr -d ' '; }
+
+core=$(size internal/module.ts)
+
+printf '%8s B  %s\n' "$core" "internal/module.ts"
+
+entrypoints=(
+  experimental/store/backend/module.ts
+  experimental/store/selector/module.ts
+  experimental/store/module.ts
+  jsx/tokens/module.ts
+  jsx/projections/module.ts
+  jsx/module.ts
+)
+
+for m in "${entrypoints[@]}"; do
+  s=$(size "$m" --external @cutout/internal)
+  printf '%8s B  %s\n' "$s" "$m"
+done
