@@ -70,9 +70,19 @@ export const isOutputToken = (
   return false;
 };
 
-// TODO
 export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
-  return true;
+  if (!isOutputToken(value)) {
+    return false;
+  }
+
+  return [
+    TokenType.BOOLEAN,
+    TokenType.NULL,
+    TokenType.NUMBER,
+    TokenType.STRING,
+    TokenType.SYMBOL,
+    TokenType.UNDEFINED,
+  ].includes(value[TOKEN_TYPE_INDEX]);
 };
 
 /**

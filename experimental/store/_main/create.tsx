@@ -7,10 +7,13 @@ import {
   type CutoutAttributeToken,
   type CutoutIdentifierToken,
   type CutoutJSXToken,
+  type CutoutNumberToken,
   CutoutTokenType,
+  tokenizeValue,
 } from "@cutout/jsx/tokens";
 import type { CutoutBackend } from "@cutout/store/backend";
 
+import { ROOT_SNAPSHOT_TOKEN } from "./constants.ts";
 import { getIdentifierTokenFactory } from "./identifier.ts";
 import { addAttributePath, addChildPath, addTagPath } from "./paths.ts";
 import type { Store } from "./types.ts";
@@ -19,24 +22,39 @@ type Options = {
   backend: CutoutBackend;
 };
 
+type SnapshotTracker = [CutoutIdentifierToken, CutoutNumberToken];
+
+const TRACKER_SNAPSHOT_INDEX = 0;
+const TRACKER_RANK_INDEX = 1;
+
+const makeTracker = (
+  snapshot: CutoutIdentifierToken,
+): SnapshotTracker => [snapshot, tokenizeValue(0) as CutoutNumberToken];
+
 export const create = ({ backend }: Options): Store => {
   const getSnapshotToken = getIdentifierTokenFactory();
 
   return {
     append(jsx: CutoutJSXToken) {
-      // TODO: handle children
-      const snapshotStack: [CutoutIdentifierToken, number][] = [];
       let attributePointer: CutoutAttributeToken | null = null;
+      const rootTracker = makeTracker(ROOT_SNAPSHOT_TOKEN);
+      const trackerStack: SnapshotTracker[] = [];
       for (const token of jsx[CUTOUT_TOKEN_VALUE_INDEX]()) {
-        const parent = snapshotStack.at(-1);
+        const parentTracker = trackerStack.at(-1) ?? rootTracker;
         switch (token[CUTOUT_TOKEN_TYPE_INDEX]) {
           case CutoutTokenType.ELEMENT_OPEN: {
             const snapshot = getSnapshotToken();
 
             addTagPath(backend, { snapshot, tag: token });
-            addChildPath(backend, { snapshot, parent /* TODO */ });
+            addChildPath(backend, {
+              child: snapshot,
+              parent: parentTracker[TRACKER_SNAPSHOT_INDEX],
+              rank: parentTracker[TRACKER_RANK_INDEX],
+            });
 
-            snapshotStack.push([snapshot, 0]);
+            parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_VALUE_INDEX]++;
+
+            trackerStack.push(makeTracker(snapshot));
             attributePointer = null;
             break;
           }
@@ -44,7 +62,7 @@ export const create = ({ backend }: Options): Store => {
             attributePointer = token;
             break;
           case CutoutTokenType.ELEMENT_CLOSE:
-            snapshotStack.pop();
+            trackerStack.pop();
             /* falls through */
           case CutoutTokenType.UNDEFINED:
             attributePointer = null;
@@ -56,7 +74,7 @@ export const create = ({ backend }: Options): Store => {
           case CutoutTokenType.ARRAY:
           case CutoutTokenType.OBJECT:
           case CutoutTokenType.NULL:
-            if (!parent) {
+            if (!parentTracker) {
               throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
             }
 
@@ -64,7 +82,7 @@ export const create = ({ backend }: Options): Store => {
               addAttributePath(
                 backend,
                 {
-                  snapshot: parent[0],
+                  snapshot: parentTracker[0],
                   attributeKey: attributePointer,
                   attributeValue: token,
                 },
@@ -73,7 +91,11 @@ export const create = ({ backend }: Options): Store => {
               break;
             }
 
-            addChildPath(backend, {/* TODO */});
+            // TODO: create "tagless node"...
+            addChildPath(backend, {
+              parent: parentTracker[TRACKER_SNAPSHOT_INDEX],
+              rank: parentTracker[TRACKER_RANK_INDEX],
+            });
             break;
           case CutoutTokenType.PROMISE:
             throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);

@@ -1,17 +1,24 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/internal";
 import {
+  CUTOUT_TOKEN_VALUE_INDEX,
   type CutoutAttributeToken,
   type CutoutElementToken,
   type CutoutIdentifierToken,
+  type CutoutNumberToken,
   type CutoutOutputToken,
+  type CutoutStringToken,
   isPrimitiveToken,
+  tokenizeValue,
 } from "@cutout/jsx/tokens";
 import type { CutoutBackend } from "@cutout/store/backend";
 
 import {
   INDEX_ATTRIBUTES_TOKEN,
+  INDEX_CHILDREN_TOKEN,
+  INDEX_PARENT_TOKEN,
   INDEX_SNAPSHOTS_TOKEN,
   INDEX_TAGS_TOKEN,
+  ROOT_SNAPSHOT_TOKEN,
 } from "./constants.ts";
 
 export function addTagPath(
@@ -49,7 +56,11 @@ export function addAttributePath(
     backend.add([
       INDEX_ATTRIBUTES_TOKEN,
       attributeKey,
-      attributeValue, // TODO: stringify, to match selector
+      // Attribute values must be stringified in the reverse lookup so we can properly match them
+      // with the Store Selector.
+      tokenizeValue(
+        String(attributeValue[CUTOUT_TOKEN_VALUE_INDEX]),
+      ) as CutoutStringToken,
       snapshot,
     ]);
     return;
@@ -59,6 +70,27 @@ export function addAttributePath(
   throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
 }
 
-export function addChildPath(backend: CutoutBackend, {}) {
-  // TODO
+export function addChildPath(
+  backend: CutoutBackend,
+  { parent = ROOT_SNAPSHOT_TOKEN, child, rank }: {
+    parent?: CutoutIdentifierToken;
+    child: CutoutIdentifierToken;
+    rank: CutoutNumberToken;
+  },
+) {
+  backend.add([
+    INDEX_SNAPSHOTS_TOKEN,
+    parent,
+    INDEX_CHILDREN_TOKEN,
+    rank,
+    child,
+  ]);
+
+  backend.add([
+    INDEX_SNAPSHOTS_TOKEN,
+    child,
+    INDEX_PARENT_TOKEN,
+    parent,
+    rank,
+  ]);
 }
