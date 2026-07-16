@@ -114,7 +114,7 @@ export const create = ({ backend }: Options): Store => {
       let resultSet = new Set<Uint8Array<ArrayBuffer>>();
       for (const selector of selectors) {
         let selectorSet;
-        if (selector.combinator || selector.parent) {
+        if (selector.combinator || selector.child) {
           throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
         }
 
@@ -122,6 +122,7 @@ export const create = ({ backend }: Options): Store => {
           for (
             const { key, value, operator, caseSensitive } of selector.attributes
           ) {
+            // ISSUE(#100): properly resolve CSS combinators and attribute comparators
             if (operator || value || caseSensitive !== undefined) {
               throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
             }

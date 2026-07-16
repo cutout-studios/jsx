@@ -3,11 +3,15 @@ import {
   CutoutErrorCode,
   enumGuardFactory,
 } from "@cutout/internal";
+import {
+  type CutoutStringToken,
+  CutoutTokenType,
+  tokenizeValue,
+} from "@cutout/jsx/tokens";
 
 import { AttributeOperator, Combinator } from "./constants.ts";
 import type { AttributeSelector, Selector } from "./types.ts";
 
-// TODO: update to return tokens, right-most first
 export const parse = (query: string): Selector[] => {
   if (/[:@]/.test(query)) {
     throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
@@ -26,6 +30,7 @@ export const parse = (query: string): Selector[] => {
     let pointer: Selector | undefined;
     let rawSubquery: RegExpExecArray | null;
 
+    // ISSUE(#100): properly resolve CSS combinators (right-most first)
     while ((rawSubquery = combinatorRegex.exec(statement)) !== null) {
       const result = _parseSubqueryMatch(rawSubquery);
       pointer = pointer ? (pointer.child = result) : (root = result);
@@ -45,7 +50,7 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   const combinator = rawCombinator?.trim() ||
     (rawCombinator ? Combinator.DESCENDANT : undefined);
 
-  const result: Partial<Selector> = {};
+  const result: Selector = { attributes: [] };
   let piece: RegExpExecArray | null;
 
   const subqueryRegex =
@@ -53,19 +58,27 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
 
   while ((piece = subqueryRegex.exec(subquery)) !== null) {
     const { t: tag, i: id, c: className, a: attribute } = piece.groups!;
-    if (tag) result.tag = tag;
-    else if (id) result.id = id;
-    else if (className) (result.classNames ??= new Set()).add(className);
-    else if (attribute) {
+    if (tag) result.tag = [CutoutTokenType.ELEMENT_OPEN, tag];
+    else if (id) {
+      result.attributes.push({
+        key: [CutoutTokenType.ATTRIBUTE, "id"],
+        value: [CutoutTokenType.STRING, id],
+      });
+    } else if (className) {
+      result.attributes.push({
+        key: [CutoutTokenType.ATTRIBUTE, "class"],
+        value: [CutoutTokenType.STRING, className],
+      });
+    } else if (attribute) {
       const parsed = _parseAttribute(attribute);
-      if (parsed) result.attribute = parsed;
+      if (parsed) result.attributes.push(parsed);
     }
   }
 
   if (_isCombinator(combinator)) result.combinator = combinator;
   else if (combinator) throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
 
-  return result as Selector;
+  return result;
 }
 
 const _isAttributeOperator = enumGuardFactory(AttributeOperator);
@@ -78,8 +91,12 @@ function _parseAttribute(
   if (!attributeMatch?.groups) return;
   const { k: key, v: value, o: operator, c: casing } = attributeMatch.groups;
   if (!key) return;
-  const result: AttributeSelector = { key };
-  if (value) result.value = value.replace(/^["']|["']$/g, "");
+  const result: AttributeSelector = { key: [CutoutTokenType.ATTRIBUTE, key] };
+  if (value) {
+    result.value = tokenizeValue(
+      value.replace(/^["']|["']$/g, ""),
+    ) as CutoutStringToken;
+  }
   if (casing) result.caseSensitive = casing === "s";
   if (_isAttributeOperator(operator)) result.operator = operator;
   return result;
