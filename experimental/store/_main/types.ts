@@ -1,7 +1,7 @@
 import type { CutoutJSXToken } from "@cutout/jsx/tokens";
 import type { CutoutStoreSelector } from "@cutout/store/selector";
 
-// ISSUE(#): options
+// ISSUE(#98): add query/append options
 export type Store = {
   append(jsx: CutoutJSXToken): void;
   select(selectors: CutoutStoreSelector[]): CutoutJSXToken;

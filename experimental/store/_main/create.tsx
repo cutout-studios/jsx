@@ -91,10 +91,10 @@ export const create = ({ backend }: Options): Store => {
               break;
             }
 
-            // TODO: create "tagless node"...
             addChildPath(backend, {
               parent: parentTracker[TRACKER_SNAPSHOT_INDEX],
               rank: parentTracker[TRACKER_RANK_INDEX],
+              child: token,
             });
             break;
           case CutoutTokenType.PROMISE:

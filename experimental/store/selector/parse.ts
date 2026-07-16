@@ -37,7 +37,7 @@ export const parse = (query: string): Selector[] => {
   return selectors;
 };
 
-// ISSUE(#): these can contain CSS.escape()'d characters, technically
+// ISSUE(#97): properly handle CSS.escape'd characters
 const _isCombinator = enumGuardFactory(Combinator);
 function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   const { c: rawCombinator, s: subquery } = groups!;

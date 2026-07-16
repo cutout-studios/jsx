@@ -1,5 +1,6 @@
 import { CutoutError, CutoutErrorCode } from "@cutout/internal";
 import {
+  CUTOUT_TOKEN_TYPE_INDEX,
   CUTOUT_TOKEN_VALUE_INDEX,
   type CutoutAttributeToken,
   type CutoutElementToken,
@@ -7,6 +8,7 @@ import {
   type CutoutNumberToken,
   type CutoutOutputToken,
   type CutoutStringToken,
+  CutoutTokenType,
   isPrimitiveToken,
   tokenizeValue,
 } from "@cutout/jsx/tokens";
@@ -66,7 +68,7 @@ export function addAttributePath(
     return;
   }
 
-  // TODO: else, expand paths
+  // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
   throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
 }
 
@@ -74,23 +76,40 @@ export function addChildPath(
   backend: CutoutBackend,
   { parent = ROOT_SNAPSHOT_TOKEN, child, rank }: {
     parent?: CutoutIdentifierToken;
-    child: CutoutIdentifierToken;
+    child: CutoutIdentifierToken | CutoutOutputToken;
     rank: CutoutNumberToken;
   },
 ) {
-  backend.add([
-    INDEX_SNAPSHOTS_TOKEN,
-    parent,
-    INDEX_CHILDREN_TOKEN,
-    rank,
-    child,
-  ]);
+  if (child[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER) {
+    backend.add([
+      INDEX_SNAPSHOTS_TOKEN,
+      parent,
+      INDEX_CHILDREN_TOKEN,
+      rank,
+      child,
+    ]);
 
-  backend.add([
-    INDEX_SNAPSHOTS_TOKEN,
-    child,
-    INDEX_PARENT_TOKEN,
-    parent,
-    rank,
-  ]);
+    backend.add([
+      INDEX_SNAPSHOTS_TOKEN,
+      child,
+      INDEX_PARENT_TOKEN,
+      parent,
+      rank,
+    ]);
+
+    return;
+  }
+
+  if (isPrimitiveToken(child)) {
+    backend.add([
+      INDEX_SNAPSHOTS_TOKEN,
+      parent,
+      INDEX_CHILDREN_TOKEN,
+      rank,
+      child,
+    ]);
+  }
+
+  // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
+  throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
 }
