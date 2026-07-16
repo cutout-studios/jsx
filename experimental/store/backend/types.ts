@@ -1,12 +1,16 @@
 import type {
   CutoutBooleanToken,
+  CutoutIdentifierToken,
   CutoutNullToken,
   CutoutPrimitiveToken,
   CutoutPromiseToken,
   CutoutSyntaxToken,
 } from "@cutout/jsx/tokens";
 
-export type TokenSegment = CutoutPrimitiveToken | CutoutSyntaxToken;
+export type TokenSegment =
+  | CutoutPrimitiveToken
+  | CutoutSyntaxToken
+  | CutoutIdentifierToken;
 export type TokenPath = TokenSegment[];
 
 export type ListOptions = {

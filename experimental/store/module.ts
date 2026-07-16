@@ -1,1 +1,1 @@
-export { create as createStore } from "./create.tsx";
+export { create as createStore } from "./_main/create.tsx";

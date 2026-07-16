@@ -36,7 +36,8 @@ export type AnyToken<
  */
 export type SystemToken =
   | UnknownToken
-  | JSXGeneratorToken;
+  | JSXGeneratorToken
+  | IdentifierToken;
 
 /**
  * A token where we genuinely don't know the type or value yet.
@@ -57,6 +58,14 @@ export type UnknownToken = AnyToken<
 export type JSXGeneratorToken = AnyToken<
   TokenType.GENERATOR,
   () => Generator<OutputToken>
+>;
+
+/**
+ * A token for a system-level identifier.
+ */
+export type IdentifierToken = AnyToken<
+  TokenType.IDENTIFIER,
+  Uint8Array<ArrayBuffer>
 >;
 
 // -----------------------------------------------------------------------------

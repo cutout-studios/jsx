@@ -14,6 +14,7 @@ export type {
   ElementCloseToken as CutoutElementCloseToken,
   ElementToken as CutoutElementToken,
   FunctionToken as CutoutFunctionToken,
+  IdentifierToken as CutoutIdentifierToken,
   JSXGeneratorToken as CutoutJSXToken,
   NullToken as CutoutNullToken,
   NumberToken as CutoutNumberToken,
@@ -34,6 +35,7 @@ export type {
 export {
   isGeneratorToken as isJSXToken,
   isOutputToken,
+  isPrimitiveToken,
   isValidToken,
 } from "./guards.ts";
 

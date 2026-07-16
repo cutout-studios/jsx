@@ -1,41 +1,14 @@
 import { CutoutError } from "@cutout/internal";
+import {
+  type CutoutIdentifierToken,
+  CutoutTokenType,
+} from "@cutout/jsx/tokens";
 
-const DEFAULT_ENCODING =
-  "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-const DEFAULT_BYTE_LENGTH = 16;
-
-const BYTE_TO_BITS = 8;
-const BITE_DEPTH = 2;
-const BYTE_DEPTH = BITE_DEPTH ** BYTE_TO_BITS;
-const TIMESTAMP_BYTE_LIMIT = 6;
-
-function encode(bytes: Uint8Array, alphabet: string): string {
-  const characterSpaceSize = Math.log2(alphabet.length);
-
-  if (!Number.isInteger(characterSpaceSize)) throw new CutoutError();
-
-  const mask = alphabet.length - 1;
-  let [result, pointer, value, bitCount] = ["", 0, 0, 0];
-
-  while (pointer < bytes.length) {
-    value = (value << BYTE_TO_BITS) | bytes[pointer];
-    bitCount += BYTE_TO_BITS;
-
-    while (bitCount >= characterSpaceSize) {
-      bitCount -= characterSpaceSize;
-      result += alphabet[(value >>> bitCount) & mask];
-    }
-
-    value &= (1 << bitCount) - 1;
-    pointer++;
-  }
-
-  if (bitCount > 0) {
-    result += alphabet[(value << (characterSpaceSize - bitCount)) & mask];
-  }
-
-  return result;
-}
+import {
+  BYTE_DEPTH,
+  DEFAULT_IDENTIFIER_BYTE_LENGTH,
+  TIMESTAMP_BYTE_LIMIT,
+} from "./constants.ts";
 
 function timeToBytes(time: number, bytes: number): Uint8Array {
   if (bytes > TIMESTAMP_BYTE_LIMIT) throw new CutoutError();
@@ -56,7 +29,9 @@ function increment(value: Uint8Array): Uint8Array<ArrayBuffer> {
   while (pointer--) {
     if (value[pointer] < BYTE_DEPTH - 1) {
       value[pointer]++;
-      return new Uint8Array([...value]);
+      const container = new Uint8Array(value.length);
+      container.set(value);
+      return container;
     }
 
     value[pointer] = 0;
@@ -65,12 +40,11 @@ function increment(value: Uint8Array): Uint8Array<ArrayBuffer> {
   return new Uint8Array();
 }
 
-export function getSnapshotIdFactory(
+export function getIdentifierTokenFactory(
   {
-    totalByteLength = DEFAULT_BYTE_LENGTH,
-    alphabet = DEFAULT_ENCODING,
+    totalByteLength = DEFAULT_IDENTIFIER_BYTE_LENGTH,
   } = {},
-): () => string {
+): () => CutoutIdentifierToken {
   let randomByteLength, timeByteLength;
 
   if (totalByteLength <= TIMESTAMP_BYTE_LIMIT) {
@@ -84,7 +58,7 @@ export function getSnapshotIdFactory(
   let lastTime = -1;
   let lastRandom = new Uint8Array(randomByteLength);
 
-  return function getSnapshotId(): string {
+  return function getIdentifierToken(): CutoutIdentifierToken {
     const now = Date.now();
 
     if (now <= lastTime) {
@@ -99,9 +73,11 @@ export function getSnapshotIdFactory(
       lastRandom = crypto.getRandomValues(lastRandom);
     }
 
-    return (
-      encode(timeToBytes(lastTime, timeByteLength), alphabet) +
-      encode(lastRandom, alphabet)
-    );
+    const result = new Uint8Array(totalByteLength);
+
+    result.set(timeToBytes(lastTime, timeByteLength));
+    result.set(lastRandom, timeByteLength);
+
+    return [CutoutTokenType.IDENTIFIER, result];
   };
 }

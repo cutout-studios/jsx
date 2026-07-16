@@ -49,6 +49,8 @@ export enum TokenType {
   ELEMENT_CLOSE = 0x0D,
   /** A JSX element attribute (e.g. `class=`). */
   ATTRIBUTE = 0x0E,
+
+  IDENTIFIER = 0x0F,
 }
 
 // ------------------------------------------------------------

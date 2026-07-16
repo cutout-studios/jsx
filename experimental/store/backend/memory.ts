@@ -8,8 +8,8 @@ import type { Backend, ListOptions, TokenPath, TokenSegment } from "./types.ts";
 type SerializedPathTrie = Map<string, SerializedPathTrie>;
 
 export class MemoryBackend implements Backend {
-  constructor(paths: TokenPath[]) {
-    for (const path of paths) {
+  constructor(paths?: TokenPath[]) {
+    for (const path of paths ?? []) {
       this.add(path);
     }
   }

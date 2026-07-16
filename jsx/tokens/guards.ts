@@ -10,7 +10,12 @@ import {
   TOKEN_VALUE_INDEX,
   TokenType,
 } from "./constants.ts";
-import type { JSXGeneratorToken, OutputToken, ValidToken } from "./types.ts";
+import type {
+  JSXGeneratorToken,
+  OutputToken,
+  PrimitiveToken,
+  ValidToken,
+} from "./types.ts";
 
 /**
  * A TypeScript guard for vaild (not unknown) Cutout Tokens.
@@ -63,6 +68,11 @@ export const isOutputToken = (
   }
 
   return false;
+};
+
+// TODO
+export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
+  return true;
 };
 
 /**
