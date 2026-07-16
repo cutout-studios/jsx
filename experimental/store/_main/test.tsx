@@ -23,13 +23,13 @@ Deno.test(TEST_MODULE, async (test) => {
     </>,
   );
 
-  // await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
+  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
 
-  // store.append(
-  //   <user id={1}>
-  //     <username>Bobby</username>
-  //   </user>,
-  // );
+  store.append(
+    <user id={1}>
+      <username>Bobby</username>
+    </user>,
+  );
 
-  // await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
+  await assertSnapshot(test, rawText(store.select(parseSelector("user#1"))));
 });
