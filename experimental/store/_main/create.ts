@@ -123,13 +123,17 @@ export const create = ({ backend }: Options): Store => {
             const { key, value, operator, caseSensitive } of selector.attributes
           ) {
             // ISSUE(#100): properly resolve CSS combinators and attribute comparators
-            if (operator || value || caseSensitive !== undefined) {
+            if (operator || caseSensitive !== undefined) {
               throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
             }
 
+            // Until ISSUE(#100), 'operator' is presumed to be equals.
+            const prefix = value ? [key, value] : [key];
+
             const attibuteSet = new Set<Uint8Array<ArrayBuffer>>();
             for (
-              const path of backend.list([INDEX_ATTRIBUTES_TOKEN, key]) ?? []
+              const path of backend.list([INDEX_ATTRIBUTES_TOKEN, ...prefix]) ??
+                []
             ) {
               const [, snapshotId] = path.at(
                 -1,
