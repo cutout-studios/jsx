@@ -26,7 +26,7 @@ Deno.test(`${TEST_GROUP} - MemoryBackend`, () => {
   assertArrayIncludes(
     backend.list(tokenizePath(["users", 123, "name"]))?.toArray() ?? [],
     [
-      ["bobadams"].map(tokenizeValue),
+      tokenizePath(["bobadams"]),
     ],
   );
   assertArrayIncludes(
