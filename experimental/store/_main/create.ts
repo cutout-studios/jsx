@@ -58,7 +58,10 @@ export const create = ({ backend }: Options): Store => {
               rank: parentTracker[TRACKER_RANK_INDEX],
             });
 
-            parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_VALUE_INDEX]++;
+            parentTracker[TRACKER_RANK_INDEX] = [
+              parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_TYPE_INDEX],
+              parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_VALUE_INDEX] + 1,
+            ];
 
             trackerStack.push(makeTracker(snapshot));
             attributePointer = null;
@@ -102,6 +105,11 @@ export const create = ({ backend }: Options): Store => {
               rank: parentTracker[TRACKER_RANK_INDEX],
               child: token,
             });
+
+            parentTracker[TRACKER_RANK_INDEX] = [
+              parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_TYPE_INDEX],
+              parentTracker[TRACKER_RANK_INDEX][CUTOUT_TOKEN_VALUE_INDEX] + 1,
+            ];
             break;
           case CutoutTokenType.PROMISE:
             throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
@@ -111,7 +119,7 @@ export const create = ({ backend }: Options): Store => {
       }
     },
     select(selectors: CutoutStoreSelector[]): CutoutJSXToken[] {
-      let resultSet = new Set<Uint8Array<ArrayBuffer>>();
+      let resultSet = new Set<string>();
       for (const selector of selectors) {
         let selectorSet;
         if (selector.combinator || selector.child) {
@@ -130,7 +138,7 @@ export const create = ({ backend }: Options): Store => {
             // Until ISSUE(#100), 'operator' is presumed to be equals.
             const prefix = value ? [key, value] : [key];
 
-            const attibuteSet = new Set<Uint8Array<ArrayBuffer>>();
+            const attibuteSet = new Set<string>();
             for (
               const path of backend.list([INDEX_ATTRIBUTES_TOKEN, ...prefix]) ??
                 []
@@ -139,7 +147,7 @@ export const create = ({ backend }: Options): Store => {
                 -1,
               ) as CutoutIdentifierToken;
 
-              attibuteSet.add(snapshotId);
+              attibuteSet.add(JSON.stringify(snapshotId));
             }
             selectorSet = selectorSet
               ? intersect(selectorSet, attibuteSet)
@@ -148,13 +156,13 @@ export const create = ({ backend }: Options): Store => {
         }
 
         if (selector.tag) {
-          const tagSet = new Set<Uint8Array<ArrayBuffer>>();
+          const tagSet = new Set<string>();
           for (
             const path of backend.list([INDEX_TAGS_TOKEN, selector.tag]) ?? []
           ) {
             const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
 
-            tagSet.add(snapshotId);
+            tagSet.add(JSON.stringify(snapshotId));
           }
           selectorSet = selectorSet ? intersect(selectorSet, tagSet) : tagSet;
         }
@@ -162,16 +170,18 @@ export const create = ({ backend }: Options): Store => {
         resultSet = selectorSet ? union(resultSet, selectorSet) : resultSet;
       }
 
-      return Array.from(resultSet).map((snapshotId) => {
+      // Only return the most recent result (e.g. limit is 1 until ISSUE(#98))
+      return Array.from(resultSet).slice(0, 1).map((snapshotId) => {
+        // TODO: get the whole tree
         const nodePaths = backend.list([INDEX_SNAPSHOTS_TOKEN, [
           CutoutTokenType.IDENTIFIER,
-          snapshotId,
+          JSON.parse(snapshotId),
         ]]);
 
         return [
           CutoutTokenType.GENERATOR,
           function* () {
-            // TODO: generate node paths
+            // TODO: make the token stream
           },
         ];
       });
