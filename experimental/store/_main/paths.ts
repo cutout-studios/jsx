@@ -74,10 +74,10 @@ export function addAttributePath(
 
 export function addChildPath(
   backend: CutoutBackend,
-  { parent = ROOT_SNAPSHOT_TOKEN, child, rank }: {
+  { parent = ROOT_SNAPSHOT_TOKEN, child, childIndex }: {
     parent?: CutoutIdentifierToken;
     child: CutoutIdentifierToken | CutoutOutputToken;
-    rank: CutoutNumberToken;
+    childIndex: CutoutNumberToken;
   },
 ) {
   if (child[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER) {
@@ -85,7 +85,7 @@ export function addChildPath(
       INDEX_SNAPSHOTS_TOKEN,
       parent,
       INDEX_CHILDREN_TOKEN,
-      rank,
+      childIndex,
       child,
     ]);
 
@@ -94,7 +94,7 @@ export function addChildPath(
       child,
       INDEX_PARENT_TOKEN,
       parent,
-      rank,
+      childIndex,
     ]);
 
     return;
@@ -105,7 +105,7 @@ export function addChildPath(
       INDEX_SNAPSHOTS_TOKEN,
       parent,
       INDEX_CHILDREN_TOKEN,
-      rank,
+      childIndex,
       child,
     ]);
   }

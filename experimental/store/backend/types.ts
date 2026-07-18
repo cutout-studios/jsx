@@ -18,7 +18,6 @@ export type ListOptions = {
 };
 
 export interface Backend {
-  has(path: TokenPath): CutoutBooleanToken;
   add(path: TokenPath): CutoutPromiseToken | CutoutNullToken;
   list(
     prefix: TokenPath,

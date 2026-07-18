@@ -7,8 +7,5 @@ export type SelectionOptions = {
 
 export type Store = {
   append(jsx: CutoutJSXToken): void;
-  select(
-    selectors: CutoutStoreSelector[],
-    options?: SelectionOptions,
-  ): CutoutJSXToken[];
+  select(selectors: CutoutStoreSelector[]): CutoutJSXToken[];
 };

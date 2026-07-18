@@ -22,6 +22,7 @@ import {
   isOutputToken,
   isValidToken,
   tokenizeValue,
+  type UnknownToken,
 } from "@cutout/jsx/tokens";
 
 /**
@@ -161,7 +162,7 @@ function* _forwardTokens(
     return;
   }
 
-  const token = tokenizeValue(value);
+  const token = tokenizeValue(value) as CutoutOutputToken | UnknownToken;
 
   if (token[CUTOUT_TOKEN_TYPE_INDEX] !== CutoutTokenType.UNKNOWN) {
     yield token;
