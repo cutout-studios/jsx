@@ -65,7 +65,7 @@ export type JSXGeneratorToken = AnyToken<
  */
 export type IdentifierToken = AnyToken<
   TokenType.IDENTIFIER,
-  Uint8Array<ArrayBuffer>
+  string
 >;
 
 // -----------------------------------------------------------------------------

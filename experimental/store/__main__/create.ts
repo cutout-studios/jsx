@@ -6,14 +6,14 @@ import {
   CUTOUT_TOKEN_TYPE_INDEX,
   CUTOUT_TOKEN_VALUE_INDEX,
   type CutoutAttributeToken,
-  type CutoutElementCloseToken,
   type CutoutElementToken,
   type CutoutIdentifierToken,
   type CutoutJSXToken,
+  type CutoutOutputToken,
   type CutoutPrimitiveToken,
   CutoutTokenType,
   equals,
-  isValidToken,
+  isPromiseToken,
   tokenizeValue,
 } from "@cutout/jsx/tokens";
 import type { CutoutBackend, CutoutBackendPath } from "@cutout/store/backend";
@@ -37,14 +37,16 @@ type Options = {
   backend: CutoutBackend;
 };
 
+// TODO: Sync vs. async?
 export const create = ({ backend }: Options): Store => {
   const getSnapshotToken = getIdentifierTokenFactory();
 
   return {
     append(jsxGenerator: CutoutJSXToken) {
       const appendStack: CutoutIdentifierToken[] = [ROOT_SNAPSHOT_TOKEN];
-      const childCounter = _createChildCounter();
-      
+      const childCounter = _createChildPositionCounter();
+      childCounter.init(ROOT_SNAPSHOT_TOKEN);
+
       let attributePointer: CutoutAttributeToken | null = null;
       for (const token of jsxGenerator[CUTOUT_TOKEN_VALUE_INDEX]()) {
         const parent = appendStack.at(-1) ?? ROOT_SNAPSHOT_TOKEN;
@@ -60,7 +62,7 @@ export const create = ({ backend }: Options): Store => {
               parent,
               childIndex: childCount,
             });
-            
+
             childCounter.init(snapshot);
             appendStack.push(snapshot);
 
@@ -70,7 +72,9 @@ export const create = ({ backend }: Options): Store => {
             break;
           }
           case CutoutTokenType.ATTRIBUTE:
-            attributePointer = token;
+            if (token[CUTOUT_TOKEN_VALUE_INDEX] !== CUTOUT_CHILDREN_LABEL) {
+              attributePointer = token;
+            }
             break;
           case CutoutTokenType.ELEMENT_CLOSE:
             appendStack.pop();
@@ -85,10 +89,6 @@ export const create = ({ backend }: Options): Store => {
           case CutoutTokenType.ARRAY:
           case CutoutTokenType.OBJECT:
           case CutoutTokenType.NULL:
-            if (!parent) {
-              throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
-            }
-
             if (attributePointer) {
               addAttributePath(
                 backend,
@@ -118,20 +118,18 @@ export const create = ({ backend }: Options): Store => {
       }
     },
     select(selectors: CutoutStoreSelector[]): CutoutJSXToken[] {
-      _checkSupport(selectors);
+      _checkSelectorSupport(selectors);
 
-      const foundSnapshots = new Set<string>();
+      const snapshots = new Set<string>();
       for (const selector of selectors) {
-        for (const snapshot of _findSnapshotsFor(backend, selector)) {
-          foundSnapshots.add(snapshot);
+        for (const snapshot of _selectSnapshotIdsFrom(backend, selector)) {
+          snapshots.add(snapshot);
         }
       }
 
       const result: CutoutJSXToken[] = [];
-      for (const snapshot of foundSnapshots) {
-        result.push(
-          _createResultGenerator(backend, snapshot),
-        );
+      for (const snapshot of snapshots) {
+        result.push(_createSelectorJSX(backend, snapshot));
       }
 
       return result;
@@ -139,26 +137,24 @@ export const create = ({ backend }: Options): Store => {
   };
 };
 
-function _createChildCounter() {
-  const [{ decode }, record] = [
-    new TextDecoder(),
-    {} as Record<string, number>,
-  ];
+// TODO: determine which of these live in a different file
+function _createChildPositionCounter() {
+  const record = {} as Record<string, number>;
   return {
     get([, snapshotId]: CutoutIdentifierToken) {
-      return tokenizeValue(record[decode(snapshotId)]);
+      return tokenizeValue(record[snapshotId]);
     },
     init([, snapshotId]: CutoutIdentifierToken) {
-      record[decode(snapshotId)] ??= 0;
+      record[snapshotId] ??= 0;
     },
     increment([, snapshotId]: CutoutIdentifierToken) {
-      record[decode(snapshotId)]++;
+      record[snapshotId]++;
     },
   };
 }
 
 // ISSUE(#100): properly resolve CSS combinators and attribute comparators
-function _checkSupport(selectors: CutoutStoreSelector[]) {
+function _checkSelectorSupport(selectors: CutoutStoreSelector[]) {
   for (const { attributes, combinator, child } of selectors) {
     if (combinator || child) {
       throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
@@ -172,16 +168,15 @@ function _checkSupport(selectors: CutoutStoreSelector[]) {
   }
 }
 
-function _findSnapshotsFor(
+function _selectSnapshotIdsFrom(
   backend: CutoutBackend,
   { attributes, tag }: CutoutStoreSelector,
 ): Set<string> {
   let result;
-  const decoder = new TextDecoder();
 
   if (attributes) {
     for (
-      const { value, key } of attributes.sort(_attributeSpecifityHeuristic)
+      const { value, key } of [...attributes].sort(_attributeSpecifityHeuristic)
     ) {
       const attibuteSet = new Set<string>();
       const prefix = value ? [key, value] : [key];
@@ -189,10 +184,13 @@ function _findSnapshotsFor(
         const path of backend.list([INDEX_ATTRIBUTES_TOKEN, ...prefix]) ??
           []
       ) {
-        // TODO: if promise, wrap in a promise
+        if (isPromiseToken(path)) {
+          throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+        }
+
         const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
 
-        attibuteSet.add(decoder.decode(snapshotId));
+        attibuteSet.add(snapshotId);
       }
 
       result = result ? _intersect(result, attibuteSet) : attibuteSet;
@@ -204,10 +202,13 @@ function _findSnapshotsFor(
     for (
       const path of backend.list([INDEX_TAGS_TOKEN, tag]) ?? []
     ) {
-      // TODO: if promise, wrap in a promise
+      if (isPromiseToken(path)) {
+        throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+      }
+
       const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
 
-      tagSet.add(decoder.decode(snapshotId));
+      tagSet.add(snapshotId);
     }
     result = result ? _intersect(result, tagSet) : tagSet;
   }
@@ -232,8 +233,8 @@ function _attributeSpecifityHeuristic(
     value: [, rightValue] = tokenizeValue(""),
   }: CutoutAttributeSelector,
 ): number {
-  const rankDifference = ATTRIBUTE_KEY_RANK_MAP[rightKeyValue] -
-    ATTRIBUTE_KEY_RANK_MAP[leftKeyValue];
+  const rankDifference = (ATTRIBUTE_KEY_RANK_MAP[rightKeyValue] ?? 0) -
+    (ATTRIBUTE_KEY_RANK_MAP[leftKeyValue] ?? 0);
   if (rankDifference) return rankDifference;
 
   return (rightValue.length || rightKeyValue.length) -
@@ -256,49 +257,47 @@ function _intersect<T>(left: Set<T>, right: Set<T>): Set<T> {
 }
 
 type SelectionFrame = {
-  id: string;
+  snapshotId: string;
 } | {
-  close: CutoutElementCloseToken;
+  token: CutoutOutputToken;
 };
 
-function _createResultGenerator(
+function _createSelectorJSX(
   backend: CutoutBackend,
   rootSnapshotId: string,
 ): CutoutJSXToken {
-  const [encoder, decoder] = [new TextEncoder(), new TextDecoder()];
-
   return [
     CutoutTokenType.GENERATOR,
     function* () {
       let selectionStack: SelectionFrame[] = [
-        { id: rootSnapshotId },
+        { snapshotId: rootSnapshotId },
       ];
       while (selectionStack.length) {
         const frame = selectionStack.pop()!;
 
-        if ("close" in frame) {
-          yield frame.close;
+        if ("token" in frame) {
+          yield frame.token;
           continue;
         }
 
         const snapshotPathGenerator = backend.list([INDEX_SNAPSHOTS_TOKEN, [
           CutoutTokenType.IDENTIFIER,
-          encoder.encode(frame.id),
+          frame.snapshotId,
         ]]);
 
         if (!snapshotPathGenerator) continue;
 
         let tagValue: string | undefined;
         const attributes: (CutoutAttributeToken | CutoutPrimitiveToken)[] = [];
-        const children = [];
+        const orderedChildren: SelectionFrame[] = [];
         for (const path of snapshotPathGenerator) {
-          if (isValidToken(path)) {
-            yield path; // Promise
-            break;
+          if (isPromiseToken(path)) {
+            throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
           }
 
           const [indexToken, keyToken, valueToken] = path as CutoutBackendPath;
 
+          // TODO: clean this section up
           if (equals(indexToken, INDEX_TAGS_TOKEN)) {
             yield keyToken as CutoutElementToken;
             [, tagValue] = keyToken as CutoutElementToken;
@@ -314,22 +313,26 @@ function _createResultGenerator(
           if (
             equals(indexToken, INDEX_CHILDREN_TOKEN)
           ) {
-            children[valueToken[CUTOUT_TOKEN_VALUE_INDEX] as number] = {
-              id: decoder
-                .decode(keyToken[CUTOUT_TOKEN_VALUE_INDEX] as Uint8Array),
-            };
+            orderedChildren[keyToken[CUTOUT_TOKEN_VALUE_INDEX] as number] =
+              valueToken[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER
+                ? {
+                  snapshotId: valueToken[CUTOUT_TOKEN_VALUE_INDEX] as string,
+                }
+                : {
+                  token: valueToken as CutoutOutputToken,
+                };
           }
         }
 
         yield* attributes;
 
-        if (children.length) {
+        if (orderedChildren.length) {
           yield [CutoutTokenType.ATTRIBUTE, CUTOUT_CHILDREN_LABEL];
         }
 
         selectionStack = [...selectionStack, {
-          close: [CutoutTokenType.ELEMENT_CLOSE, tagValue!],
-        }, ...(children.reverse())];
+          token: [CutoutTokenType.ELEMENT_CLOSE, tagValue!],
+        }, ...(orderedChildren.reverse())];
       }
     },
   ];

@@ -55,6 +55,7 @@ export function addAttributePath(
       attributeKey,
       attributeValue,
     ]);
+
     backend.add([
       INDEX_ATTRIBUTES_TOKEN,
       attributeKey,
@@ -65,6 +66,7 @@ export function addAttributePath(
       ) as CutoutStringToken,
       snapshot,
     ]);
+
     return;
   }
 
@@ -108,8 +110,10 @@ export function addChildPath(
       childIndex,
       child,
     ]);
+
+    return;
   }
 
-  // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
+  // ISSUE(#99): Unwrap raw arrays/objects into backend paths
   throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
 }

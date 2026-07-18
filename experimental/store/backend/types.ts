@@ -1,5 +1,4 @@
 import type {
-  CutoutBooleanToken,
   CutoutIdentifierToken,
   CutoutNullToken,
   CutoutPrimitiveToken,
@@ -21,7 +20,5 @@ export interface Backend {
   add(path: TokenPath): CutoutPromiseToken | CutoutNullToken;
   list(
     prefix: TokenPath,
-    options?: ListOptions,
   ): Generator<TokenPath | CutoutPromiseToken> | undefined;
-  delete(path: TokenPath): CutoutPromiseToken | CutoutBooleanToken;
 }

@@ -1,1 +1,1 @@
-export { create as createStore } from "./_main/create.ts";
+export { create as createStore } from "./__main__/create.ts";

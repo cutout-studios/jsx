@@ -9,5 +9,8 @@
     "@std/assert": "jsr:@std/assert",
     "@std/testing": "jsr:@std/testing"
   },
-  "name": "@cutout/store"
+  "name": "@cutout/store",
+  "tasks": {
+    "docs:lint": "deno doc --lint ./module.ts ./backend/module.ts ./selector/module.ts"
+  }
 }

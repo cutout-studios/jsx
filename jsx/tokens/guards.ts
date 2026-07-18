@@ -14,6 +14,7 @@ import type {
   JSXGeneratorToken,
   OutputToken,
   PrimitiveToken,
+  PromiseToken,
   ValidToken,
 } from "./types.ts";
 
@@ -71,9 +72,7 @@ export const isOutputToken = (
 };
 
 export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
-  if (!isOutputToken(value)) {
-    return false;
-  }
+  if (!isOutputToken(value)) return false;
 
   return [
     TokenType.BOOLEAN,
@@ -83,6 +82,14 @@ export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
     TokenType.SYMBOL,
     TokenType.UNDEFINED,
   ].includes(value[TOKEN_TYPE_INDEX]);
+};
+
+export const isPromiseToken = (
+  value: unknown,
+): value is PromiseToken => {
+  if (!isOutputToken(value)) return false;
+
+  return value[TOKEN_TYPE_INDEX] === TokenType.PROMISE;
 };
 
 /**

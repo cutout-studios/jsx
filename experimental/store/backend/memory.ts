@@ -1,9 +1,5 @@
-import {
-  type CutoutBooleanToken,
-  type CutoutNullToken,
-  CutoutTokenType,
-} from "@cutout/jsx/tokens";
-import type { Backend, ListOptions, TokenPath, TokenSegment } from "./types.ts";
+import { type CutoutNullToken, CutoutTokenType } from "@cutout/jsx/tokens";
+import type { Backend, TokenPath, TokenSegment } from "./types.ts";
 
 type SerializedPathTrie = Map<string, SerializedPathTrie>;
 
@@ -33,11 +29,8 @@ export class MemoryBackend implements Backend {
 
   list(
     prefix: TokenPath,
-    { limit = 1 }: ListOptions = {},
   ): Generator<TokenPath> | undefined {
-    const options = { limit };
-
-    const cacheKey = JSON.stringify([options, prefix]);
+    const cacheKey = JSON.stringify(prefix);
 
     if (this.#scanCache.has(cacheKey)) {
       return this.#scanCache.get(cacheKey);
@@ -47,33 +40,13 @@ export class MemoryBackend implements Backend {
 
     if (!scanRoot) return;
 
-    const result = this.#flatten(scanRoot, options);
+    const result = this.#flatten(scanRoot).reverse();
 
     this.#scanCache.set(cacheKey, result);
 
     return (function* () {
       for (const path of result) yield path;
     })();
-  }
-
-  delete(path: TokenPath): CutoutBooleanToken {
-    const [rootPath, terminalValue] = [path.slice(0, -1), path.at(-1)];
-
-    if (!rootPath.length || !terminalValue) {
-      return [CutoutTokenType.BOOLEAN, false];
-    }
-
-    const deleteRoot = this.#resolvePath(rootPath);
-
-    if (!deleteRoot) return [CutoutTokenType.BOOLEAN, false];
-
-    const deleteResult = deleteRoot.delete(JSON.stringify(terminalValue));
-
-    if (deleteResult) {
-      this.#scanCache.clear();
-    }
-
-    return [CutoutTokenType.BOOLEAN, deleteResult];
   }
 
   #pathTrie: SerializedPathTrie = new Map();
@@ -91,10 +64,7 @@ export class MemoryBackend implements Backend {
   }
 
   #scanCache = new Map();
-  #flatten(
-    root: SerializedPathTrie,
-    { limit }: { limit: number },
-  ): TokenPath[] {
+  #flatten(root: SerializedPathTrie): TokenPath[] {
     const result: TokenPath[] = [];
 
     const stack: [TokenSegment[], SerializedPathTrie][] = [[[], root]];
@@ -110,8 +80,6 @@ export class MemoryBackend implements Backend {
         }
 
         result.push([...currentKeyPath, JSON.parse(key)]);
-
-        if (result.length === limit) return result;
       }
     }
 

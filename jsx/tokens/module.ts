@@ -36,6 +36,7 @@ export {
   isGeneratorToken as isJSXToken,
   isOutputToken,
   isPrimitiveToken,
+  isPromiseToken,
   isValidToken,
 } from "./guards.ts";
 
