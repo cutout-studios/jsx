@@ -2,20 +2,27 @@
 
 import { CutoutError, CutoutErrorCode } from "@cutout/internal";
 import {
+  CUTOUT_CHILDREN_LABEL,
   CUTOUT_TOKEN_TYPE_INDEX,
   CUTOUT_TOKEN_VALUE_INDEX,
   type CutoutAttributeToken,
+  type CutoutElementCloseToken,
+  type CutoutElementToken,
   type CutoutIdentifierToken,
   type CutoutJSXToken,
   type CutoutNumberToken,
+  type CutoutPrimitiveToken,
   CutoutTokenType,
+  equals,
+  isValidToken,
   tokenizeValue,
 } from "@cutout/jsx/tokens";
-import type { CutoutBackend } from "@cutout/store/backend";
+import type { CutoutBackend, CutoutBackendPath } from "@cutout/store/backend";
 import type { CutoutStoreSelector } from "@cutout/store/selector";
 
 import {
   INDEX_ATTRIBUTES_TOKEN,
+  INDEX_CHILDREN_TOKEN,
   INDEX_SNAPSHOTS_TOKEN,
   INDEX_TAGS_TOKEN,
   ROOT_SNAPSHOT_TOKEN,
@@ -133,19 +140,16 @@ export const create = ({ backend }: Options): Store => {
         // TODO: order from most to least specific
         if (selector.attributes) {
           for (
-            const { key, value, operator, caseSensitive } of selector.attributes
+            const { value, operator, caseSensitive } of selector.attributes
           ) {
             // ISSUE(#100): properly resolve CSS combinators and attribute comparators
             if (operator || caseSensitive !== undefined) {
               throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
             }
 
-            // Until ISSUE(#100), 'operator' is presumed to be equals.
-            const prefix = value ? [key, value] : [key];
-
             const attibuteSet = new Set<string>();
             for (
-              const path of backend.list([INDEX_ATTRIBUTES_TOKEN, ...prefix]) ??
+              const path of backend.list([INDEX_ATTRIBUTES_TOKEN, value!]) ??
                 []
             ) {
               const [, snapshotId] = path.at(
@@ -181,17 +185,76 @@ export const create = ({ backend }: Options): Store => {
         }
       }
 
-      return Array.from(resultSet).slice(limit * -1).map((snapshotId) => {
-        // TODO: get the whole tree
-        const nodePaths = backend.list([INDEX_SNAPSHOTS_TOKEN, [
-          CutoutTokenType.IDENTIFIER,
-          encoder.encode(snapshotId),
-        ]]);
-
+      return Array.from(resultSet).slice(limit * -1).map((rootSnapshotId) => {
         return [
           CutoutTokenType.GENERATOR,
           function* () {
-            // TODO: make the token stream
+            let childStack: { id?: string; close?: CutoutElementCloseToken }[] =
+              [
+                { id: rootSnapshotId },
+              ];
+            while (childStack.length) {
+              const { id, close } = childStack.pop()!;
+
+              if (close) {
+                yield close;
+                continue;
+              }
+
+              const snapshotGenerator = backend.list([INDEX_SNAPSHOTS_TOKEN, [
+                CutoutTokenType.IDENTIFIER,
+                encoder.encode(id),
+              ]]);
+
+              if (!snapshotGenerator) {
+                continue;
+              }
+
+              let tagValue: string | undefined;
+              const attributes:
+                (CutoutAttributeToken | CutoutPrimitiveToken)[] = [];
+              const children = [];
+              for (const path of snapshotGenerator) {
+                if (isValidToken(path)) {
+                  yield path; // Promise
+                  break;
+                }
+
+                const [indexToken, keyToken, valueToken] =
+                  path as CutoutBackendPath;
+
+                if (equals(indexToken, INDEX_TAGS_TOKEN)) {
+                  yield keyToken as CutoutElementToken;
+                  [, tagValue] = keyToken as CutoutElementToken;
+                }
+
+                if (equals(indexToken, INDEX_ATTRIBUTES_TOKEN)) {
+                  attributes.push(
+                    keyToken as CutoutAttributeToken,
+                    valueToken as CutoutPrimitiveToken,
+                  );
+                }
+
+                if (
+                  equals(indexToken, INDEX_CHILDREN_TOKEN)
+                ) {
+                  children[valueToken[CUTOUT_TOKEN_VALUE_INDEX] as number] = {
+                    id: decoder
+                      .decode(keyToken[CUTOUT_TOKEN_VALUE_INDEX] as Uint8Array),
+                  };
+                }
+              }
+
+              yield* attributes;
+
+              if (children.length) {
+                yield [CutoutTokenType.ATTRIBUTE, CUTOUT_CHILDREN_LABEL];
+              }
+
+              childStack = [...childStack, {
+                close: [CutoutTokenType.ELEMENT_CLOSE, tagValue!],
+              }, ...(children.reverse())];
+            }
           },
         ];
       });

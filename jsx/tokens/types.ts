@@ -238,4 +238,5 @@ export type OutputToken =
  */
 export type ValidToken =
   | OutputToken
+  | IdentifierToken
   | JSXGeneratorToken;
