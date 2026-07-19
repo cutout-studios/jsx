@@ -125,7 +125,9 @@ export function selectTokens(
 
   if (attributes) {
     for (
-      const { value, key } of [...attributes].sort(_attributeSpecifityHeuristic)
+      const { value, key } of [...attributes].sort(
+        _attributeSpecificityHeuristic,
+      )
     ) {
       const attibuteSet = new Set<string>();
       const prefix = value ? [key, value] : [key];
@@ -182,7 +184,7 @@ function _intersect<T>(left: Set<T>, right: Set<T>): Set<T> {
   return result;
 }
 
-function _attributeSpecifityHeuristic(
+function _attributeSpecificityHeuristic(
   {
     key: [, leftKeyValue],
     value: [, leftValue] = tokenizeValue(""),
