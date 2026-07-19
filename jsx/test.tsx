@@ -5,18 +5,18 @@ import type { JSXGeneratorToken } from "./tokens/types.ts";
 
 const TEST_GROUP = "jsx";
 
-Deno.test(`${TEST_GROUP}`, assertCutoutJsxSnapshot(<div></div>));
+Deno.test(`${TEST_GROUP}`, assertXOJsxSnapshot(<div></div>));
 
 Deno.test(
   `${TEST_GROUP} - attributes`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <div style={{ color: "red" }} id="my-cool-div"></div>,
   ),
 );
 
 Deno.test(
   `${TEST_GROUP} - children`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <ul>
       <li>Child #1</li>
       <li>Child #2</li>
@@ -27,7 +27,7 @@ Deno.test(
 
 Deno.test(
   `${TEST_GROUP} - mapped children`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <ul>
       {["Child #1", "Child #2", "Child #3"].map((message, index) => (
         <li key={index}>{message}</li>
@@ -38,7 +38,7 @@ Deno.test(
 
 Deno.test(
   `${TEST_GROUP} - children + attributes`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <ul id="main">
       <li class="selected">Child #1</li>
       <li>Child #2</li>
@@ -49,7 +49,7 @@ Deno.test(
 
 Deno.test(
   `${TEST_GROUP} - nested children`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <div>
       <div>
         <div>
@@ -66,7 +66,7 @@ Deno.test(
 
 Deno.test(
   `${TEST_GROUP} - nested children + attributes`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <div id="1">
       <div id="2">
         <div id="3" onClick={() => console.log("Hello from id #3!")}>
@@ -83,7 +83,7 @@ Deno.test(
 
 Deno.test(
   `${TEST_GROUP} - fragment`,
-  assertCutoutJsxSnapshot(
+  assertXOJsxSnapshot(
     <>
       <span>Hello #1</span>
       <span>Hello #2</span>
@@ -96,13 +96,13 @@ Deno.test(
   (test) => {
     const MyElement = ({ hello }: { hello: string }) => <div>{hello}</div>;
 
-    assertCutoutJsxSnapshot(
+    assertXOJsxSnapshot(
       <MyElement hello="Hello, Daniel!" />,
     )(test);
   },
 );
 
-function assertCutoutJsxSnapshot([, render]: JSXGeneratorToken) {
+function assertXOJsxSnapshot([, render]: JSXGeneratorToken) {
   return async (test: Deno.TestContext) =>
     await assertSnapshot(test, [...render()]);
 }

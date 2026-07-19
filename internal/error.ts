@@ -11,7 +11,7 @@ import {
 import type { CallSite } from "./types.ts";
 
 /** @internal */
-export type CutoutErrorCallsite = {
+export type XOErrorCallsite = {
   file: string | null;
   column: number | null;
   line: number | null;
@@ -21,16 +21,16 @@ export type CutoutErrorCallsite = {
  * A wrapper class for the native Error that
  * enforces a standard error code.
  */
-export class CutoutError extends Error {
-  /** The canonical Cutout Error code. */
+export class XOError extends Error {
+  /** The canonical XO Error code. */
   code: ErrorCode;
 
   /**
-   * Construct a new CutoutError instance.
+   * Construct a new XOError instance.
    *
    * @example
    * ```ts
-   * throw new CutoutError(CutoutErrorCode.DATA_ACCESS, {
+   * throw new XOError(XOErrorCode.DATA_ACCESS, {
    *   context: User,
    *   guidance: "The user may not be logged in yet due to a race condition. See Issue #35."
    * });
@@ -38,11 +38,11 @@ export class CutoutError extends Error {
    */
   constructor(
     code: ErrorCode = ErrorCode.OPERATION_UNSUPPORTED,
-    { guidance, context, ...options }: CutoutErrorOptions = {},
+    { guidance, context, ...options }: XOErrorOptions = {},
   ) {
     super(`[${code}] ${ERROR_CODE_MESSAGES[code]}`, options);
 
-    this.name = "CutoutError";
+    this.name = "XOError";
     this.code = code;
     this.#callsite = captureCallSite();
     this.#context = context;
@@ -53,7 +53,7 @@ export class CutoutError extends Error {
    * The actual call information re: where this
    * error was created.
    */
-  get callsite(): CutoutErrorCallsite | undefined {
+  get callsite(): XOErrorCallsite | undefined {
     if (!this.#callsite) return undefined;
 
     let file = this.#callsite.getFileName();
@@ -104,7 +104,7 @@ export class CutoutError extends Error {
   #guidance?: string;
 }
 
-type CutoutErrorOptions = {
+type XOErrorOptions = {
   context?: unknown;
   guidance?: string;
 } & ErrorOptions;

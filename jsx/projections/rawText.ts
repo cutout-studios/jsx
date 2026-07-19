@@ -1,7 +1,7 @@
 import {
-  CUTOUT_CHILDREN_LABEL,
-  CUTOUT_FRAGMENT_LABEL,
-  CutoutTokenType,
+  XO_CHILDREN_LABEL,
+  XO_FRAGMENT_LABEL,
+  XOTokenType,
 } from "@cutout/jsx/tokens";
 
 import type { Projection } from "./types.ts";
@@ -31,27 +31,27 @@ export const rawText: Projection<string> = (jsx): string => {
 
   for (const [type, value] of jsx[1]()) {
     switch (type) {
-      case CutoutTokenType.ELEMENT_OPEN:
+      case XOTokenType.ELEMENT_OPEN:
         _openElement(state, value);
         break;
-      case CutoutTokenType.ELEMENT_CLOSE:
+      case XOTokenType.ELEMENT_CLOSE:
         _closeElement(state, value);
         break;
-      case CutoutTokenType.ATTRIBUTE:
+      case XOTokenType.ATTRIBUTE:
         _addAttribute(state, value);
         break;
-      case CutoutTokenType.STRING:
-      case CutoutTokenType.SYMBOL:
-      case CutoutTokenType.FUNCTION:
-      case CutoutTokenType.OBJECT:
-      case CutoutTokenType.ARRAY:
-      case CutoutTokenType.BOOLEAN:
-      case CutoutTokenType.NUMBER:
+      case XOTokenType.STRING:
+      case XOTokenType.SYMBOL:
+      case XOTokenType.FUNCTION:
+      case XOTokenType.OBJECT:
+      case XOTokenType.ARRAY:
+      case XOTokenType.BOOLEAN:
+      case XOTokenType.NUMBER:
         _addAttributeValue(state, value);
         break;
-      case CutoutTokenType.NULL:
-      case CutoutTokenType.UNDEFINED:
-      case CutoutTokenType.PROMISE:
+      case XOTokenType.NULL:
+      case XOTokenType.UNDEFINED:
+      case XOTokenType.PROMISE:
       default:
         break;
     }
@@ -73,7 +73,7 @@ function _openElement(
   state: _FormatState,
   value: string,
 ) {
-  if (value === CUTOUT_FRAGMENT_LABEL) {
+  if (value === XO_FRAGMENT_LABEL) {
     return state.context.fragment = true;
   }
 
@@ -86,7 +86,7 @@ function _closeElement(
   state: _FormatState,
   value: string,
 ) {
-  if (value === CUTOUT_FRAGMENT_LABEL) {
+  if (value === XO_FRAGMENT_LABEL) {
     return state.context.fragment = false;
   }
 
@@ -104,7 +104,7 @@ function _addAttribute(
 ) {
   if (state.context.fragment) return;
 
-  if (value === CUTOUT_CHILDREN_LABEL) {
+  if (value === XO_CHILDREN_LABEL) {
     state.result += ">";
     return state.context.property = false;
   }

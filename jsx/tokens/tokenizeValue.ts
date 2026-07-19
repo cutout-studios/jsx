@@ -21,7 +21,7 @@ type TokenForValue<T> = T extends number | bigint ? [TokenType.NUMBER, T]
   : [TokenType.UNKNOWN, T];
 
 /**
- * Attempts to convert an arbitrary value into a `CutoutToken`.
+ * Attempts to convert an arbitrary value into a `XOToken`.
  *
  * @param {unknown} value The unknown value to convert.
  * @returns {OutputToken | UnknownToken}
@@ -29,7 +29,7 @@ type TokenForValue<T> = T extends number | bigint ? [TokenType.NUMBER, T]
  * @example
  * ```ts
  * const [type, value] = tokenizeValue("hello");
- *   // type -> CutoutTokenType.String
+ *   // type -> XOTokenType.String
  *   // value -> "hello"
  * ```
  */

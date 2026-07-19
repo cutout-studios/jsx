@@ -1,4 +1,4 @@
-import { type CutoutNullToken, CutoutTokenType } from "@cutout/jsx/tokens";
+import { type XONullToken, XOTokenType } from "@cutout/jsx/tokens";
 import type { Backend, TokenPath, TokenSegment } from "./types.ts";
 
 type SerializedPathTrie = Map<string, SerializedPathTrie>;
@@ -10,7 +10,7 @@ export class MemoryBackend implements Backend {
     }
   }
 
-  add(path: TokenPath): CutoutNullToken {
+  add(path: TokenPath): XONullToken {
     this.#scanCache.clear();
 
     let pointer = this.#pathTrie;
@@ -24,7 +24,7 @@ export class MemoryBackend implements Backend {
       pointer = pointer.get(segmentString) as SerializedPathTrie;
     }
 
-    return [CutoutTokenType.NULL, null];
+    return [XOTokenType.NULL, null];
   }
 
   list(

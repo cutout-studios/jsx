@@ -1,8 +1,5 @@
-import { CutoutError } from "@cutout/internal";
-import {
-  type CutoutIdentifierToken,
-  CutoutTokenType,
-} from "@cutout/jsx/tokens";
+import { XOError } from "@cutout/internal";
+import { type XOIdentifierToken, XOTokenType } from "@cutout/jsx/tokens";
 
 import {
   BIN_TO_BYTES,
@@ -16,7 +13,7 @@ export function getIdentifierTokenFactory(
   {
     totalByteLength = DEFAULT_IDENTIFIER_BYTE_LENGTH,
   } = {},
-): () => CutoutIdentifierToken {
+): () => XOIdentifierToken {
   let randomByteLength, timeByteLength;
 
   if (totalByteLength <= TIMESTAMP_BYTE_LIMIT) {
@@ -30,7 +27,7 @@ export function getIdentifierTokenFactory(
   let lastTime = -1;
   let lastRandom = new Uint8Array(randomByteLength);
 
-  return function getIdentifierToken(): CutoutIdentifierToken {
+  return function getIdentifierToken(): XOIdentifierToken {
     const now = Date.now();
 
     if (now <= lastTime) {
@@ -50,7 +47,7 @@ export function getIdentifierTokenFactory(
     result.set(_timeToBytes(lastTime, timeByteLength));
     result.set(lastRandom, timeByteLength);
 
-    return [CutoutTokenType.IDENTIFIER, _encode(result)];
+    return [XOTokenType.IDENTIFIER, _encode(result)];
   };
 }
 
@@ -71,7 +68,7 @@ function _incrementBuffer(value: Uint8Array): Uint8Array<ArrayBuffer> {
 }
 
 function _timeToBytes(time: number, bytes: number): Uint8Array {
-  if (bytes > TIMESTAMP_BYTE_LIMIT) throw new CutoutError();
+  if (bytes > TIMESTAMP_BYTE_LIMIT) throw new XOError();
 
   const result = new Uint8Array(bytes);
 

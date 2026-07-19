@@ -1,22 +1,22 @@
-import { CutoutError, CutoutErrorCode } from "@cutout/internal";
+import { XOError, XOErrorCode } from "@cutout/internal";
 import {
-  CUTOUT_CHILDREN_LABEL,
-  CUTOUT_TOKEN_VALUE_INDEX,
-  type CutoutAttributeToken,
-  type CutoutElementToken,
-  type CutoutIdentifierToken,
-  type CutoutJSXToken,
-  type CutoutNumberToken,
-  type CutoutOutputToken,
-  type CutoutPrimitiveToken,
-  CutoutTokenType,
   isPromiseToken,
   tokenizeValue,
+  XO_CHILDREN_LABEL,
+  XO_TOKEN_VALUE_INDEX,
+  type XOAttributeToken,
+  type XOElementToken,
+  type XOIdentifierToken,
+  type XOJSXToken,
+  type XONumberToken,
+  type XOOutputToken,
+  type XOPrimitiveToken,
+  XOTokenType,
 } from "@cutout/jsx/tokens";
-import type { CutoutBackend, CutoutBackendPath } from "@cutout/store/backend";
+import type { XOBackend, XOBackendPath } from "@cutout/store/backend";
 import type {
-  CutoutAttributeSelector,
-  CutoutStoreSelector,
+  XOAttributeSelector,
+  XOStoreSelector,
 } from "@cutout/store/selector";
 
 import {
@@ -30,18 +30,18 @@ import {
 
 type SelectionFrame = {
   isSnapshot: true;
-  token: CutoutIdentifierToken;
+  token: XOIdentifierToken;
 } | {
   isSnapshot: false;
-  token: CutoutOutputToken;
+  token: XOOutputToken;
 };
 
 export function selectJSX(
-  backend: CutoutBackend,
-  snapshot: CutoutIdentifierToken,
-): CutoutJSXToken {
+  backend: XOBackend,
+  snapshot: XOIdentifierToken,
+): XOJSXToken {
   return [
-    CutoutTokenType.GENERATOR,
+    XOTokenType.GENERATOR,
     function* () {
       let selectionStack: SelectionFrame[] = [
         { token: snapshot, isSnapshot: true },
@@ -62,42 +62,40 @@ export function selectJSX(
         if (!snapshotPathGenerator) continue;
 
         let tagValue: string | undefined;
-        const attributes: (CutoutAttributeToken | CutoutPrimitiveToken)[] = [];
+        const attributes: (XOAttributeToken | XOPrimitiveToken)[] = [];
         const orderedChildren: SelectionFrame[] = [];
         for (const path of snapshotPathGenerator) {
           if (isPromiseToken(path)) {
-            throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+            throw new XOError(XOErrorCode.OPERATION_UNSUPPORTED);
           }
 
-          const [indexNameToken, keyToken, valueToken] =
-            path as CutoutBackendPath;
+          const [indexNameToken, keyToken, valueToken] = path as XOBackendPath;
 
-          switch (indexNameToken[CUTOUT_TOKEN_VALUE_INDEX]) {
+          switch (indexNameToken[XO_TOKEN_VALUE_INDEX]) {
             case INDEX_TAGS_LABEL: {
-              yield keyToken as CutoutElementToken;
-              [, tagValue] = keyToken as CutoutElementToken;
+              yield keyToken as XOElementToken;
+              [, tagValue] = keyToken as XOElementToken;
               break;
             }
             case INDEX_ATTRIBUTES_LABEL:
               attributes.push(
-                keyToken as CutoutAttributeToken,
-                valueToken as CutoutPrimitiveToken,
+                keyToken as XOAttributeToken,
+                valueToken as XOPrimitiveToken,
               );
               break;
-            case CUTOUT_CHILDREN_LABEL: {
-              const [, childIndex] = keyToken as CutoutNumberToken;
+            case XO_CHILDREN_LABEL: {
+              const [, childIndex] = keyToken as XONumberToken;
               const [childType] = valueToken;
 
-              orderedChildren[childIndex] =
-                childType === CutoutTokenType.IDENTIFIER
-                  ? {
-                    isSnapshot: true,
-                    token: valueToken as CutoutIdentifierToken,
-                  }
-                  : {
-                    isSnapshot: false,
-                    token: valueToken as CutoutPrimitiveToken,
-                  };
+              orderedChildren[childIndex] = childType === XOTokenType.IDENTIFIER
+                ? {
+                  isSnapshot: true,
+                  token: valueToken as XOIdentifierToken,
+                }
+                : {
+                  isSnapshot: false,
+                  token: valueToken as XOPrimitiveToken,
+                };
             }
           }
         }
@@ -105,12 +103,12 @@ export function selectJSX(
         yield* attributes;
 
         if (orderedChildren.length) {
-          yield [CutoutTokenType.ATTRIBUTE, CUTOUT_CHILDREN_LABEL];
+          yield [XOTokenType.ATTRIBUTE, XO_CHILDREN_LABEL];
         }
 
         selectionStack = [...selectionStack, {
           isSnapshot: false,
-          token: [CutoutTokenType.ELEMENT_CLOSE, tagValue!],
+          token: [XOTokenType.ELEMENT_CLOSE, tagValue!],
         }, ...(orderedChildren.reverse())];
       }
     },
@@ -118,9 +116,9 @@ export function selectJSX(
 }
 
 export function selectTokens(
-  backend: CutoutBackend,
-  { attributes, tag }: CutoutStoreSelector,
-): CutoutIdentifierToken[] {
+  backend: XOBackend,
+  { attributes, tag }: XOStoreSelector,
+): XOIdentifierToken[] {
   let result;
 
   if (attributes) {
@@ -136,10 +134,10 @@ export function selectTokens(
           []
       ) {
         if (isPromiseToken(path)) {
-          throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+          throw new XOError(XOErrorCode.OPERATION_UNSUPPORTED);
         }
 
-        const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
+        const [, snapshotId] = path.at(-1) as XOIdentifierToken;
 
         attibuteSet.add(snapshotId);
       }
@@ -154,10 +152,10 @@ export function selectTokens(
       const path of backend.list([INDEX_TAGS_TOKEN, tag]) ?? []
     ) {
       if (isPromiseToken(path)) {
-        throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+        throw new XOError(XOErrorCode.OPERATION_UNSUPPORTED);
       }
 
-      const [, snapshotId] = path.at(-1) as CutoutIdentifierToken;
+      const [, snapshotId] = path.at(-1) as XOIdentifierToken;
 
       tagSet.add(snapshotId);
     }
@@ -165,7 +163,7 @@ export function selectTokens(
   }
 
   return Array.from(result ?? new Set<string>()).map(
-    (id) => [CutoutTokenType.IDENTIFIER, id],
+    (id) => [XOTokenType.IDENTIFIER, id],
   );
 }
 
@@ -188,11 +186,11 @@ function _attributeSpecificityHeuristic(
   {
     key: [, leftKeyValue],
     value: [, leftValue] = tokenizeValue(""),
-  }: CutoutAttributeSelector,
+  }: XOAttributeSelector,
   {
     key: [, rightKeyValue],
     value: [, rightValue] = tokenizeValue(""),
-  }: CutoutAttributeSelector,
+  }: XOAttributeSelector,
 ): number {
   const rankDifference =
     (SELECTION_ATTRIBUTE_KEY_RANK_MAP[rightKeyValue] ?? 0) -

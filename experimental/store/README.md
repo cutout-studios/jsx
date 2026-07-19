@@ -5,9 +5,9 @@ this:
 
 ```tsx
 import { createStore } from "@cutout/store";
-import { CutoutMemoryBackend } from "@cutout/store/backends";
+import { XOMemoryBackend } from "@cutout/store/backends";
 
-const store = createStore({ backend: new CutoutMemoryBackend() });
+const store = createStore({ backend: new XOMemoryBackend() });
 
 store.append(
   <>
