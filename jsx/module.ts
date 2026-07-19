@@ -2,27 +2,27 @@
  * @packageDocumentation
  * The runtime implementation for the `@cutout/jsx` pragma, which transforms standard JSX syntax (like
  * `<div>Hello</div>`) into a custom token stream using generators.
- * Think of this as the bridge between TypeScript's JSX emission and Cutout's runtime-typed
+ * Think of this as the bridge between TypeScript's JSX emission and XO's runtime-typed
  * intermediate representation (IR).
  */
 
 import {
-  CUTOUT_CHILDREN_LABEL,
-  CUTOUT_FRAGMENT_LABEL,
-  CUTOUT_TOKEN_TYPE_INDEX,
-  CUTOUT_TOKEN_VALUE_INDEX,
-  CUTOUT_UNSERIALIZABLE_LABEL,
-  type CutoutAttributeToken,
-  type CutoutElementCloseToken,
-  type CutoutElementToken,
-  type CutoutJSXToken,
-  type CutoutOutputToken,
-  CutoutTokenType,
   isJSXToken,
   isOutputToken,
   isValidToken,
   tokenizeValue,
   type UnknownToken,
+  XO_CHILDREN_LABEL,
+  XO_FRAGMENT_LABEL,
+  XO_TOKEN_TYPE_INDEX,
+  XO_TOKEN_VALUE_INDEX,
+  XO_UNSERIALIZABLE_LABEL,
+  type XOAttributeToken,
+  type XOElementCloseToken,
+  type XOElementToken,
+  type XOJSXToken,
+  type XOOutputToken,
+  XOTokenType,
 } from "@cutout/jsx/tokens";
 
 /**
@@ -56,15 +56,15 @@ export namespace JSX {
  * const incorrect = <MyElement hello={123} /> // Type Error.
  * ```
  */
-export type CutoutElementFunction<A = Record<string, unknown>> = (
+export type XOElementFunction<A = Record<string, unknown>> = (
   attributes: A,
-) => CutoutJSXToken;
+) => XOJSXToken;
 
 /**
  * The core transformation function for `@cutout/jsx`.
  *
  * This is what TypeScript calls when it sees `<MyComponent prop="value">child</MyComponent>`.
- * Instead of returning a node, we return a `CutoutGeneratorToken`.
+ * Instead of returning a node, we return a `XOGeneratorToken`.
  * This allows us to lazily evaluate the component tree.
  *
  * @param element The tag name or element function (e.g., "div" or `MyComponent`).
@@ -76,10 +76,10 @@ export type CutoutElementFunction<A = Record<string, unknown>> = (
  * @returns A generator token representing the element structure.
  */
 export const jsx = (
-  element: CutoutElementFunction | string,
+  element: XOElementFunction | string,
   _elementAttributes: { [key: string]: unknown },
   ..._elementChildren: unknown[]
-): CutoutJSXToken => {
+): XOJSXToken => {
   const _generator = function* () {
     // 1. Normalize children across "react" and "react-jsx" pragma types.
     //    We separate children from the rest of the attributes to handle them separately.
@@ -101,32 +101,32 @@ export const jsx = (
 
     // 3. Otherwise, we've hit an intrinsic element.
     // => 3.1. Yield the opening tag.
-    yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementToken;
+    yield [XOTokenType.ELEMENT_OPEN, element] as XOElementToken;
 
     // => 3.2. Yield all non-child attributes.
     for (const key in attributes) {
-      yield [CutoutTokenType.ATTRIBUTE, key] as CutoutAttributeToken;
+      yield [XOTokenType.ATTRIBUTE, key] as XOAttributeToken;
       yield* _forwardTokens(attributes[key]);
     }
 
     // => 3.3. Yield children.
     if (Array.isArray(children) && children.length) {
       yield [
-        CutoutTokenType.ATTRIBUTE,
-        CUTOUT_CHILDREN_LABEL,
-      ] as CutoutAttributeToken;
+        XOTokenType.ATTRIBUTE,
+        XO_CHILDREN_LABEL,
+      ] as XOAttributeToken;
 
       for (const child of children as unknown[]) yield* _forwardTokens(child);
     }
 
     // => 3.4. Yield the closing tag.
     yield [
-      CutoutTokenType.ELEMENT_CLOSE,
+      XOTokenType.ELEMENT_CLOSE,
       element,
-    ] as CutoutElementCloseToken;
+    ] as XOElementCloseToken;
   };
 
-  return [CutoutTokenType.GENERATOR, _generator];
+  return [XOTokenType.GENERATOR, _generator];
 };
 
 /**
@@ -141,19 +141,19 @@ export const jsxs: typeof jsx = jsx;
  * In JSX, this lets you group elements without adding an extra wrapper to the
  * DOM. Here, it's just an alias for our fragment label.
  */
-export const Fragment: string = CUTOUT_FRAGMENT_LABEL;
+export const Fragment: string = XO_FRAGMENT_LABEL;
 
 function* _forwardTokens(
   value: unknown,
   debug = false,
-): Generator<CutoutOutputToken> {
+): Generator<XOOutputToken> {
   if (Array.isArray(value) && !isValidToken(value)) {
     for (const item of value) yield* _forwardTokens(item);
     return;
   }
 
   if (isJSXToken(value)) {
-    yield* value[CUTOUT_TOKEN_VALUE_INDEX]();
+    yield* value[XO_TOKEN_VALUE_INDEX]();
     return;
   }
 
@@ -162,20 +162,20 @@ function* _forwardTokens(
     return;
   }
 
-  const token = tokenizeValue(value) as CutoutOutputToken | UnknownToken;
+  const token = tokenizeValue(value) as XOOutputToken | UnknownToken;
 
-  if (token[CUTOUT_TOKEN_TYPE_INDEX] !== CutoutTokenType.UNKNOWN) {
+  if (token[XO_TOKEN_TYPE_INDEX] !== XOTokenType.UNKNOWN) {
     yield token;
   }
 
   // ISSUE(#47): implement jsxDEV to exercise the `debug` option.
-  if (token[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.UNKNOWN && debug) {
+  if (token[XO_TOKEN_TYPE_INDEX] === XOTokenType.UNKNOWN && debug) {
     let unknownValue;
 
     try {
       unknownValue = JSON.stringify(value);
     } catch {
-      unknownValue = CUTOUT_UNSERIALIZABLE_LABEL;
+      unknownValue = XO_UNSERIALIZABLE_LABEL;
     }
 
     console.warn(`Encountered unknown value "${unknownValue}". Skipping.`);

@@ -1,12 +1,8 @@
+import { enumGuardFactory, XOError, XOErrorCode } from "@cutout/internal";
 import {
-  CutoutError,
-  CutoutErrorCode,
-  enumGuardFactory,
-} from "@cutout/internal";
-import {
-  type CutoutStringToken,
-  CutoutTokenType,
   tokenizeValue,
+  type XOStringToken,
+  XOTokenType,
 } from "@cutout/jsx/tokens";
 
 import { AttributeOperator, Combinator } from "./constants.ts";
@@ -14,7 +10,7 @@ import type { AttributeSelector, Selector } from "./types.ts";
 
 export const parse = (query: string): Selector[] => {
   if (/[:@]/.test(query)) {
-    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+    throw new XOError(XOErrorCode.OPERATION_UNSUPPORTED);
   }
 
   const listRegex = /([^,]+)(?:,|$)/g;
@@ -36,7 +32,7 @@ export const parse = (query: string): Selector[] => {
       pointer = pointer ? (pointer.child = result) : (root = result);
     }
 
-    if (!root) throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
+    if (!root) throw new XOError(XOErrorCode.DATA_MALFORMED);
     selectors.push(root);
   }
 
@@ -58,16 +54,16 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
 
   while ((piece = subqueryRegex.exec(subquery)) !== null) {
     const { t: tag, i: id, c: className, a: attribute } = piece.groups!;
-    if (tag) result.tag = [CutoutTokenType.ELEMENT_OPEN, tag];
+    if (tag) result.tag = [XOTokenType.ELEMENT_OPEN, tag];
     else if (id) {
       result.attributes.push({
-        key: [CutoutTokenType.ATTRIBUTE, "id"],
-        value: [CutoutTokenType.STRING, id],
+        key: [XOTokenType.ATTRIBUTE, "id"],
+        value: [XOTokenType.STRING, id],
       });
     } else if (className) {
       result.attributes.push({
-        key: [CutoutTokenType.ATTRIBUTE, "class"],
-        value: [CutoutTokenType.STRING, className],
+        key: [XOTokenType.ATTRIBUTE, "class"],
+        value: [XOTokenType.STRING, className],
       });
     } else if (attribute) {
       const parsed = _parseAttribute(attribute);
@@ -76,7 +72,7 @@ function _parseSubqueryMatch({ groups }: RegExpExecArray): Selector {
   }
 
   if (_isCombinator(combinator)) result.combinator = combinator;
-  else if (combinator) throw new CutoutError(CutoutErrorCode.DATA_MALFORMED);
+  else if (combinator) throw new XOError(XOErrorCode.DATA_MALFORMED);
 
   return result;
 }
@@ -91,11 +87,11 @@ function _parseAttribute(
   if (!attributeMatch?.groups) return;
   const { k: key, v: value, o: operator, c: casing } = attributeMatch.groups;
   if (!key) return;
-  const result: AttributeSelector = { key: [CutoutTokenType.ATTRIBUTE, key] };
+  const result: AttributeSelector = { key: [XOTokenType.ATTRIBUTE, key] };
   if (value) {
     result.value = tokenizeValue(
       value.replace(/^["']|["']$/g, ""),
-    ) as CutoutStringToken;
+    ) as XOStringToken;
   }
   if (casing) result.caseSensitive = casing === "s";
   if (_isAttributeOperator(operator)) result.operator = operator;

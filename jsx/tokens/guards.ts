@@ -19,7 +19,7 @@ import type {
 } from "./types.ts";
 
 /**
- * A TypeScript guard for vaild (not unknown) Cutout Tokens.
+ * A TypeScript guard for vaild (not unknown) XO Tokens.
  *
  * @param {unknown} value
  */
@@ -28,7 +28,7 @@ export const isValidToken = (
 ): value is ValidToken => isOutputToken(value) || isGeneratorToken(value);
 
 /**
- * A TypeScript guard for Cutout Tokens that can be returned
+ * A TypeScript guard for XO Tokens that can be returned
  * from a Generator.
  *
  * @param {unknown} value
@@ -72,7 +72,7 @@ export const isOutputToken = (
 };
 
 /**
- * A TypeScript guard for Cutout Primitive tokens.
+ * A TypeScript guard for XO Primitive tokens.
  *
  * @param {unknown} value
  */
@@ -90,7 +90,7 @@ export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
 };
 
 /**
- * A TypeScript guard for Cutout Promise tokens.
+ * A TypeScript guard for XO Promise tokens.
  *
  * @param {unknown} value
  */
@@ -103,7 +103,7 @@ export const isPromiseToken = (
 };
 
 /**
- * A TypeScript guard for Cutout Generator tokens.
+ * A TypeScript guard for XO Generator tokens.
  *
  * @param {unknown} value
  */

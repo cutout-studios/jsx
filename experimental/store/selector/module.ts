@@ -1,5 +1,5 @@
 export type {
-  AttributeSelector as CutoutAttributeSelector,
-  Selector as CutoutStoreSelector,
+  AttributeSelector as XOAttributeSelector,
+  Selector as XOStoreSelector,
 } from "./types.ts";
 export { parse as parseSelector } from "./parse.ts";

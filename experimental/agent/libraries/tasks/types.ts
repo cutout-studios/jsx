@@ -1,4 +1,4 @@
-import type { CutoutJSXToken } from "@cutout/jsx/tokens";
+import type { XOJSXToken } from "@cutout/jsx/tokens";
 
 type NonEmptyArray<T> = [T, ...Array<T>];
 
@@ -31,5 +31,5 @@ export type Rubric = {
 
 export type QualifyingDevelopmentTask = {
   displayName: string;
-  prompt: (scores: Record<string, number>) => CutoutJSXToken | null;
+  prompt: (scores: Record<string, number>) => XOJSXToken | null;
 };

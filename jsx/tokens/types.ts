@@ -12,13 +12,13 @@ import type { TokenType } from "./constants.ts";
 /**
  * The fundamental shape of a token in @cutout/jsx: a readonly tuple of `[type, value]`.
  *
- * @template A The token type (default: `CutoutTokenType.UNKNOWN`).
+ * @template A The token type (default: `XOTokenType.UNKNOWN`).
  * @template T The actual data payload (default: `unknown`).
  *
  * @example
  * ```ts
  * // A simple number token
- * const token: AnyCutoutToken<CutoutTokenType.NUMBER, number> = [0x03, 42];
+ * const token: AnyXOToken<XOTokenType.NUMBER, number> = [0x03, 42];
  * ```
  */
 export type AnyToken<
@@ -53,7 +53,7 @@ export type UnknownToken = AnyToken<
  *
  * JSX Generators are allow us to yield tokens
  * dynamically, which is great for streaming SSR or lazy evaluation.
- * It yields OutputCutoutTokens on demand.
+ * It yields OutputXOTokens on demand.
  */
 export type JSXGeneratorToken = AnyToken<
   TokenType.GENERATOR,

@@ -1,20 +1,20 @@
 import type {
-  CutoutIdentifierToken,
-  CutoutNullToken,
-  CutoutPrimitiveToken,
-  CutoutPromiseToken,
-  CutoutSyntaxToken,
+  XOIdentifierToken,
+  XONullToken,
+  XOPrimitiveToken,
+  XOPromiseToken,
+  XOSyntaxToken,
 } from "@cutout/jsx/tokens";
 
 export type TokenSegment =
-  | CutoutPrimitiveToken
-  | CutoutSyntaxToken
-  | CutoutIdentifierToken;
+  | XOPrimitiveToken
+  | XOSyntaxToken
+  | XOIdentifierToken;
 export type TokenPath = TokenSegment[];
 
 export interface Backend {
-  add(path: TokenPath): CutoutPromiseToken | CutoutNullToken;
+  add(path: TokenPath): XOPromiseToken | XONullToken;
   list(
     prefix: TokenPath,
-  ): Generator<TokenPath | CutoutPromiseToken> | undefined;
+  ): Generator<TokenPath | XOPromiseToken> | undefined;
 }

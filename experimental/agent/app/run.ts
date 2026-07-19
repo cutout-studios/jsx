@@ -5,7 +5,7 @@ import {
 import { messageRubric, renderRubricPrompt } from "@cutout/agent/tasks";
 import { QuickSearch } from "@cutout/agent/tools";
 import { rawText } from "@cutout/jsx/projections";
-import type { CutoutJSXToken } from "@cutout/jsx/tokens";
+import type { XOJSXToken } from "@cutout/jsx/tokens";
 import { load } from "@std/dotenv";
 
 import { LOG_LEVEL } from "../constants.env.ts";
@@ -120,7 +120,7 @@ while (true) {
 
   const rubric = Object.fromEntries(rubricEntriesOrError);
 
-  const taskPrompts: CutoutJSXToken[] = [];
+  const taskPrompts: XOJSXToken[] = [];
   const taskNames = [];
   for (const potentialTask of SUPPORTED_TASKS) {
     const renderedPrompt = potentialTask.prompt(rubric);

@@ -6,7 +6,7 @@ export const CALLSITE_INDEX = 0;
 export const CALLSITE_PARENT_INDEX = 1;
 
 /**
- * Canonical CutoutError error codes.
+ * Canonical XOError error codes.
  */
 export enum ErrorCode {
   DATA_MISSING = "DATA_MISSING",

@@ -1,18 +1,18 @@
-import { CutoutError, CutoutErrorCode } from "@cutout/internal";
+import { XOError, XOErrorCode } from "@cutout/internal";
 import {
-  CUTOUT_TOKEN_TYPE_INDEX,
-  CUTOUT_TOKEN_VALUE_INDEX,
-  type CutoutAttributeToken,
-  type CutoutElementToken,
-  type CutoutIdentifierToken,
-  type CutoutNumberToken,
-  type CutoutOutputToken,
-  type CutoutPrimitiveToken,
-  CutoutTokenType,
   isPrimitiveToken,
   tokenizeValue,
+  XO_TOKEN_TYPE_INDEX,
+  XO_TOKEN_VALUE_INDEX,
+  type XOAttributeToken,
+  type XOElementToken,
+  type XOIdentifierToken,
+  type XONumberToken,
+  type XOOutputToken,
+  type XOPrimitiveToken,
+  XOTokenType,
 } from "@cutout/jsx/tokens";
-import type { CutoutBackend } from "@cutout/store/backend";
+import type { XOBackend } from "@cutout/store/backend";
 
 import {
   INDEX_ATTRIBUTES_TOKEN,
@@ -24,10 +24,10 @@ import {
 } from "./constants.ts";
 
 export function appendTag(
-  backend: CutoutBackend,
+  backend: XOBackend,
   { snapshot, tag }: {
-    snapshot: CutoutIdentifierToken;
-    tag: CutoutElementToken;
+    snapshot: XOIdentifierToken;
+    tag: XOElementToken;
   },
 ): void {
   backend.add([
@@ -40,15 +40,15 @@ export function appendTag(
 }
 
 export function appendAttribute(
-  backend: CutoutBackend,
+  backend: XOBackend,
   { snapshot, attribute: { key, value } }: {
-    snapshot: CutoutIdentifierToken;
-    attribute: { key: CutoutAttributeToken; value: CutoutOutputToken };
+    snapshot: XOIdentifierToken;
+    attribute: { key: XOAttributeToken; value: XOOutputToken };
   },
 ): void {
   // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
   if (!isPrimitiveToken(value)) {
-    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+    throw new XOError(XOErrorCode.OPERATION_UNSUPPORTED);
   }
 
   backend.add([
@@ -63,14 +63,14 @@ export function appendAttribute(
   // so the system can match them:
 
   // => The Store Selector is string-based, so too should the value be so we can match.
-  let reverseLookupStrings = [String(value[CUTOUT_TOKEN_VALUE_INDEX])];
+  let reverseLookupStrings = [String(value[XO_TOKEN_VALUE_INDEX])];
 
   // => The class list is an implicit array; we must add each class separately.
   if (
-    key[CUTOUT_TOKEN_VALUE_INDEX] === "class" &&
-    value[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.STRING
+    key[XO_TOKEN_VALUE_INDEX] === "class" &&
+    value[XO_TOKEN_TYPE_INDEX] === XOTokenType.STRING
   ) {
-    reverseLookupStrings = value[CUTOUT_TOKEN_VALUE_INDEX].trim()
+    reverseLookupStrings = value[XO_TOKEN_VALUE_INDEX].trim()
       .split(/\s+/);
   }
 
@@ -85,16 +85,16 @@ export function appendAttribute(
 }
 
 export function appendChild(
-  backend: CutoutBackend,
+  backend: XOBackend,
   { snapshot = ROOT_SNAPSHOT_TOKEN, child: { token: child, index } }: {
-    snapshot?: CutoutIdentifierToken;
+    snapshot?: XOIdentifierToken;
     child: {
-      token: CutoutIdentifierToken | CutoutPrimitiveToken;
-      index: CutoutNumberToken;
+      token: XOIdentifierToken | XOPrimitiveToken;
+      index: XONumberToken;
     };
   },
 ) {
-  if (child[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER) {
+  if (child[XO_TOKEN_TYPE_INDEX] === XOTokenType.IDENTIFIER) {
     backend.add([
       INDEX_SNAPSHOTS_TOKEN,
       snapshot,
