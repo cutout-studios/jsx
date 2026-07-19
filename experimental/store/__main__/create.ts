@@ -9,10 +9,10 @@ import {
   type CutoutElementToken,
   type CutoutIdentifierToken,
   type CutoutJSXToken,
+  type CutoutNumberToken,
   type CutoutOutputToken,
   type CutoutPrimitiveToken,
   CutoutTokenType,
-  equals,
   isPromiseToken,
   tokenizeValue,
 } from "@cutout/jsx/tokens";
@@ -23,9 +23,10 @@ import type {
 } from "@cutout/store/selector";
 
 import {
+  INDEX_ATTRIBUTES_LABEL,
   INDEX_ATTRIBUTES_TOKEN,
-  INDEX_CHILDREN_TOKEN,
   INDEX_SNAPSHOTS_TOKEN,
+  INDEX_TAGS_LABEL,
   INDEX_TAGS_TOKEN,
   ROOT_SNAPSHOT_TOKEN,
 } from "./constants.ts";
@@ -128,7 +129,7 @@ export const create = ({ backend }: Options): Store => {
 
       const result: CutoutJSXToken[] = [];
       for (const snapshot of snapshots) {
-        result.push(_createSelectorJSX(backend, snapshot));
+        result.push(_loadJSXFrom(backend, snapshot));
       }
 
       return result;
@@ -261,7 +262,7 @@ type SelectionFrame = {
   token: CutoutOutputToken;
 };
 
-function _createSelectorJSX(
+function _loadJSXFrom(
   backend: CutoutBackend,
   rootSnapshotId: string,
 ): CutoutJSXToken {
@@ -294,32 +295,30 @@ function _createSelectorJSX(
             throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
           }
 
-          const [indexToken, keyToken, valueToken] = path as CutoutBackendPath;
+          const [indexNameToken, keyToken, valueToken] =
+            path as CutoutBackendPath;
 
-          // TODO: clean this section up
-          if (equals(indexToken, INDEX_TAGS_TOKEN)) {
-            yield keyToken as CutoutElementToken;
-            [, tagValue] = keyToken as CutoutElementToken;
-          }
+          switch (indexNameToken[CUTOUT_TOKEN_VALUE_INDEX]) {
+            case INDEX_TAGS_LABEL: {
+              yield keyToken as CutoutElementToken;
+              [, tagValue] = keyToken as CutoutElementToken;
+              break;
+            }
+            case INDEX_ATTRIBUTES_LABEL:
+              attributes.push(
+                keyToken as CutoutAttributeToken,
+                valueToken as CutoutPrimitiveToken,
+              );
+              break;
+            case CUTOUT_CHILDREN_LABEL: {
+              const [, childIndex] = keyToken as CutoutNumberToken;
+              const [childType, childValue] = valueToken;
 
-          if (equals(indexToken, INDEX_ATTRIBUTES_TOKEN)) {
-            attributes.push(
-              keyToken as CutoutAttributeToken,
-              valueToken as CutoutPrimitiveToken,
-            );
-          }
-
-          if (
-            equals(indexToken, INDEX_CHILDREN_TOKEN)
-          ) {
-            orderedChildren[keyToken[CUTOUT_TOKEN_VALUE_INDEX] as number] =
-              valueToken[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER
-                ? {
-                  snapshotId: valueToken[CUTOUT_TOKEN_VALUE_INDEX] as string,
-                }
-                : {
-                  token: valueToken as CutoutOutputToken,
-                };
+              orderedChildren[childIndex] =
+                childType === CutoutTokenType.IDENTIFIER
+                  ? { snapshotId: childValue }
+                  : { token: valueToken as CutoutOutputToken };
+            }
           }
         }
 

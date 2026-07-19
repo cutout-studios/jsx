@@ -41,4 +41,3 @@ export {
 } from "./guards.ts";
 
 export { tokenizeValue } from "./tokenizeValue.ts";
-export { equals } from "./equals.ts";
