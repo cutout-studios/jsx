@@ -1,72 +1,61 @@
-import type { Backend, GetterOptions, Path, PathSegment } from "./types.ts";
+import { type CutoutNullToken, CutoutTokenType } from "@cutout/jsx/tokens";
+import type { Backend, TokenPath, TokenSegment } from "./types.ts";
 
-type PathTrie = Map<PathSegment, PathTrie>;
+type SerializedPathTrie = Map<string, SerializedPathTrie>;
 
 export class MemoryBackend implements Backend {
-  constructor(paths: Path[]) {
-    for (const path of paths) {
+  constructor(paths?: TokenPath[]) {
+    for (const path of paths ?? []) {
       this.add(path);
     }
   }
 
-  get(path: Path, { limit = 1 }: GetterOptions = {}): Path[] {
-    const options = { limit };
-
-    const cacheKey = JSON.stringify([options, path]);
-
-    if (this.#flatCache.has(cacheKey)) {
-      return this.#flatCache.get(cacheKey);
-    }
-
-    const getRoot = this.#resolvePath(path);
-
-    if (!getRoot) return [];
-
-    const result = this.#flatten(getRoot, options);
-
-    this.#flatCache.set(cacheKey, result);
-
-    return result;
-  }
-
-  add(path: Path): void {
-    this.#flatCache.clear();
+  add(path: TokenPath): CutoutNullToken {
+    this.#scanCache.clear();
 
     let pointer = this.#pathTrie;
     for (const segment of path) {
-      if (!pointer.has(segment)) {
-        pointer.set(segment, new Map());
+      const segmentString = JSON.stringify(segment);
+
+      if (!pointer.has(segmentString)) {
+        pointer.set(segmentString, new Map());
       }
 
-      pointer = pointer.get(segment) as PathTrie;
-    }
-  }
-
-  delete(path: Path): boolean {
-    const [rootPath, terminalValue] = [path.slice(0, -1), path.at(-1)];
-
-    if (!rootPath.length || !terminalValue) return false;
-
-    const deleteRoot = this.#resolvePath(rootPath);
-
-    if (!deleteRoot) return false;
-
-    const deleteResult = deleteRoot.delete(terminalValue);
-
-    if (deleteResult) {
-      this.#flatCache.clear();
+      pointer = pointer.get(segmentString) as SerializedPathTrie;
     }
 
-    return deleteResult;
+    return [CutoutTokenType.NULL, null];
   }
 
-  #pathTrie: PathTrie = new Map();
-  #resolvePath(path: Path): PathTrie | undefined {
+  list(
+    prefix: TokenPath,
+  ): Generator<TokenPath> | undefined {
+    const cacheKey = JSON.stringify(prefix);
+
+    if (this.#scanCache.has(cacheKey)) {
+      return this.#scanCache.get(cacheKey);
+    }
+
+    const scanRoot = this.#resolvePath(prefix);
+
+    if (!scanRoot) return;
+
+    const result = this.#flatten(scanRoot).reverse();
+
+    this.#scanCache.set(cacheKey, result);
+
+    return (function* () {
+      for (const path of result) yield path;
+    })();
+  }
+
+  #pathTrie: SerializedPathTrie = new Map();
+  #resolvePath(path: TokenPath): SerializedPathTrie | undefined {
     if (path.length === 0) return this.#pathTrie;
 
-    let pointer: PathTrie | undefined = this.#pathTrie;
+    let pointer: SerializedPathTrie | undefined = this.#pathTrie;
     for (const segment of path) {
-      pointer = pointer.get(segment);
+      pointer = pointer.get(JSON.stringify(segment));
 
       if (pointer === undefined) return;
     }
@@ -74,11 +63,11 @@ export class MemoryBackend implements Backend {
     return pointer;
   }
 
-  #flatCache = new Map();
-  #flatten(root: PathTrie, { limit }: { limit: number }): Path[] {
-    const result: Path[] = [];
+  #scanCache = new Map();
+  #flatten(root: SerializedPathTrie): TokenPath[] {
+    const result: TokenPath[] = [];
 
-    const stack: [PathSegment[], PathTrie][] = [[[], root]];
+    const stack: [TokenSegment[], SerializedPathTrie][] = [[[], root]];
     while (stack.length) {
       const [currentKeyPath, currentSubtrie] = stack.pop() ?? [];
 
@@ -86,13 +75,11 @@ export class MemoryBackend implements Backend {
 
       for (const [key, value] of currentSubtrie.entries()) {
         if (value.size) {
-          stack.push([[...currentKeyPath, key], value]);
+          stack.push([[...currentKeyPath, JSON.parse(key)], value]);
           continue;
         }
 
-        result.push([...currentKeyPath, key]);
-
-        if (result.length === limit) return result;
+        result.push([...currentKeyPath, JSON.parse(key)]);
       }
     }
 

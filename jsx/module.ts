@@ -7,26 +7,23 @@
  */
 
 import {
-  CHILDREN_LABEL,
-  FRAGMENT_LABEL,
-  TOKEN_TYPE_INDEX,
-  TOKEN_VALUE_INDEX,
-  TokenType,
-  UNSERIALIZABLE_LABEL,
-} from "./tokens/constants.ts";
-import {
-  isGeneratorToken,
+  CUTOUT_CHILDREN_LABEL,
+  CUTOUT_FRAGMENT_LABEL,
+  CUTOUT_TOKEN_TYPE_INDEX,
+  CUTOUT_TOKEN_VALUE_INDEX,
+  CUTOUT_UNSERIALIZABLE_LABEL,
+  type CutoutAttributeToken,
+  type CutoutElementCloseToken,
+  type CutoutElementToken,
+  type CutoutJSXToken,
+  type CutoutOutputToken,
+  CutoutTokenType,
+  isJSXToken,
   isOutputToken,
   isValidToken,
-} from "./tokens/guards.ts";
-import { tokenizeValue } from "./tokens/tokenizeValue.ts";
-import type {
-  AttributeToken,
-  ElementCloseToken,
-  ElementOpenToken,
-  JSXGeneratorToken,
-  OutputToken,
-} from "./tokens/types.ts";
+  tokenizeValue,
+  type UnknownToken,
+} from "@cutout/jsx/tokens";
 
 /**
  * The default @cutout/jsx typings.
@@ -61,7 +58,7 @@ export namespace JSX {
  */
 export type CutoutElementFunction<A = Record<string, unknown>> = (
   attributes: A,
-) => JSXGeneratorToken;
+) => CutoutJSXToken;
 
 /**
  * The core transformation function for `@cutout/jsx`.
@@ -82,7 +79,7 @@ export const jsx = (
   element: CutoutElementFunction | string,
   _elementAttributes: { [key: string]: unknown },
   ..._elementChildren: unknown[]
-): JSXGeneratorToken => {
+): CutoutJSXToken => {
   const _generator = function* () {
     // 1. Normalize children across "react" and "react-jsx" pragma types.
     //    We separate children from the rest of the attributes to handle them separately.
@@ -104,29 +101,32 @@ export const jsx = (
 
     // 3. Otherwise, we've hit an intrinsic element.
     // => 3.1. Yield the opening tag.
-    yield [TokenType.ELEMENT_OPEN, element] as ElementOpenToken;
+    yield [CutoutTokenType.ELEMENT_OPEN, element] as CutoutElementToken;
 
     // => 3.2. Yield all non-child attributes.
     for (const key in attributes) {
-      yield [TokenType.ATTRIBUTE, key] as AttributeToken;
+      yield [CutoutTokenType.ATTRIBUTE, key] as CutoutAttributeToken;
       yield* _forwardTokens(attributes[key]);
     }
 
     // => 3.3. Yield children.
     if (Array.isArray(children) && children.length) {
-      yield [TokenType.ATTRIBUTE, CHILDREN_LABEL] as AttributeToken;
+      yield [
+        CutoutTokenType.ATTRIBUTE,
+        CUTOUT_CHILDREN_LABEL,
+      ] as CutoutAttributeToken;
 
       for (const child of children as unknown[]) yield* _forwardTokens(child);
     }
 
     // => 3.4. Yield the closing tag.
     yield [
-      TokenType.ELEMENT_CLOSE,
+      CutoutTokenType.ELEMENT_CLOSE,
       element,
-    ] as ElementCloseToken;
+    ] as CutoutElementCloseToken;
   };
 
-  return [TokenType.GENERATOR, _generator];
+  return [CutoutTokenType.GENERATOR, _generator];
 };
 
 /**
@@ -141,19 +141,19 @@ export const jsxs: typeof jsx = jsx;
  * In JSX, this lets you group elements without adding an extra wrapper to the
  * DOM. Here, it's just an alias for our fragment label.
  */
-export const Fragment: string = FRAGMENT_LABEL;
+export const Fragment: string = CUTOUT_FRAGMENT_LABEL;
 
 function* _forwardTokens(
   value: unknown,
   debug = false,
-): Generator<OutputToken> {
+): Generator<CutoutOutputToken> {
   if (Array.isArray(value) && !isValidToken(value)) {
     for (const item of value) yield* _forwardTokens(item);
     return;
   }
 
-  if (isGeneratorToken(value)) {
-    yield* value[TOKEN_VALUE_INDEX]();
+  if (isJSXToken(value)) {
+    yield* value[CUTOUT_TOKEN_VALUE_INDEX]();
     return;
   }
 
@@ -162,20 +162,20 @@ function* _forwardTokens(
     return;
   }
 
-  const token = tokenizeValue(value);
+  const token = tokenizeValue(value) as CutoutOutputToken | UnknownToken;
 
-  if (token[TOKEN_TYPE_INDEX] !== TokenType.UNKNOWN) {
+  if (token[CUTOUT_TOKEN_TYPE_INDEX] !== CutoutTokenType.UNKNOWN) {
     yield token;
   }
 
   // ISSUE(#47): implement jsxDEV to exercise the `debug` option.
-  if (token[TOKEN_TYPE_INDEX] === TokenType.UNKNOWN && debug) {
+  if (token[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.UNKNOWN && debug) {
     let unknownValue;
 
     try {
       unknownValue = JSON.stringify(value);
     } catch {
-      unknownValue = UNSERIALIZABLE_LABEL;
+      unknownValue = CUTOUT_UNSERIALIZABLE_LABEL;
     }
 
     console.warn(`Encountered unknown value "${unknownValue}". Skipping.`);

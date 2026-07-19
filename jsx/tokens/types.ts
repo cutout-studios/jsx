@@ -36,7 +36,8 @@ export type AnyToken<
  */
 export type SystemToken =
   | UnknownToken
-  | JSXGeneratorToken;
+  | JSXGeneratorToken
+  | IdentifierToken;
 
 /**
  * A token where we genuinely don't know the type or value yet.
@@ -57,6 +58,14 @@ export type UnknownToken = AnyToken<
 export type JSXGeneratorToken = AnyToken<
   TokenType.GENERATOR,
   () => Generator<OutputToken>
+>;
+
+/**
+ * A token for a system-level identifier.
+ */
+export type IdentifierToken = AnyToken<
+  TokenType.IDENTIFIER,
+  string
 >;
 
 // -----------------------------------------------------------------------------
@@ -179,7 +188,7 @@ export type PromiseToken = AnyToken<TokenType.PROMISE, Promise<ValidToken>>;
  * Elements, attributes, and the like.
  */
 export type SyntaxToken =
-  | ElementOpenToken
+  | ElementToken
   | ElementCloseToken
   | AttributeToken;
 
@@ -187,7 +196,7 @@ export type SyntaxToken =
  * A token representing the opening of a JSX element.
  * The value is the tag name (e.g., "div", "MyComponent").
  */
-export type ElementOpenToken = AnyToken<
+export type ElementToken = AnyToken<
   TokenType.ELEMENT_OPEN,
   string
 >;
@@ -229,4 +238,5 @@ export type OutputToken =
  */
 export type ValidToken =
   | OutputToken
+  | IdentifierToken
   | JSXGeneratorToken;

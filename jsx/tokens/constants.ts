@@ -49,6 +49,10 @@ export enum TokenType {
   ELEMENT_CLOSE = 0x0D,
   /** A JSX element attribute (e.g. `class=`). */
   ATTRIBUTE = 0x0E,
+
+  // -- Other --
+  /** Marks a special unique string for internal tracking. */
+  IDENTIFIER = 0x0F,
 }
 
 // ------------------------------------------------------------

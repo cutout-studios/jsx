@@ -8,6 +8,18 @@ import type { AnyFunction } from "@cutout/internal";
 import { TokenType } from "./constants.ts";
 import type { OutputToken, UnknownToken } from "./types.ts";
 
+type TokenForValue<T> = T extends number | bigint ? [TokenType.NUMBER, T]
+  : T extends string ? [TokenType.STRING, T]
+  : T extends boolean ? [TokenType.BOOLEAN, T]
+  : T extends symbol ? [TokenType.SYMBOL, T]
+  : T extends undefined ? [TokenType.UNDEFINED, undefined]
+  : T extends AnyFunction ? [TokenType.FUNCTION, T]
+  : T extends null ? [TokenType.NULL, null]
+  : T extends readonly unknown[] ? [TokenType.ARRAY, T]
+  : T extends Promise<unknown> ? [TokenType.PROMISE, T]
+  : T extends object ? [TokenType.OBJECT, T]
+  : [TokenType.UNKNOWN, T];
+
 /**
  * Attempts to convert an arbitrary value into a `CutoutToken`.
  *
@@ -21,9 +33,10 @@ import type { OutputToken, UnknownToken } from "./types.ts";
  *   // value -> "hello"
  * ```
  */
-export const tokenizeValue = (
-  value: unknown,
-): OutputToken | UnknownToken => {
+export const tokenizeValue = <T>(value: T): TokenForValue<T> =>
+  _tokenizeValue(value) as TokenForValue<T>;
+
+function _tokenizeValue(value: unknown): OutputToken | UnknownToken {
   switch (typeof value) {
     case "bigint":
     case "number":
@@ -51,4 +64,4 @@ export const tokenizeValue = (
     default:
       return [TokenType.UNKNOWN, value];
   }
-};
+}

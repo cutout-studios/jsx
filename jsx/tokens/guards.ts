@@ -10,7 +10,13 @@ import {
   TOKEN_VALUE_INDEX,
   TokenType,
 } from "./constants.ts";
-import type { JSXGeneratorToken, OutputToken, ValidToken } from "./types.ts";
+import type {
+  JSXGeneratorToken,
+  OutputToken,
+  PrimitiveToken,
+  PromiseToken,
+  ValidToken,
+} from "./types.ts";
 
 /**
  * A TypeScript guard for vaild (not unknown) Cutout Tokens.
@@ -63,6 +69,37 @@ export const isOutputToken = (
   }
 
   return false;
+};
+
+/**
+ * A TypeScript guard for Cutout Primitive tokens.
+ *
+ * @param {unknown} value
+ */
+export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
+  if (!isOutputToken(value)) return false;
+
+  return [
+    TokenType.BOOLEAN,
+    TokenType.NULL,
+    TokenType.NUMBER,
+    TokenType.STRING,
+    TokenType.SYMBOL,
+    TokenType.UNDEFINED,
+  ].includes(value[TOKEN_TYPE_INDEX]);
+};
+
+/**
+ * A TypeScript guard for Cutout Promise tokens.
+ *
+ * @param {unknown} value
+ */
+export const isPromiseToken = (
+  value: unknown,
+): value is PromiseToken => {
+  if (!isOutputToken(value)) return false;
+
+  return value[TOKEN_TYPE_INDEX] === TokenType.PROMISE;
 };
 
 /**
