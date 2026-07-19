@@ -71,6 +71,11 @@ export const isOutputToken = (
   return false;
 };
 
+/**
+ * A TypeScript guard for Cutout Primitive tokens.
+ *
+ * @param {unknown} value
+ */
 export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
   if (!isOutputToken(value)) return false;
 
@@ -84,6 +89,11 @@ export const isPrimitiveToken = (value: unknown): value is PrimitiveToken => {
   ].includes(value[TOKEN_TYPE_INDEX]);
 };
 
+/**
+ * A TypeScript guard for Cutout Promise tokens.
+ *
+ * @param {unknown} value
+ */
 export const isPromiseToken = (
   value: unknown,
 ): value is PromiseToken => {
