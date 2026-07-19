@@ -1,58 +1,38 @@
-import {
-  assert,
-  assertArrayIncludes,
-  assertEquals,
-  assertFalse,
-} from "@std/assert";
+import { tokenizeValue } from "@cutout/jsx/tokens";
+import { assertArrayIncludes, assertEquals } from "@std/assert";
 import { MemoryBackend } from "./memory.ts";
-import type { Path } from "./types.ts";
+import type { TokenPath } from "./types.ts";
 
 const TEST_GROUP = "store/backend";
+
+const tokenizePath = (path: (string | number)[]): TokenPath => {
+  return path.map(tokenizeValue) as TokenPath;
+};
 
 Deno.test(`${TEST_GROUP} - MemoryBackend`, () => {
   const backend = new MemoryBackend([]);
 
-  const namePath: Path = ["users", 123, "name", "bobadams"];
-  const zipPath: Path = ["users", 123, "address", "zip", 12345];
+  const namePath = tokenizePath(["users", 123, "name", "bobadams"]);
+  const zipPath = tokenizePath(["users", 123, "address", "zip", 12345]);
 
   backend.add(namePath);
   backend.add(zipPath);
 
-  assertArrayIncludes(backend.get(["users", 123, "name"]), [
-    ["bobadams"],
-  ]);
   assertArrayIncludes(
-    backend.get(["users", 123, "address", "zip"]),
-    [[12345]],
+    backend.list(tokenizePath(["users", 123, "name"]))?.toArray() ?? [],
+    [
+      tokenizePath(["bobadams"]),
+    ],
+  );
+  assertArrayIncludes(
+    backend.list(tokenizePath(["users", 123, "address", "zip"]))?.toArray() ??
+      [],
+    [tokenizePath([12345])],
   );
 
-  assertEquals(backend.get(["users", "nope"]), []);
-
-  assert(backend.delete(namePath));
-
-  assertFalse(backend.get(["users", 123, "name"])[0]);
-  assertArrayIncludes(
-    backend.get(["users", 123, "address", "zip"]),
-    [[12345]],
+  assertEquals(
+    backend.list(["users", "nope"].map(tokenizeValue) as TokenPath)
+      ?.toArray() ?? [],
+    [],
   );
-
-  assertFalse(backend.delete(namePath));
-});
-
-Deno.test(`${TEST_GROUP} - MemoryBackend, limit`, () => {
-  const backend = new MemoryBackend([
-    ["nodes", "n1", "children", "c1"],
-    ["nodes", "n1", "children", "c2"],
-    ["nodes", "n1", "children", "c3"],
-  ]);
-
-  const childrenPrefix: Path = ["nodes", "n1", "children"];
-
-  assertEquals(backend.get(childrenPrefix, { limit: 2 }).length, 2);
-
-  assertArrayIncludes(backend.get(childrenPrefix, { limit: Infinity }), [
-    ["c1"],
-    ["c2"],
-    ["c3"],
-  ]);
 });

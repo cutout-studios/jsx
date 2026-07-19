@@ -4,14 +4,12 @@
 this:
 
 ```tsx
-import { CutoutDocumentStore } from "@cutout/store";
-import { MemoryBackend } from "@cutout/store/backends";
+import { createStore } from "@cutout/store";
+import { CutoutMemoryBackend } from "@cutout/store/backends";
 
-const store = CutoutDocumentStore.with(
-  new MemoryBackend(),
-);
+const store = createStore({ backend: new CutoutMemoryBackend() });
 
-store.upsert(
+store.append(
   <>
     {/* Use whatever markup you want, even HTML. */}
     <user id={123}>
@@ -28,13 +26,19 @@ store.upsert(
 
 // Later...
 import { rawText } from "@cutout/jsx/projections";
+import { parseSelector } from "@cutout/store/selector";
 
-const getUser = (userId) => <user id={userId}></user>;
+const getUser = (userId) => parseSelector(`user#${userId}`);
 
 console.log(
-  rawText( // => "<username>bobadams</username><displayname>Bob Adams</displayname>"
-    store.query(getUser(123)), // get the stored IR subtree
-  ),
+  rawText(
+    store.select(getUser(123))[0], // get the stored IR subtree
+  ), /*
+        <user id="123">
+          <username>bobadams</username>
+          <displayname>Bob Adams</displayname>
+        </user>
+      */
 );
 ```
 

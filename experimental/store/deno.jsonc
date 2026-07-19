@@ -1,11 +1,16 @@
 {
-  "name": "@cutout/store",
-  "imports": {
-    "@std/assert": "jsr:@std/assert",
-
-    "@cutout/internal": "../../internal/module.ts"
-  },
   "exports": {
-    "./backend": "./backend/module.ts"
+    ".": "./module.ts",
+    "./backend": "./backend/module.ts",
+    "./selector": "./selector/module.ts"
+  },
+  "imports": {
+    "@cutout/internal": "../../internal/module.ts",
+    "@std/assert": "jsr:@std/assert",
+    "@std/testing": "jsr:@std/testing"
+  },
+  "name": "@cutout/store",
+  "tasks": {
+    "docs:lint": "deno doc --lint ./module.ts ./backend/module.ts ./selector/module.ts"
   }
 }

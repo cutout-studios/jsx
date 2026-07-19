@@ -6,12 +6,15 @@ import { messageRubric, renderRubricPrompt } from "@cutout/agent/tasks";
 import { QuickSearch } from "@cutout/agent/tools";
 import { rawText } from "@cutout/jsx/projections";
 import type { CutoutJSXToken } from "@cutout/jsx/tokens";
+import { load } from "@std/dotenv";
 
 import { LOG_LEVEL } from "../constants.env.ts";
 import { callWithSpinner } from "./callWithSpinner.ts";
 import { JUDGE_RESULT_TAG, SUPPORTED_TASKS } from "./constants.ts";
 import { evaluateSystem } from "./evaluateSystem.ts";
 import { renderAgentSystemPrompt } from "./renderAgentSystemPrompt.tsx";
+
+await load({ export: true });
 
 // Evaluate System
 let agentModel, judgeModel;
