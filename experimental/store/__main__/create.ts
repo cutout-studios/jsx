@@ -37,7 +37,6 @@ type Options = {
   backend: CutoutBackend;
 };
 
-// TODO: Sync vs. async?
 export const create = ({ backend }: Options): Store => {
   const getSnapshotToken = getIdentifierTokenFactory();
 

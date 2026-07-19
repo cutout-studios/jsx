@@ -7,7 +7,6 @@ import {
   type CutoutIdentifierToken,
   type CutoutNumberToken,
   type CutoutOutputToken,
-  type CutoutStringToken,
   CutoutTokenType,
   isPrimitiveToken,
   tokenizeValue,
@@ -47,31 +46,42 @@ export function addAttributePath(
     attributeValue: CutoutOutputToken;
   },
 ): void {
-  if (isPrimitiveToken(attributeValue)) {
-    backend.add([
-      INDEX_SNAPSHOTS_TOKEN,
-      snapshot,
-      INDEX_ATTRIBUTES_TOKEN,
-      attributeKey,
-      attributeValue,
-    ]);
-
-    backend.add([
-      INDEX_ATTRIBUTES_TOKEN,
-      attributeKey,
-      // Attribute values must be stringified in the reverse lookup so we can properly match them
-      // with the Store Selector.
-      tokenizeValue(
-        String(attributeValue[CUTOUT_TOKEN_VALUE_INDEX]),
-      ) as CutoutStringToken,
-      snapshot,
-    ]);
-
-    return;
+  // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
+  if (!isPrimitiveToken(attributeValue)) {
+    throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
   }
 
-  // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
-  throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+  backend.add([
+    INDEX_SNAPSHOTS_TOKEN,
+    snapshot,
+    INDEX_ATTRIBUTES_TOKEN,
+    attributeKey,
+    attributeValue,
+  ]);
+
+  // The attribute reverse lookup table require further processing
+  // so the system can match them:
+
+  // => The Store Selector is string-based, so too should the value be so we can match.
+  let reverseLookupStrings = [String(attributeValue[CUTOUT_TOKEN_VALUE_INDEX])];
+
+  // => The class list is an implicit array; we must add each class separately.
+  if (
+    attributeKey[CUTOUT_TOKEN_VALUE_INDEX] === "class" &&
+    attributeValue[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.STRING
+  ) {
+    reverseLookupStrings = attributeValue[CUTOUT_TOKEN_VALUE_INDEX].trim()
+      .split(/\s+/);
+  }
+
+  for (const string of reverseLookupStrings) {
+    backend.add([
+      INDEX_ATTRIBUTES_TOKEN,
+      attributeKey,
+      tokenizeValue(string),
+      snapshot,
+    ]);
+  }
 }
 
 export function addChildPath(

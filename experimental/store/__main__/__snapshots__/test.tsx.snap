@@ -10,6 +10,7 @@ snapshot[`store — deep nesting 1`] = `'<org id="1"><team><member><name>Bob</na
 
 snapshot[`store — class selector 1`] = `
 [
+  '<user class="admin employee"><username>Janet</username></user>',
   '<user class="employee"><username>Bob</username></user>',
 ]
 `;
@@ -17,9 +18,14 @@ snapshot[`store — class selector 1`] = `
 snapshot[`store — class selector 2`] = `
 [
   '<user class="admin"><username>Ross</username></user>',
+  '<user class="admin employee"><username>Janet</username></user>',
 ]
 `;
 
-snapshot[`store — class selector 3`] = `[]`;
+snapshot[`store — class selector 3`] = `
+[
+  '<user class="admin employee"><username>Janet</username></user>',
+]
+`;
 
 snapshot[`store — HTML 1`] = `"<header>Hello <i>World</i>!</header>"`;

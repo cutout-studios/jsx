@@ -32,6 +32,7 @@ Deno.test(TEST_MODULE, async (test) => {
     </user>,
   );
 
+  // Same selector, but returns "Bobby" now.
   await assertSnapshot(test, rawText(store.select(selector)[0]));
 });
 
@@ -62,6 +63,7 @@ Deno.test(`${TEST_MODULE} — deep nesting`, async (test) => {
       </team>
     </org>,
   );
+
   await assertSnapshot(test, rawText(store.select(selector)[0]));
 });
 
@@ -103,6 +105,8 @@ Deno.test("store — class selector", async (test) => {
 
 Deno.test("store — HTML", async (test) => {
   const store = create({ backend: new CutoutMemoryBackend() });
+  const headerSelector = parseSelector("header");
+
   store.append(
     <html>
       <head>
@@ -118,5 +122,5 @@ Deno.test("store — HTML", async (test) => {
     </html>,
   );
 
-  await assertSnapshot(test, rawText(store.select(parseSelector("header"))[0]));
+  await assertSnapshot(test, rawText(store.select(headerSelector)[0]));
 });
