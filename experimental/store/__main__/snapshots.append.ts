@@ -7,6 +7,7 @@ import {
   type CutoutIdentifierToken,
   type CutoutNumberToken,
   type CutoutOutputToken,
+  type CutoutPrimitiveToken,
   CutoutTokenType,
   isPrimitiveToken,
   tokenizeValue,
@@ -22,7 +23,7 @@ import {
   ROOT_SNAPSHOT_TOKEN,
 } from "./constants.ts";
 
-export function addTagPath(
+export function appendSnapshotTag(
   backend: CutoutBackend,
   { snapshot, tag }: {
     snapshot: CutoutIdentifierToken;
@@ -38,16 +39,15 @@ export function addTagPath(
   backend.add([INDEX_TAGS_TOKEN, tag, snapshot]);
 }
 
-export function addAttributePath(
+export function appendSnapshotAttribute(
   backend: CutoutBackend,
-  { snapshot, attributeKey, attributeValue }: {
+  { snapshot, attribute: { key, value } }: {
     snapshot: CutoutIdentifierToken;
-    attributeKey: CutoutAttributeToken;
-    attributeValue: CutoutOutputToken;
+    attribute: { key: CutoutAttributeToken; value: CutoutOutputToken };
   },
 ): void {
   // ISSUE(#99): Unwrap raw arrays/objects into backend paths.
-  if (!isPrimitiveToken(attributeValue)) {
+  if (!isPrimitiveToken(value)) {
     throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
   }
 
@@ -55,49 +55,51 @@ export function addAttributePath(
     INDEX_SNAPSHOTS_TOKEN,
     snapshot,
     INDEX_ATTRIBUTES_TOKEN,
-    attributeKey,
-    attributeValue,
+    key,
+    value,
   ]);
 
   // The attribute reverse lookup table require further processing
   // so the system can match them:
 
   // => The Store Selector is string-based, so too should the value be so we can match.
-  let reverseLookupStrings = [String(attributeValue[CUTOUT_TOKEN_VALUE_INDEX])];
+  let reverseLookupStrings = [String(value[CUTOUT_TOKEN_VALUE_INDEX])];
 
   // => The class list is an implicit array; we must add each class separately.
   if (
-    attributeKey[CUTOUT_TOKEN_VALUE_INDEX] === "class" &&
-    attributeValue[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.STRING
+    key[CUTOUT_TOKEN_VALUE_INDEX] === "class" &&
+    value[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.STRING
   ) {
-    reverseLookupStrings = attributeValue[CUTOUT_TOKEN_VALUE_INDEX].trim()
+    reverseLookupStrings = value[CUTOUT_TOKEN_VALUE_INDEX].trim()
       .split(/\s+/);
   }
 
   for (const string of reverseLookupStrings) {
     backend.add([
       INDEX_ATTRIBUTES_TOKEN,
-      attributeKey,
+      key,
       tokenizeValue(string),
       snapshot,
     ]);
   }
 }
 
-export function addChildPath(
+export function appendSnapshotChild(
   backend: CutoutBackend,
-  { parent = ROOT_SNAPSHOT_TOKEN, child, childIndex }: {
-    parent?: CutoutIdentifierToken;
-    child: CutoutIdentifierToken | CutoutOutputToken;
-    childIndex: CutoutNumberToken;
+  { snapshot = ROOT_SNAPSHOT_TOKEN, child: { token: child, index } }: {
+    snapshot?: CutoutIdentifierToken;
+    child: {
+      token: CutoutIdentifierToken | CutoutPrimitiveToken;
+      index: CutoutNumberToken;
+    };
   },
 ) {
   if (child[CUTOUT_TOKEN_TYPE_INDEX] === CutoutTokenType.IDENTIFIER) {
     backend.add([
       INDEX_SNAPSHOTS_TOKEN,
-      parent,
+      snapshot,
       INDEX_CHILDREN_TOKEN,
-      childIndex,
+      index,
       child,
     ]);
 
@@ -105,25 +107,18 @@ export function addChildPath(
       INDEX_SNAPSHOTS_TOKEN,
       child,
       INDEX_PARENT_TOKEN,
-      parent,
-      childIndex,
+      snapshot,
+      index,
     ]);
 
     return;
   }
 
-  if (isPrimitiveToken(child)) {
-    backend.add([
-      INDEX_SNAPSHOTS_TOKEN,
-      parent,
-      INDEX_CHILDREN_TOKEN,
-      childIndex,
-      child,
-    ]);
-
-    return;
-  }
-
-  // ISSUE(#99): Unwrap raw arrays/objects into backend paths
-  throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
+  backend.add([
+    INDEX_SNAPSHOTS_TOKEN,
+    snapshot,
+    INDEX_CHILDREN_TOKEN,
+    index,
+    child,
+  ]);
 }

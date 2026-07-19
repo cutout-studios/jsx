@@ -27,3 +27,10 @@ export const INDEX_TAGS_TOKEN = tokenizeValue(INDEX_TAGS_LABEL);
 export const INDEX_ATTRIBUTES_TOKEN = tokenizeValue(INDEX_ATTRIBUTES_LABEL);
 export const INDEX_PARENT_TOKEN = tokenizeValue("[[PARENT]]");
 export const INDEX_CHILDREN_TOKEN = tokenizeValue(CUTOUT_CHILDREN_LABEL);
+
+export const SELECTION_ATTRIBUTE_KEY_RANK_MAP: Record<string, number> = {
+  id: 3,
+  key: 2,
+  class: 1,
+  // *: 0
+};
