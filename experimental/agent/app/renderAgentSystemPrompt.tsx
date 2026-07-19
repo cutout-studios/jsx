@@ -1,10 +1,10 @@
 /* @jsxImportSource @cutout/jsx */
 
-import type { CutoutJSXToken } from "@cutout/jsx/tokens";
+import type { XOJSXToken } from "@cutout/jsx/tokens";
 
 export const renderAgentSystemPrompt = (
-  taskPrompts: CutoutJSXToken[],
-): CutoutJSXToken => (
+  taskPrompts: XOJSXToken[],
+): XOJSXToken => (
   <main>
     <article>
       <section>

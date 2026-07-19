@@ -1,7 +1,7 @@
 /** @jsxImportSource @cutout/jsx */
 
 import { rawText } from "@cutout/jsx/projections";
-import { CutoutMemoryBackend } from "@cutout/store/backend";
+import { XOMemoryBackend } from "@cutout/store/backend";
 import { parseSelector } from "@cutout/store/selector";
 import { assertSnapshot } from "@std/testing/snapshot";
 
@@ -10,7 +10,7 @@ import { create } from "./create.ts";
 const TEST_MODULE = "store";
 
 Deno.test(TEST_MODULE, async (test) => {
-  const store = create({ backend: new CutoutMemoryBackend() });
+  const store = create({ backend: new XOMemoryBackend() });
   const selector = parseSelector("user#1");
 
   store.append(
@@ -37,7 +37,7 @@ Deno.test(TEST_MODULE, async (test) => {
 });
 
 Deno.test(`${TEST_MODULE} — multiple children`, async (test) => {
-  const store = create({ backend: new CutoutMemoryBackend() });
+  const store = create({ backend: new XOMemoryBackend() });
   const selector = parseSelector("user#1");
 
   store.append(
@@ -51,7 +51,7 @@ Deno.test(`${TEST_MODULE} — multiple children`, async (test) => {
 });
 
 Deno.test(`${TEST_MODULE} — deep nesting`, async (test) => {
-  const store = create({ backend: new CutoutMemoryBackend() });
+  const store = create({ backend: new XOMemoryBackend() });
   const selector = parseSelector("org#1");
 
   store.append(
@@ -68,7 +68,7 @@ Deno.test(`${TEST_MODULE} — deep nesting`, async (test) => {
 });
 
 Deno.test("store — class selector", async (test) => {
-  const store = create({ backend: new CutoutMemoryBackend() });
+  const store = create({ backend: new XOMemoryBackend() });
   const employees = parseSelector(".employee");
   const admins = parseSelector(".admin");
   const employeeAdmins = parseSelector(".employee.admin");
@@ -104,7 +104,7 @@ Deno.test("store — class selector", async (test) => {
 });
 
 Deno.test("store — HTML", async (test) => {
-  const store = create({ backend: new CutoutMemoryBackend() });
+  const store = create({ backend: new XOMemoryBackend() });
   const headerSelector = parseSelector("header");
 
   store.append(
