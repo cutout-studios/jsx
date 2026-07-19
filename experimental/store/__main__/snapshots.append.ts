@@ -23,7 +23,7 @@ import {
   ROOT_SNAPSHOT_TOKEN,
 } from "./constants.ts";
 
-export function appendSnapshotTag(
+export function appendTag(
   backend: CutoutBackend,
   { snapshot, tag }: {
     snapshot: CutoutIdentifierToken;
@@ -39,7 +39,7 @@ export function appendSnapshotTag(
   backend.add([INDEX_TAGS_TOKEN, tag, snapshot]);
 }
 
-export function appendSnapshotAttribute(
+export function appendAttribute(
   backend: CutoutBackend,
   { snapshot, attribute: { key, value } }: {
     snapshot: CutoutIdentifierToken;
@@ -84,7 +84,7 @@ export function appendSnapshotAttribute(
   }
 }
 
-export function appendSnapshotChild(
+export function appendChild(
   backend: CutoutBackend,
   { snapshot = ROOT_SNAPSHOT_TOKEN, child: { token: child, index } }: {
     snapshot?: CutoutIdentifierToken;

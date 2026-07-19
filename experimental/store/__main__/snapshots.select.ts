@@ -36,7 +36,7 @@ type SelectionFrame = {
   token: CutoutOutputToken;
 };
 
-export function selectSnapshotJSX(
+export function selectJSX(
   backend: CutoutBackend,
   snapshot: CutoutIdentifierToken,
 ): CutoutJSXToken {
@@ -117,7 +117,7 @@ export function selectSnapshotJSX(
   ];
 }
 
-export function selectSnapshotTokens(
+export function selectTokens(
   backend: CutoutBackend,
   { attributes, tag }: CutoutStoreSelector,
 ): CutoutIdentifierToken[] {

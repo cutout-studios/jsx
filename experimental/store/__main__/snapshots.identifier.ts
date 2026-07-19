@@ -54,6 +54,36 @@ export function getIdentifierTokenFactory(
   };
 }
 
+function _incrementBuffer(value: Uint8Array): Uint8Array<ArrayBuffer> {
+  let pointer = value.length;
+  while (pointer--) {
+    if (value[pointer] < BYTE_DEPTH - 1) {
+      value[pointer]++;
+      const container = new Uint8Array(value.length);
+      container.set(value);
+      return container;
+    }
+
+    value[pointer] = 0;
+  }
+
+  return new Uint8Array();
+}
+
+function _timeToBytes(time: number, bytes: number): Uint8Array {
+  if (bytes > TIMESTAMP_BYTE_LIMIT) throw new CutoutError();
+
+  const result = new Uint8Array(bytes);
+
+  let pointer = result.length;
+  while (pointer--) {
+    result[pointer] = time % BYTE_DEPTH;
+    time = Math.floor(time / BYTE_DEPTH);
+  }
+
+  return result;
+}
+
 export function _encode(
   bytes: Uint8Array,
   { alphabet = DEFAULT_IDENTIFIER_ALPHABET } = {},
@@ -80,34 +110,4 @@ export function _encode(
   }
 
   return result;
-}
-
-function _timeToBytes(time: number, bytes: number): Uint8Array {
-  if (bytes > TIMESTAMP_BYTE_LIMIT) throw new CutoutError();
-
-  const result = new Uint8Array(bytes);
-
-  let pointer = result.length;
-  while (pointer--) {
-    result[pointer] = time % BYTE_DEPTH;
-    time = Math.floor(time / BYTE_DEPTH);
-  }
-
-  return result;
-}
-
-function _incrementBuffer(value: Uint8Array): Uint8Array<ArrayBuffer> {
-  let pointer = value.length;
-  while (pointer--) {
-    if (value[pointer] < BYTE_DEPTH - 1) {
-      value[pointer]++;
-      const container = new Uint8Array(value.length);
-      container.set(value);
-      return container;
-    }
-
-    value[pointer] = 0;
-  }
-
-  return new Uint8Array();
 }

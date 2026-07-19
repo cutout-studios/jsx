@@ -16,13 +16,9 @@ import type { CutoutBackend } from "@cutout/store/backend";
 import type { CutoutStoreSelector } from "@cutout/store/selector";
 
 import { ROOT_SNAPSHOT_TOKEN } from "./constants.ts";
-import { getIdentifierTokenFactory } from "./identifier.ts";
-import {
-  appendSnapshotAttribute,
-  appendSnapshotChild,
-  appendSnapshotTag,
-} from "./snapshots.append.ts";
-import { selectSnapshotJSX, selectSnapshotTokens } from "./snapshots.select.ts";
+import { appendAttribute, appendChild, appendTag } from "./snapshots.append.ts";
+import { getIdentifierTokenFactory } from "./snapshots.identifier.ts";
+import { selectJSX, selectTokens } from "./snapshots.select.ts";
 import type { Store } from "./types.ts";
 
 type Options = {
@@ -47,8 +43,8 @@ export const create = ({ backend }: Options): Store => {
           case CutoutTokenType.ELEMENT_OPEN: {
             const snapshot = getSnapshotToken();
 
-            appendSnapshotTag(backend, { snapshot, tag: token });
-            appendSnapshotChild(backend, {
+            appendTag(backend, { snapshot, tag: token });
+            appendChild(backend, {
               snapshot: parent,
               child: { token: snapshot, index: childCount },
             });
@@ -80,7 +76,7 @@ export const create = ({ backend }: Options): Store => {
           case CutoutTokenType.OBJECT:
           case CutoutTokenType.NULL:
             if (attributePointer) {
-              appendSnapshotAttribute(
+              appendAttribute(
                 backend,
                 {
                   snapshot: parent,
@@ -96,7 +92,7 @@ export const create = ({ backend }: Options): Store => {
               throw new CutoutError(CutoutErrorCode.OPERATION_UNSUPPORTED);
             }
 
-            appendSnapshotChild(backend, {
+            appendChild(backend, {
               snapshot: parent,
               child: { token, index: childCount },
             });
@@ -114,7 +110,7 @@ export const create = ({ backend }: Options): Store => {
 
       const snapshotIds = new Set<string>();
       for (const selector of selectors) {
-        for (const snapshot of selectSnapshotTokens(backend, selector)) {
+        for (const snapshot of selectTokens(backend, selector)) {
           snapshotIds.add(snapshot[CUTOUT_TOKEN_VALUE_INDEX]);
         }
       }
@@ -122,7 +118,7 @@ export const create = ({ backend }: Options): Store => {
       const result: CutoutJSXToken[] = [];
       for (const snapshotId of snapshotIds) {
         result.push(
-          selectSnapshotJSX(backend, [CutoutTokenType.IDENTIFIER, snapshotId]),
+          selectJSX(backend, [CutoutTokenType.IDENTIFIER, snapshotId]),
         );
       }
 
