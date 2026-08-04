@@ -3,8 +3,7 @@
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 [![Code Coverage](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/coverage.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 
-A collection of Deno-first development tools, all designed to stay as close as
-possible to their respective targets.
+Our collection of in-house (open source) development tools, all built following the Cutout™ philosophy _(pending)_.
 
 ## Contents
 
@@ -20,7 +19,7 @@ possible to their respective targets.
 **Interested in contributing?** See our
 [Contribution Guide](https://github.com/cutout-studios/toolbox/blob/main/CONTRIBUTING.md).
 
-### Who we are
+### Who's this?
 
 [Cutout Studios](https://cutoutstudios.com/) is a Philadelphia-based creative
 studio focused on building experiences for personal growth.
