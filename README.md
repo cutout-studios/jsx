@@ -3,7 +3,8 @@
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 [![Code Coverage](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/coverage.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 
-Our collection of in-house (open source) development tools, all built following the Cutout™ philosophy _(pending)_.
+Our collection of in-house (open source) development tools, all built following
+the Cutout™ philosophy _(pending)_.
 
 ## Contents
 
@@ -24,6 +25,9 @@ Our collection of in-house (open source) development tools, all built following 
 [Cutout Studios](https://cutoutstudios.com/) is a Philadelphia-based creative
 studio focused on building experiences for personal growth.
 
----
+## License
 
-[Copyright 2026, Cutout Studios](https://github.com/cutout-studios/toolbox/blob/main/LICENSE)
+MIT — see [LICENSE](./LICENSE).
+
+"Cutout", "Cutout Studios", and the XO mark are trademarks of Cutout Studios LLC
+and are not covered by that license. See [TRADEMARK.md](./TRADEMARK.md).
