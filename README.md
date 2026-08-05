@@ -3,7 +3,7 @@
 [![Maintainability](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/maintainability.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 [![Code Coverage](https://qlty.sh/badges/63ab5737-a9d3-4598-855e-83c7fe779ec6/coverage.svg)](https://qlty.sh/gh/cutout-studios/projects/jsx)
 
-Our collection of in-house (open source) development tools, built to our
+A collection of in-house (open source) development tools, built to our
 [philosophy](./PHILOSOPHY.md).
 
 ## Contents
