@@ -35,5 +35,5 @@ for `deno_core`. The next steps are to:
 ---
 
 <p align="center">
-  <a href="https://github.com/cutout-studios/.github/main/profile/TRADEMARK.md">Copyright 2026, Cutout Studios</a>
+  <a href="https://github.com/cutout-studios/.github/blob/main/profile/TRADEMARK.md">Copyright 2026, Cutout Studios</a>
 </p>

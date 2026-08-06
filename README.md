@@ -8,7 +8,7 @@
 <p>
 
 A collection of in-house (open source) development tools, built to our
-[philosophy](https://github.com/cutout-studios/.github/main/profile/PHILOSOPHY.md)
+[philosophy](https://github.com/cutout-studios/.github/blob/main/profile/PHILOSOPHY.md)
 spec.
 
 </p>
@@ -29,7 +29,7 @@ spec.
 ## Contributing
 
 **Interested in contributing?** See our
-[Contribution Guide](https://github.com/cutout-studios/.github/main/CONTRIBUTING.md).
+[Contribution Guide](https://github.com/cutout-studios/.github/blob/main/CONTRIBUTING.md).
 
 ## License
 
@@ -37,4 +37,4 @@ MIT — see [LICENSE](./LICENSE).
 
 "Cutout", "Cutout Studios", and the XO mark are trademarks of Cutout Studios LLC
 and are not covered by that license. See our
-[TRADEMARK.md](https://github.com/cutout-studios/.github/main/profile/TRADEMARK.md).
+[TRADEMARK.md](https://github.com/cutout-studios/.github/blob/main/profile/TRADEMARK.md).
