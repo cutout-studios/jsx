@@ -7,9 +7,7 @@
 
 <p>
 
-A collection of in-house (open source) development tools, built to our
-[philosophy](https://github.com/cutout-studios/.github/blob/main/profile/PHILOSOPHY.md)
-spec.
+Our collection of open source, in-house development tools.
 
 </p>
 
